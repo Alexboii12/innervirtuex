@@ -1988,15 +1988,17 @@
           })
         });
 
+        const result = await response.json().catch(() => ({}));
+
         if (!response.ok) {
-          throw new Error(`Subscribe failed with status ${response.status}`);
+          throw new Error(result.error || `Subscribe failed with status ${response.status}`);
         }
 
         ui.showToast(CONFIG.subscribeSuccessMessage);
         subscribeForm.reset();
       } catch (error) {
         console.warn("Subscribe request failed.", error);
-        ui.showToast("Subscription failed. Check backend setup");
+        ui.showToast(error.message || "Subscription failed. Check backend setup");
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Subscribe";
