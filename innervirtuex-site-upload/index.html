@@ -863,213 +863,6 @@
       gap: 0.6rem;
     }
 
-    .xbot-launcher {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 9998;
-      min-width: 148px;
-      padding: 0.95rem 1.1rem;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      background: rgba(9, 9, 9, 0.92);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      backdrop-filter: blur(10px);
-      transition:
-        transform var(--ease-medium),
-        border-color var(--ease-medium),
-        color var(--ease-medium),
-        background-color var(--ease-medium);
-    }
-
-    .xbot-launcher:hover,
-    .xbot-launcher:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(212, 175, 55, 0.5);
-      color: var(--gold);
-      background: rgba(16, 16, 16, 0.96);
-      outline: none;
-    }
-
-    .xbot-panel {
-      position: fixed;
-      right: 20px;
-      bottom: 84px;
-      z-index: 9998;
-      width: min(420px, calc(100vw - 24px));
-      max-height: min(78vh, 700px);
-      display: grid;
-      grid-template-rows: auto auto 1fr auto;
-      background: rgba(8, 8, 8, 0.97);
-      border: 1px solid rgba(212, 175, 55, 0.22);
-      backdrop-filter: blur(12px);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateY(10px);
-      transition:
-        opacity var(--ease-medium),
-        transform var(--ease-medium),
-        visibility var(--ease-medium);
-    }
-
-    .xbot-panel.is-open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-
-    .xbot-top,
-    .xbot-footer {
-      padding: 1rem 1rem 0.95rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .xbot-footer {
-      border-bottom: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 0.9rem;
-    }
-
-    .xbot-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: flex-start;
-    }
-
-    .xbot-title {
-      font-family: var(--font-heading);
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-
-    .xbot-close {
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding-top: 0.1rem;
-    }
-
-    .xbot-subtitle,
-    .xbot-note,
-    .xbot-message p {
-      color: var(--text-soft);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.92rem;
-      line-height: 1.65;
-    }
-
-    .xbot-subtitle {
-      margin-top: 0.45rem;
-    }
-
-    .xbot-quick {
-      padding: 0.9rem 1rem 1rem;
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .xbot-chip {
-      padding: 0.65rem 0.75rem;
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition:
-        border-color var(--ease-medium),
-        color var(--ease-medium),
-        background-color var(--ease-medium);
-    }
-
-    .xbot-chip:hover,
-    .xbot-chip:focus-visible {
-      border-color: rgba(212, 175, 55, 0.42);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.06);
-      outline: none;
-    }
-
-    .xbot-messages {
-      overflow-y: auto;
-      padding: 1rem;
-      display: grid;
-      gap: 0.85rem;
-      align-content: start;
-      min-height: 220px;
-    }
-
-    .xbot-message {
-      max-width: 92%;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
-    }
-
-    .xbot-message strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .xbot-message.user {
-      margin-left: auto;
-      border-color: rgba(212, 175, 55, 0.18);
-    }
-
-    .xbot-form {
-      display: grid;
-      gap: 0.7rem;
-    }
-
-    .xbot-form input {
-      width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-    }
-
-    .xbot-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: center;
-    }
-
-    .xbot-send {
-      padding: 0.8rem 1rem;
-      border: 1px solid rgba(212, 175, 55, 0.34);
-      background: var(--gold);
-      color: #050505;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .xbot-note {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-    }
-
     .toast {
       border-left: 3px solid var(--gold);
       background: rgba(212, 175, 55, 0.1);
@@ -1234,17 +1027,6 @@
       .join-form {
         flex-direction: column;
         align-items: stretch;
-      }
-
-      .xbot-launcher {
-        right: 12px;
-        bottom: 12px;
-      }
-
-      .xbot-panel {
-        right: 12px;
-        bottom: 70px;
-        width: calc(100vw - 24px);
       }
     }
 
@@ -1661,10 +1443,6 @@
         <a href="#premium">eBooks</a>
         <a href="#blog">Insights</a>
         <a href="#join">@innervirtuex</a>
-        <a href="privacy-policy.html">Privacy</a>
-        <a href="terms-and-conditions.html">Terms</a>
-        <a href="contact.html">Contact</a>
-        <a href="refund-policy.html">Refunds</a>
       </div>
     </footer>
   </div>
@@ -1689,50 +1467,6 @@
   <div id="neural-drop-overlay"></div>
   <div id="toast-container"></div>
 
-  <button class="xbot-launcher" id="xbot-launcher" type="button" aria-expanded="false" aria-controls="xbot-panel">
-    Talk to Xbot
-  </button>
-
-  <section class="xbot-panel" id="xbot-panel" aria-label="Xbot support assistant">
-    <div class="xbot-top">
-      <div class="xbot-head">
-        <div>
-          <div class="xbot-title">Xbot</div>
-          <div class="xbot-subtitle">Instant support for subscriptions, payments, delivery, and policy questions.</div>
-        </div>
-        <button class="xbot-close" id="xbot-close" type="button">Close</button>
-      </div>
-    </div>
-
-    <div class="xbot-quick">
-      <button class="xbot-chip" type="button" data-xbot-topic="ebook">What do I get?</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="payment">Payment help</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="refund">Refund policy</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="subscription">Email support</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="delivery">Delivery issue</button>
-    </div>
-
-    <div class="xbot-messages" id="xbot-messages">
-      <div class="xbot-message">
-        <strong>Xbot</strong>
-        <p>
-          Welcome. I can help with ebook access, payment questions, subscriptions, refunds, and what each product includes.
-          Ask in simple language and I’ll guide you instantly.
-        </p>
-      </div>
-    </div>
-
-    <div class="xbot-footer">
-      <form class="xbot-form" id="xbot-form">
-        <input id="xbot-input" type="text" name="message" placeholder="Ask Xbot about payments, delivery, or subscriptions" aria-label="Message Xbot">
-        <div class="xbot-actions">
-          <div class="xbot-note">If something still needs follow-up, direct visitors to Instagram DM.</div>
-          <button class="xbot-send" type="submit">Send</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
   <audio id="drone-audio" loop preload="none" muted>
     <source src="https://example.com/bass-drone.mp3" type="audio/mpeg">
   </audio>
@@ -1741,7 +1475,6 @@
     const CONFIG = {
       audioSrc: "https://example.com/bass-drone.mp3",
       subscribeEndpoint: "/api/subscribe",
-      xbotEndpoint: "/api/xbot",
       subscribeMethod: "POST",
       subscribeHeaders: {},
       subscribeSuccessMessage: "You are in. Welcome to the Inner Circle.",
@@ -1821,18 +1554,10 @@
     const experienceCopy = document.getElementById("experience-copy");
     const droneAudio = document.getElementById("drone-audio");
     const audioToggle = document.getElementById("audio-toggle");
-    const xbotLauncher = document.getElementById("xbot-launcher");
-    const xbotPanel = document.getElementById("xbot-panel");
-    const xbotClose = document.getElementById("xbot-close");
-    const xbotMessages = document.getElementById("xbot-messages");
-    const xbotForm = document.getElementById("xbot-form");
-    const xbotInput = document.getElementById("xbot-input");
-    const xbotChips = Array.from(document.querySelectorAll("[data-xbot-topic]"));
 
     let typeTimer = null;
     let activeTimers = [];
     let overlayRunning = false;
-    const xbotHistory = [];
 
     const wait = (ms) =>
       new Promise((resolve) => {
@@ -1864,158 +1589,6 @@
           toast.style.opacity = "0";
           window.setTimeout(() => toast.remove(), 350);
         }, 2800);
-      }
-    };
-
-    const XBOT_RESPONSES = {
-      ebook:
-        "Each INNER VIRTUE X product is a digital resource designed for calm self-mastery. The page explains what is inside each ebook or journal, including clarity exercises, emotional regulation frameworks, and daily reflection prompts.",
-      payment:
-        "Payments are handled through Razorpay on the live site. If payment succeeds but access is missing, the visitor should keep the payment confirmation, check the email used at checkout, and then continue through the support path on the site.",
-      refund:
-        "INNER VIRTUE X sells digital products, so completed purchases are generally final. Refunds may still be reviewed for duplicate charges, failed delivery, or unauthorized transactions reported promptly.",
-      subscription:
-        "Subscribers receive reflections and updates through Brevo. They can unsubscribe anytime from the footer of any email. If they do not receive emails, ask them to check promotions, spam, or re-subscribe with the correct address.",
-      delivery:
-        "If a digital product is not delivered, the buyer should verify payment success, check the email used at checkout, review spam or promotions folders, and then continue to the official support channel listed on the site.",
-      default:
-        "Xbot can help with product details, payment questions, subscriptions, delivery concerns, and refund policy. Try asking things like 'How do I get my ebook?' or 'What is your refund policy?'"
-    };
-
-    const XBOT_PROMPTS = {
-      ebook: "What do I receive after buying an ebook from INNER VIRTUE X?",
-      payment: "I need help with payment on INNER VIRTUE X.",
-      refund: "What is your refund policy?",
-      subscription: "How do email updates and subscriptions work?",
-      delivery: "I paid but did not get my ebook."
-    };
-
-    const appendXbotMessage = (role, text) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = `xbot-message${role === "user" ? " user" : ""}`;
-
-      const label = document.createElement("strong");
-      label.textContent = role === "user" ? "You" : "Xbot";
-
-      const body = document.createElement("p");
-      body.textContent = text;
-
-      wrapper.appendChild(label);
-      wrapper.appendChild(body);
-      xbotMessages.appendChild(wrapper);
-      xbotMessages.scrollTop = xbotMessages.scrollHeight;
-    };
-
-    const setXbotPending = (pending) => {
-      const submitButton = xbotForm.querySelector("button[type='submit']");
-      xbotInput.disabled = pending;
-      submitButton.disabled = pending;
-      submitButton.textContent = pending ? "Thinking..." : "Send";
-    };
-
-    const addXbotTyping = () => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "xbot-message";
-      wrapper.id = "xbot-typing";
-
-      const label = document.createElement("strong");
-      label.textContent = "Xbot";
-
-      const body = document.createElement("p");
-      body.textContent = "Thinking with clarity...";
-
-      wrapper.appendChild(label);
-      wrapper.appendChild(body);
-      xbotMessages.appendChild(wrapper);
-      xbotMessages.scrollTop = xbotMessages.scrollHeight;
-    };
-
-    const removeXbotTyping = () => {
-      const typing = document.getElementById("xbot-typing");
-      if (typing) {
-        typing.remove();
-      }
-    };
-
-    const resolveXbotReply = (message) => {
-      const text = message.toLowerCase();
-
-      if (text.includes("refund") || text.includes("cancel")) {
-        return XBOT_RESPONSES.refund;
-      }
-      if (text.includes("pay") || text.includes("payment") || text.includes("razorpay") || text.includes("stripe")) {
-        return XBOT_RESPONSES.payment;
-      }
-      if (text.includes("deliver") || text.includes("download") || text.includes("access") || text.includes("receive")) {
-        return XBOT_RESPONSES.delivery;
-      }
-      if (text.includes("email") || text.includes("subscribe") || text.includes("newsletter") || text.includes("unsubscribe")) {
-        return XBOT_RESPONSES.subscription;
-      }
-      if (text.includes("ebook") || text.includes("journal") || text.includes("guide") || text.includes("inside")) {
-        return XBOT_RESPONSES.ebook;
-      }
-
-      return XBOT_RESPONSES.default;
-    };
-
-    const askXbot = async (message) => {
-      appendXbotMessage("user", message);
-      xbotHistory.push({
-        role: "user",
-        content: message
-      });
-
-      addXbotTyping();
-      setXbotPending(true);
-
-      try {
-        const response = await fetch(CONFIG.xbotEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message,
-            history: xbotHistory
-          })
-        });
-
-        const result = await response.json().catch(() => ({}));
-        removeXbotTyping();
-
-        if (!response.ok) {
-          throw new Error(result.error || "Xbot could not respond right now");
-        }
-
-        const reply = result.reply || XBOT_RESPONSES.default;
-        appendXbotMessage("bot", reply);
-        xbotHistory.push({
-          role: "assistant",
-          content: reply
-        });
-      } catch (error) {
-        removeXbotTyping();
-        const fallback = `${resolveXbotReply(message)} If you still need manual help, please continue through Instagram DM at @innervirtuex.`;
-        appendXbotMessage("bot", fallback);
-        xbotHistory.push({
-          role: "assistant",
-          content: fallback
-        });
-        ui.showToast(error.message || "Xbot fallback mode active");
-      } finally {
-        setXbotPending(false);
-      }
-    };
-
-    const toggleXbot = (nextState) => {
-      const open = typeof nextState === "boolean" ? nextState : !xbotPanel.classList.contains("is-open");
-      xbotPanel.classList.toggle("is-open", open);
-      xbotLauncher.setAttribute("aria-expanded", String(open));
-      xbotLauncher.textContent = open ? "Hide Xbot" : "Talk to Xbot";
-
-      if (open) {
-        xbotInput.focus();
       }
     };
 
@@ -2388,40 +1961,6 @@
       ui.showToast(nextMutedState ? "Overlay audio muted" : "Overlay audio active");
     });
 
-    xbotForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const message = xbotInput.value.trim();
-      if (!message) {
-        return;
-      }
-
-      xbotForm.reset();
-      askXbot(message);
-    });
-
-    xbotLauncher.addEventListener("click", () => {
-      toggleXbot();
-    });
-
-    xbotClose.addEventListener("click", () => {
-      toggleXbot(false);
-    });
-
-    xbotChips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const topic = chip.dataset.xbotTopic;
-        toggleXbot(true);
-        const prompt = XBOT_PROMPTS[topic] || "Help me.";
-        askXbot(prompt);
-      });
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && xbotPanel.classList.contains("is-open")) {
-        toggleXbot(false);
-      }
-    });
-
     subscribeForm.addEventListener("submit", async (event) => {
       event.preventDefault();
       const value = emailInput.value.trim();
@@ -2449,17 +1988,15 @@
           })
         });
 
-        const result = await response.json().catch(() => ({}));
-
         if (!response.ok) {
-          throw new Error(result.error || `Subscribe failed with status ${response.status}`);
+          throw new Error(`Subscribe failed with status ${response.status}`);
         }
 
         ui.showToast(CONFIG.subscribeSuccessMessage);
         subscribeForm.reset();
       } catch (error) {
         console.warn("Subscribe request failed.", error);
-        ui.showToast(error.message || "Subscription failed. Check backend setup");
+        ui.showToast("Subscription failed. Check backend setup");
       } finally {
         submitButton.disabled = false;
         submitButton.textContent = "Subscribe";

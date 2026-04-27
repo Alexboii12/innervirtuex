@@ -5,16 +5,13 @@ This site is now prepared for a real launch with:
 1. Razorpay-first checkout buttons
 2. A real backend subscribe endpoint at `/api/subscribe`
 3. Brevo as the email provider behind that endpoint
-4. A real AI support bot at `/api/xbot`
-5. Optional Stripe links as a secondary checkout path
-6. Configurable protocol text and audio
+4. Optional Stripe links as a secondary checkout path
+5. Configurable protocol text and audio
 
 Everything is configured from:
 
 - `index.html`
 - `api/subscribe.js`
-- `api/xbot.js`
-- `lib/xbot-knowledge.js`
 - `.env.example`
 - The `CONFIG` object inside the `<script>` block near the bottom
 
@@ -28,7 +25,6 @@ If your goal is to publish quickly, do these now:
 4. Add the Brevo environment variables in Vercel
 5. Deploy the folder to Vercel
 6. Test one real subscribe and one real payment on mobile
-7. Add the OpenAI environment variables so Xbot works live
 
 ## 1. Audio Setup
 
@@ -208,46 +204,6 @@ Protocol 03:
 - Avoid motivational language
 - Use body sensation, breath, stillness, observation
 - Let the silence do some of the work
-
-## 3b. Xbot AI Support Setup
-
-Xbot now has:
-
-- a frontend chat interface in `index.html`
-- a live backend route at `api/xbot.js`
-- a local knowledge base in `lib/xbot-knowledge.js`
-
-### What you need in Vercel
-
-Add:
-
-```bash
-OPENAI_API_KEY=your_openai_api_key
-OPENAI_MODEL=gpt-4.1
-```
-
-### How it works
-
-1. Visitor asks Xbot a question
-2. Frontend sends the message to `/api/xbot`
-3. The backend sends the question plus your custom knowledge to OpenAI
-4. Xbot replies in your brand tone
-
-### Where to customize Xbot
-
-Edit `lib/xbot-knowledge.js` when you want to change:
-
-- product details
-- pricing
-- policies
-- support rules
-- brand tone
-
-### Safety guidance
-
-- Do not let Xbot promise refunds or delivery terms that are not true
-- Keep policy pages aligned with what Xbot says
-- If you later finish the ebooks, update the product knowledge immediately
 
 ## 4. Stripe Setup
 

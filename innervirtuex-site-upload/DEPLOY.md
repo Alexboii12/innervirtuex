@@ -32,19 +32,6 @@ Optional:
 - `BREVO_DOI_TEMPLATE_ID`
 - `BREVO_REDIRECT_URL`
 
-## 2b. Create OpenAI credentials for Xbot
-
-You also need:
-
-- `OPENAI_API_KEY`
-- optional `OPENAI_MODEL`
-
-Recommended starting model:
-
-```bash
-OPENAI_MODEL=gpt-4.1
-```
-
 ## 3. Deploy to Vercel
 
 1. Push this folder to GitHub
@@ -54,8 +41,6 @@ OPENAI_MODEL=gpt-4.1
    - `BREVO_LIST_ID`
    - optional `BREVO_DOI_TEMPLATE_ID`
    - optional `BREVO_REDIRECT_URL`
-   - `OPENAI_API_KEY`
-   - optional `OPENAI_MODEL`
 4. Redeploy
 
 ## 4. Test after deploy
@@ -65,7 +50,6 @@ OPENAI_MODEL=gpt-4.1
 3. Click each Razorpay product button
 4. Confirm the correct product/payment page opens
 5. Confirm the site still feels smooth after entering through the gateway
-6. Open Xbot and ask a real support question
 
 ## 5. Launch checklist
 
@@ -73,6 +57,5 @@ OPENAI_MODEL=gpt-4.1
 - Razorpay links are real
 - No `example.com` URLs remain
 - Audio file is real or intentionally disabled
-- Xbot answers through the live AI backend
 - Domain is connected
 - Instagram bio points to the live URL
