@@ -281,9 +281,36 @@
       min-height: 0;
       overflow: hidden;
       background:
-        radial-gradient(circle at top right, rgba(212, 175, 55, 0.05), transparent 24%),
-        radial-gradient(circle at bottom left, rgba(124, 92, 255, 0.06), transparent 28%),
+        radial-gradient(circle at 18% 18%, rgba(212, 175, 55, 0.08), transparent 22%),
+        radial-gradient(circle at 82% 22%, rgba(212, 175, 55, 0.06), transparent 20%),
+        linear-gradient(180deg, rgba(212, 175, 55, 0.04), transparent 22%),
         var(--bg);
+    }
+
+    .content-region::before,
+    .content-region::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-region::before {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 244, 214, 0.07), transparent 14%),
+        linear-gradient(90deg, transparent 7%, rgba(212, 175, 55, 0.05) 7.2%, transparent 7.4%, transparent 92.6%, rgba(212, 175, 55, 0.05) 92.8%, transparent 93%),
+        linear-gradient(180deg, transparent 0 68%, rgba(212, 175, 55, 0.04) 68.2%, transparent 68.4%);
+      opacity: 0.95;
+    }
+
+    .content-region::after {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08), transparent 18%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%);
+      mask:
+        linear-gradient(to bottom, transparent 0, #000 14%, #000 100%);
+      opacity: 0.55;
     }
 
     #neural-canvas {
@@ -314,6 +341,24 @@
       align-items: center;
       padding: clamp(1.5rem, 4vw, 4rem);
       border-bottom: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      right: -8%;
+      top: 6%;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 175, 55, 0.12);
+      box-shadow:
+        0 0 0 56px rgba(212, 175, 55, 0.04),
+        0 0 0 112px rgba(212, 175, 55, 0.025);
+      opacity: 0.72;
+      pointer-events: none;
     }
 
     .hero-copy {
@@ -386,8 +431,10 @@
 
     .typewriter-panel {
       justify-self: stretch;
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.08);
+      background:
+        linear-gradient(180deg, rgba(255, 250, 235, 0.03), rgba(212, 175, 55, 0.04)),
+        rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(212, 175, 55, 0.12);
       padding: clamp(1.25rem, 3vw, 2rem);
       min-height: 340px;
       display: grid;
@@ -395,6 +442,16 @@
       gap: 1rem;
       backdrop-filter: blur(12px);
       box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .typewriter-panel::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.08);
+      pointer-events: none;
     }
 
     .panel-top,
@@ -882,7 +939,12 @@
         transform var(--ease-medium),
         border-color var(--ease-medium),
         color var(--ease-medium),
-        background-color var(--ease-medium);
+        background-color var(--ease-medium),
+        opacity var(--ease-medium),
+        visibility var(--ease-medium);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
     }
 
     .xbot-launcher:hover,
@@ -892,6 +954,12 @@
       color: var(--gold);
       background: rgba(16, 16, 16, 0.96);
       outline: none;
+    }
+
+    .app-interface.is-live ~ .xbot-launcher {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
     }
 
     .xbot-panel {
@@ -1690,7 +1758,7 @@
   <div id="toast-container"></div>
 
   <button class="xbot-launcher" id="xbot-launcher" type="button" aria-expanded="false" aria-controls="xbot-panel">
-    Talk to Xbot
+    Consult Xbot
   </button>
 
   <section class="xbot-panel" id="xbot-panel" aria-label="Xbot support assistant">
@@ -1698,7 +1766,7 @@
       <div class="xbot-head">
         <div>
           <div class="xbot-title">Xbot</div>
-          <div class="xbot-subtitle">Instant support for subscriptions, payments, delivery, and policy questions.</div>
+          <div class="xbot-subtitle">A private concierge for payments, access, subscriptions, and calm support.</div>
         </div>
         <button class="xbot-close" id="xbot-close" type="button">Close</button>
       </div>
@@ -1716,8 +1784,7 @@
       <div class="xbot-message">
         <strong>Xbot</strong>
         <p>
-          Welcome. I can help with ebook access, payment questions, subscriptions, refunds, and what each product includes.
-          Ask in simple language and I’ll guide you instantly.
+          Welcome. Ask naturally. I’ll help with buying, access, subscriptions, refunds, and what each resource is designed to do.
         </p>
       </div>
     </div>
@@ -1726,7 +1793,7 @@
       <form class="xbot-form" id="xbot-form">
         <input id="xbot-input" type="text" name="message" placeholder="Ask Xbot about payments, delivery, or subscriptions" aria-label="Message Xbot">
         <div class="xbot-actions">
-          <div class="xbot-note">If something still needs follow-up, direct visitors to Instagram DM.</div>
+          <div class="xbot-note">Quiet support, immediate guidance, and a clear next step if anything needs follow-up.</div>
           <button class="xbot-send" type="submit">Send</button>
         </div>
       </form>
@@ -1871,6 +1938,8 @@
     };
 
     const XBOT_RESPONSES = {
+      purchase:
+        "To buy a resource, open the premium section, choose the ebook you want, click the Razorpay button, complete the payment on Razorpay, and then follow the access or delivery instructions shown after checkout. If payment succeeds but access does not arrive, keep the confirmation and use support again straight away.",
       ebook:
         "Each INNER VIRTUE X product is a digital resource designed for calm self-mastery. The page explains what is inside each ebook or journal, including clarity exercises, emotional regulation frameworks, and daily reflection prompts.",
       payment:
@@ -1882,11 +1951,12 @@
       delivery:
         "If a digital product is not delivered, the buyer should verify payment success, check the email used at checkout, review spam or promotions folders, and then continue to the official support channel listed on the site.",
       default:
-        "Xbot can help with product details, payment questions, subscriptions, delivery concerns, and refund policy. Try asking things like 'How do I get my ebook?' or 'What is your refund policy?'"
+        "I can help with buying, payments, ebook access, subscriptions, and refund policy. Ask me directly what you need and I’ll guide you."
     };
 
     const XBOT_PROMPTS = {
       ebook: "What do I receive after buying an ebook from INNER VIRTUE X?",
+      purchase: "How do I purchase an ebook from INNER VIRTUE X?",
       payment: "I need help with payment on INNER VIRTUE X.",
       refund: "What is your refund policy?",
       subscription: "How do email updates and subscriptions work?",
@@ -1964,6 +2034,16 @@
     const resolveXbotReply = (message) => {
       const text = message.toLowerCase();
 
+      if (
+        text.includes("purchase") ||
+        text.includes("buy") ||
+        text.includes("order") ||
+        text.includes("checkout") ||
+        text.includes("get it") ||
+        text.includes("how do i get")
+      ) {
+        return XBOT_RESPONSES.purchase;
+      }
       if (text.includes("refund") || text.includes("cancel")) {
         return XBOT_RESPONSES.refund;
       }
@@ -2047,7 +2127,7 @@
       const open = typeof nextState === "boolean" ? nextState : !xbotPanel.classList.contains("is-open");
       xbotPanel.classList.toggle("is-open", open);
       xbotLauncher.setAttribute("aria-expanded", String(open));
-      xbotLauncher.textContent = open ? "Hide Xbot" : "Talk to Xbot";
+      xbotLauncher.textContent = open ? "Hide Xbot" : "Consult Xbot";
 
       if (open) {
         xbotInput.focus();

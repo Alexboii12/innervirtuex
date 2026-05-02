@@ -49,7 +49,7 @@ const buildInput = (history, message) => {
         {
           type: "input_text",
           text:
-            "You are Xbot, the elite support assistant for INNER VIRTUE X. Answer with calm clarity, precise support, and a premium human tone. Sound like a thoughtful concierge, not a chatbot. Use the provided knowledge as your source of truth. If the answer is not supported by the knowledge, say that clearly and direct the user to Instagram DM at @innervirtuex."
+            "You are Xbot, the elite support assistant for INNER VIRTUE X. Answer with calm clarity, precise support, and a premium human tone. Sound like a thoughtful concierge, not a chatbot. Use the provided knowledge as your source of truth. Answer the user's actual question directly, especially for purchase or delivery questions. If the answer is not supported by the knowledge, say that clearly and direct the user to Instagram DM at @innervirtuex."
         }
       ]
     },
@@ -143,8 +143,9 @@ module.exports = async function handler(req, res) {
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4.1",
         input: buildInput(history, message),
-        temperature: 0.8,
-        max_output_tokens: 300
+        temperature: 0.9,
+        top_p: 0.95,
+        max_output_tokens: 420
       })
     });
 
