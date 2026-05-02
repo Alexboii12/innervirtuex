@@ -1833,6 +1833,9 @@
     let activeTimers = [];
     let overlayRunning = false;
     const xbotHistory = [];
+    const XBOT_MIN_THINK_MS = 1100;
+    const XBOT_TYPING_MIN_MS = 14;
+    const XBOT_TYPING_MAX_MS = 28;
 
     const wait = (ms) =>
       new Promise((resolve) => {
@@ -1904,6 +1907,27 @@
       wrapper.appendChild(body);
       xbotMessages.appendChild(wrapper);
       xbotMessages.scrollTop = xbotMessages.scrollHeight;
+      return {
+        wrapper,
+        body
+      };
+    };
+
+    const waitXbot = (ms) =>
+      new Promise((resolve) => {
+        window.setTimeout(resolve, ms);
+      });
+
+    const revealXbotText = async (text) => {
+      const nodes = appendXbotMessage("bot", "");
+      let output = "";
+
+      for (const char of text) {
+        output += char;
+        nodes.body.textContent = output;
+        xbotMessages.scrollTop = xbotMessages.scrollHeight;
+        await waitXbot(Math.floor(Math.random() * (XBOT_TYPING_MAX_MS - XBOT_TYPING_MIN_MS + 1)) + XBOT_TYPING_MIN_MS);
+      }
     };
 
     const setXbotPending = (pending) => {
@@ -1968,6 +1992,7 @@
 
       addXbotTyping();
       setXbotPending(true);
+      const startedAt = Date.now();
 
       try {
         const response = await fetch(CONFIG.xbotEndpoint, {
@@ -1982,22 +2007,32 @@
         });
 
         const result = await response.json().catch(() => ({}));
-        removeXbotTyping();
 
         if (!response.ok) {
           throw new Error(result.error || "Xbot could not respond right now");
         }
 
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < XBOT_MIN_THINK_MS) {
+          await waitXbot(XBOT_MIN_THINK_MS - elapsed);
+        }
+
+        removeXbotTyping();
         const reply = result.reply || XBOT_RESPONSES.default;
-        appendXbotMessage("bot", reply);
+        await revealXbotText(reply);
         xbotHistory.push({
           role: "assistant",
           content: reply
         });
       } catch (error) {
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < 700) {
+          await waitXbot(700 - elapsed);
+        }
+
         removeXbotTyping();
         const fallback = `${resolveXbotReply(message)} If you still need manual help, please continue through Instagram DM at @innervirtuex.`;
-        appendXbotMessage("bot", fallback);
+        await revealXbotText(fallback);
         xbotHistory.push({
           role: "assistant",
           content: fallback
