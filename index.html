@@ -971,9 +971,13 @@
       max-height: min(78vh, 700px);
       display: grid;
       grid-template-rows: auto auto 1fr auto;
-      background: rgba(8, 8, 8, 0.97);
+      background: #080808;
       border: 1px solid rgba(212, 175, 55, 0.22);
       backdrop-filter: blur(12px);
+      isolation: isolate;
+      box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.72),
+        0 0 0 1px rgba(212, 175, 55, 0.05);
       opacity: 0;
       visibility: hidden;
       pointer-events: none;
@@ -982,6 +986,7 @@
         opacity var(--ease-medium),
         transform var(--ease-medium),
         visibility var(--ease-medium);
+      overflow: hidden;
     }
 
     .xbot-panel.is-open {
@@ -995,6 +1000,9 @@
     .xbot-footer {
       padding: 1rem 1rem 0.95rem;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0a0a0a;
+      position: relative;
+      z-index: 2;
     }
 
     .xbot-footer {
@@ -1008,6 +1016,7 @@
       justify-content: space-between;
       gap: 0.8rem;
       align-items: flex-start;
+      min-width: 0;
     }
 
     .xbot-title {
@@ -1034,6 +1043,7 @@
       font-family: Arial, Helvetica, sans-serif;
       font-size: 0.92rem;
       line-height: 1.65;
+      overflow-wrap: anywhere;
     }
 
     .xbot-subtitle {
@@ -1046,6 +1056,9 @@
       gap: 0.6rem;
       flex-wrap: wrap;
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #090909;
+      position: relative;
+      z-index: 2;
     }
 
     .xbot-chip {
@@ -1078,13 +1091,18 @@
       gap: 0.85rem;
       align-content: start;
       min-height: 220px;
+      min-width: 0;
+      background: #080808;
+      position: relative;
+      z-index: 1;
     }
 
     .xbot-message {
       max-width: 92%;
       padding: 0.9rem 1rem;
       border: 1px solid rgba(255, 255, 255, 0.08);
-      background: rgba(255, 255, 255, 0.02);
+      background: #101010;
+      min-width: 0;
     }
 
     .xbot-message strong {
@@ -1105,14 +1123,23 @@
     .xbot-form {
       display: grid;
       gap: 0.7rem;
+      min-width: 0;
     }
 
     .xbot-form input {
       width: 100%;
+      min-width: 0;
+      max-width: 100%;
       padding: 0.9rem 1rem;
       border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.02);
+      background: #0b0b0b;
       color: var(--text);
+      position: relative;
+      z-index: 3;
+    }
+
+    .xbot-form input::placeholder {
+      color: rgba(240, 240, 240, 0.42);
     }
 
     .xbot-actions {
@@ -1120,6 +1147,8 @@
       justify-content: space-between;
       gap: 0.8rem;
       align-items: center;
+      flex-wrap: wrap;
+      min-width: 0;
     }
 
     .xbot-send {
@@ -1131,11 +1160,14 @@
       font-size: 0.68rem;
       letter-spacing: 0.18em;
       text-transform: uppercase;
+      flex-shrink: 0;
     }
 
     .xbot-note {
       font-size: 0.78rem;
       color: var(--text-dim);
+      flex: 1 1 220px;
+      min-width: 0;
     }
 
     .toast {
@@ -1313,6 +1345,14 @@
         right: 12px;
         bottom: 70px;
         width: calc(100vw - 24px);
+      }
+
+      .xbot-actions {
+        align-items: stretch;
+      }
+
+      .xbot-send {
+        width: 100%;
       }
     }
 
@@ -2040,7 +2080,12 @@
         text.includes("order") ||
         text.includes("checkout") ||
         text.includes("get it") ||
-        text.includes("how do i get")
+        text.includes("how do i get") ||
+        text.includes("how to purchase") ||
+        text.includes("how can i purchase") ||
+        text.includes("how do i purchase") ||
+        text.includes("how can i buy") ||
+        text.includes("where do i pay")
       ) {
         return XBOT_RESPONSES.purchase;
       }
