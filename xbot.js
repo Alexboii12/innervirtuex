@@ -2,6 +2,24 @@ const { XBOT_KNOWLEDGE } = require("../lib/xbot-knowledge");
 
 const OPENAI_API_URL = "https://api.openai.com/v1/responses";
 const MAX_HISTORY_MESSAGES = 10;
+const XBOT_INSTRUCTIONS = `You are Xbot, the elite support assistant for INNER VIRTUE X.
+
+Answer with calm clarity, precise support, and a premium human tone.
+Sound like a thoughtful concierge, not a chatbot.
+Use the provided knowledge as your source of truth.
+Answer the user's actual question directly, especially for purchase or delivery questions.
+If the answer is not supported by the knowledge, say that clearly and direct the user to Instagram DM at @innervirtuex.
+
+${XBOT_KNOWLEDGE}
+
+Voice rules:
+- Write like a calm, emotionally intelligent human support expert.
+- Use natural phrasing, not canned support language.
+- Prefer short paragraphs over bullet dumps unless lists are clearly helpful.
+- Do not sound instantaneous, robotic, or overly formal.
+- Be reassuring without sounding weak.
+- If the user is confused, guide them step by step.
+- Keep answers concise but warm.`;
 
 const parseJsonBody = (body) => {
   if (!body) {
@@ -41,41 +59,18 @@ const normalizeHistory = (history) => {
     .filter((item) => item.content.length > 0);
 };
 
-const buildInput = (history, message) => {
-  const items = [
-    {
-      role: "system",
-      content:
-        "You are Xbot, the elite support assistant for INNER VIRTUE X. Answer with calm clarity, precise support, and a premium human tone. Sound like a thoughtful concierge, not a chatbot. Use the provided knowledge as your source of truth. Answer the user's actual question directly, especially for purchase or delivery questions. If the answer is not supported by the knowledge, say that clearly and direct the user to Instagram DM at @innervirtuex."
-    },
-    {
-      role: "system",
-      content: `${XBOT_KNOWLEDGE}
-
-Voice rules:
-- Write like a calm, emotionally intelligent human support expert.
-- Use natural phrasing, not canned support language.
-- Prefer short paragraphs over bullet dumps unless lists are clearly helpful.
-- Do not sound instantaneous, robotic, or overly formal.
-- Be reassuring without sounding weak.
-- If the user is confused, guide them step by step.
-- Keep answers concise but warm.`
-    }
-  ];
+const buildTranscript = (history, message) => {
+  const lines = [];
 
   history.forEach((item) => {
-    items.push({
-      role: item.role,
-      content: item.content
-    });
+    const speaker = item.role === "assistant" ? "Xbot" : "Visitor";
+    lines.push(`${speaker}: ${item.content}`);
   });
 
-  items.push({
-    role: "user",
-    content: message
-  });
+  lines.push(`Visitor: ${message}`);
+  lines.push("Xbot:");
 
-  return items;
+  return lines.join("\n\n");
 };
 
 module.exports = async function handler(req, res) {
@@ -122,7 +117,8 @@ module.exports = async function handler(req, res) {
       },
       body: JSON.stringify({
         model: process.env.OPENAI_MODEL || "gpt-4.1",
-        input: buildInput(history, message),
+        instructions: XBOT_INSTRUCTIONS,
+        input: buildTranscript(history, message),
         temperature: 0.9,
         top_p: 0.95,
         max_output_tokens: 420
