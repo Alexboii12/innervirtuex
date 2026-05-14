@@ -947,6 +947,13 @@
       pointer-events: none;
     }
 
+    .xbot-launcher.is-hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(10px);
+    }
+
     .xbot-launcher:hover,
     .xbot-launcher:focus-visible {
       transform: translateY(-1px);
@@ -965,10 +972,12 @@
     .xbot-panel {
       position: fixed;
       right: 20px;
-      bottom: 84px;
+      bottom: 96px;
       z-index: 9998;
       width: min(420px, calc(100vw - 24px));
-      max-height: min(78vh, 700px);
+      height: min(72vh, 680px);
+      min-height: 560px;
+      max-height: calc(100vh - 132px);
       display: grid;
       grid-template-rows: auto auto 1fr auto;
       background: #080808;
@@ -1003,6 +1012,7 @@
       background: #0a0a0a;
       position: relative;
       z-index: 2;
+      flex: 0 0 auto;
     }
 
     .xbot-footer {
@@ -1090,7 +1100,7 @@
       display: grid;
       gap: 0.85rem;
       align-content: start;
-      min-height: 220px;
+      min-height: 0;
       min-width: 0;
       background: #080808;
       position: relative;
@@ -1343,8 +1353,11 @@
 
       .xbot-panel {
         right: 12px;
-        bottom: 70px;
+        bottom: 88px;
         width: calc(100vw - 24px);
+        height: min(74vh, 640px);
+        min-height: 500px;
+        max-height: calc(100vh - 112px);
       }
 
       .xbot-actions {
@@ -1353,6 +1366,10 @@
 
       .xbot-send {
         width: 100%;
+      }
+
+      .xbot-launcher {
+        bottom: 14px;
       }
     }
 
@@ -2173,6 +2190,7 @@
       xbotPanel.classList.toggle("is-open", open);
       xbotLauncher.setAttribute("aria-expanded", String(open));
       xbotLauncher.textContent = open ? "Hide Xbot" : "Consult Xbot";
+      xbotLauncher.classList.toggle("is-hidden", open);
 
       if (open) {
         xbotInput.focus();
