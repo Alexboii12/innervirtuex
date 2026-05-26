@@ -1,0 +1,2671 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INNER VIRTUE X | Sanctuary Interface</title>
+  <meta
+    name="description"
+    content="INNER VIRTUE X is a digital sanctuary for emotional mastery, resilience, and premium self-mastery resources."
+  >
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet"
+  >
+  <style>
+    :root {
+      --bg: #000000;
+      --panel-bg: rgba(10, 10, 10, 0.88);
+      --panel-soft: rgba(255, 255, 255, 0.03);
+      --line: rgba(255, 255, 255, 0.09);
+      --text: #f0f0f0;
+      --text-soft: rgba(240, 240, 240, 0.72);
+      --text-dim: rgba(240, 240, 240, 0.46);
+      --gold: #d4af37;
+      --cyan: #7ae7eb;
+      --violet: #7c5cff;
+      --success: #8de6a1;
+      --font-heading: "Cinzel", serif;
+      --font-body: "Inter", sans-serif;
+      --font-mono: "Courier New", Courier, monospace;
+      --ease-slow: 1.2s ease-in-out;
+      --ease-medium: 0.85s ease-in-out;
+      --shadow-glow: 0 0 24px rgba(212, 175, 55, 0.08);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: var(--font-body);
+      overflow: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+      transition: background-color 1.4s ease;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    button,
+    input {
+      color: inherit;
+      font: inherit;
+    }
+
+    button {
+      background: transparent;
+      border: 0;
+      cursor: pointer;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .screen {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      transition: opacity var(--ease-slow), visibility var(--ease-slow);
+    }
+
+    .screen.is-hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .gateway {
+      z-index: 2000;
+      display: grid;
+      place-items: center;
+    }
+
+    .entry-container {
+      text-align: center;
+      cursor: pointer;
+      display: grid;
+      place-items: center;
+      gap: 1rem;
+    }
+
+    .breathing-dot {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--text);
+      box-shadow: 0 0 18px rgba(240, 240, 240, 0.3);
+      animation: breathe 4s ease-in-out infinite;
+    }
+
+    .entry-text {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.36em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      padding-left: 0.36em;
+    }
+
+    .app-interface {
+      position: relative;
+      z-index: 10;
+      height: 100vh;
+      opacity: 0;
+      display: grid;
+      grid-template-rows: 64px 1fr 42px;
+      transition: opacity 1.8s ease;
+    }
+
+    .app-interface.is-live {
+      opacity: 1;
+    }
+
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 1.5rem;
+      border-bottom: 1px solid var(--line);
+      background: rgba(0, 0, 0, 0.84);
+      backdrop-filter: blur(10px);
+    }
+
+    .brand {
+      font-family: var(--font-heading);
+      font-size: 0.85rem;
+      letter-spacing: 0.42em;
+      text-transform: uppercase;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .brand span {
+      color: var(--gold);
+    }
+
+    .status-indicators {
+      display: flex;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .indicator::before {
+      content: "●";
+      color: var(--gold);
+      margin-right: 0.45rem;
+      animation: blink 2.2s ease-in-out infinite;
+    }
+
+    .app-main {
+      position: relative;
+      display: grid;
+      grid-template-columns: 290px minmax(0, 1fr);
+      min-height: 0;
+      overflow: hidden;
+    }
+
+    .sidebar {
+      position: relative;
+      z-index: 2;
+      border-right: 1px solid var(--line);
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      background: rgba(0, 0, 0, 0.76);
+      backdrop-filter: blur(8px);
+    }
+
+    .control-group {
+      display: grid;
+      gap: 0.7rem;
+    }
+
+    .control-group h3 {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+    }
+
+    .ui-btn,
+    .cta-btn,
+    .buy-btn,
+    .chip-btn,
+    .small-link {
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      transition:
+        background-color var(--ease-medium),
+        color var(--ease-medium),
+        border-color var(--ease-medium),
+        transform var(--ease-medium);
+    }
+
+    .ui-btn {
+      width: 100%;
+      padding: 0.85rem 0.95rem;
+      text-align: left;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+    }
+
+    .ui-btn:hover,
+    .ui-btn:focus-visible,
+    .cta-btn:hover,
+    .cta-btn:focus-visible,
+    .buy-btn:hover,
+    .buy-btn:focus-visible,
+    .chip-btn:hover,
+    .chip-btn:focus-visible,
+    .small-link:hover,
+    .small-link:focus-visible {
+      color: var(--gold);
+      border-color: rgba(212, 175, 55, 0.45);
+      background: rgba(212, 175, 55, 0.06);
+      outline: none;
+      transform: translateY(-1px);
+    }
+
+    .ui-btn.active,
+    .chip-btn.active {
+      color: #000;
+      background: var(--gold);
+      border-color: var(--gold);
+    }
+
+    .is-hidden-link {
+      display: none !important;
+    }
+
+    .mobile-controls {
+      display: none;
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      padding: 0.8rem 1rem;
+      background: rgba(0, 0, 0, 0.9);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(8px);
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+
+    .content-region {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      overflow: hidden;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(212, 175, 55, 0.08), transparent 22%),
+        radial-gradient(circle at 82% 22%, rgba(212, 175, 55, 0.06), transparent 20%),
+        linear-gradient(180deg, rgba(212, 175, 55, 0.04), transparent 22%),
+        var(--bg);
+    }
+
+    .content-region::before,
+    .content-region::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .content-region::before {
+      background:
+        radial-gradient(circle at 50% 18%, rgba(255, 244, 214, 0.07), transparent 14%),
+        linear-gradient(90deg, transparent 7%, rgba(212, 175, 55, 0.05) 7.2%, transparent 7.4%, transparent 92.6%, rgba(212, 175, 55, 0.05) 92.8%, transparent 93%),
+        linear-gradient(180deg, transparent 0 68%, rgba(212, 175, 55, 0.04) 68.2%, transparent 68.4%);
+      opacity: 0.95;
+    }
+
+    .content-region::after {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08), transparent 18%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%);
+      mask:
+        linear-gradient(to bottom, transparent 0, #000 14%, #000 100%);
+      opacity: 0.55;
+    }
+
+    #neural-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      opacity: 0.22;
+      z-index: 0;
+    }
+
+    .content-scroll {
+      position: relative;
+      z-index: 1;
+      height: 100%;
+      overflow-y: auto;
+      overflow-x: hidden;
+      padding: 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(212, 175, 55, 0.28) transparent;
+    }
+
+    .hero-shell {
+      min-height: calc(100vh - 106px);
+      display: grid;
+      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+      gap: 2rem;
+      align-items: center;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      border-bottom: 1px solid var(--line);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-shell::before {
+      content: "";
+      position: absolute;
+      right: -8%;
+      top: 6%;
+      width: 420px;
+      height: 420px;
+      border-radius: 50%;
+      border: 1px solid rgba(212, 175, 55, 0.12);
+      box-shadow:
+        0 0 0 56px rgba(212, 175, 55, 0.04),
+        0 0 0 112px rgba(212, 175, 55, 0.025);
+      opacity: 0.72;
+      pointer-events: none;
+    }
+
+    .hero-copy {
+      max-width: 760px;
+      display: grid;
+      gap: 1.2rem;
+    }
+
+    .eyebrow {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .hero-title {
+      font-family: var(--font-heading);
+      font-size: clamp(2.5rem, 5vw, 5.2rem);
+      line-height: 1.06;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-wrap: balance;
+    }
+
+    .hero-subtitle,
+    .section-copy,
+    .product-copy,
+    .quote-meta,
+    .article-copy,
+    .form-copy,
+    .footer-copy,
+    .hero-note,
+    .typewriter-panel p {
+      color: var(--text-soft);
+      line-height: 1.78;
+      font-size: 1rem;
+    }
+
+    .hero-actions,
+    .product-actions,
+    .join-form,
+    .insight-chips {
+      display: flex;
+      gap: 0.85rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .cta-btn,
+    .buy-btn,
+    .small-link,
+    .chip-btn {
+      padding: 0.9rem 1.1rem;
+      font-size: 0.78rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    .cta-btn.primary,
+    .buy-btn.primary {
+      background: var(--gold);
+      color: #000;
+      border-color: var(--gold);
+    }
+
+    .hero-note {
+      max-width: 620px;
+    }
+
+    .typewriter-panel {
+      justify-self: stretch;
+      background:
+        linear-gradient(180deg, rgba(255, 250, 235, 0.03), rgba(212, 175, 55, 0.04)),
+        rgba(255, 255, 255, 0.02);
+      border: 1px solid rgba(212, 175, 55, 0.12);
+      padding: clamp(1.25rem, 3vw, 2rem);
+      min-height: 340px;
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      gap: 1rem;
+      backdrop-filter: blur(12px);
+      box-shadow: var(--shadow-glow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .typewriter-panel::before {
+      content: "";
+      position: absolute;
+      inset: 14px;
+      border: 1px solid rgba(212, 175, 55, 0.08);
+      pointer-events: none;
+    }
+
+    .panel-top,
+    .panel-bottom {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-dim);
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+    }
+
+    #typewriter-target {
+      align-self: center;
+      font-family: var(--font-body);
+      font-size: clamp(1.02rem, 2vw, 1.26rem);
+      line-height: 1.95;
+      color: var(--text);
+      white-space: pre-wrap;
+      min-height: 210px;
+    }
+
+    .cursor {
+      display: inline-block;
+      width: 0.55ch;
+      color: var(--gold);
+      animation: blinkCursor 0.9s ease-in-out infinite;
+    }
+
+    .sections {
+      display: grid;
+      gap: 0;
+    }
+
+    .section-block {
+      position: relative;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .section-grid {
+      display: grid;
+      grid-template-columns: 260px minmax(0, 1fr);
+      gap: clamp(1.5rem, 4vw, 3rem);
+      align-items: start;
+    }
+
+    .section-label {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      padding-top: 0.4rem;
+    }
+
+    .section-body {
+      display: grid;
+      gap: 1.15rem;
+      max-width: 900px;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.8rem, 3.2vw, 3rem);
+      line-height: 1.12;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .principle-list,
+    .stats-grid,
+    .product-grid,
+    .article-grid {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .principle-list {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .principle-card,
+    .stat-card,
+    .product-card,
+    .article-card,
+    .quote-card,
+    .join-card,
+    .closing-card {
+      background: rgba(255, 255, 255, 0.025);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1.2rem;
+      backdrop-filter: blur(10px);
+    }
+
+    .principle-title,
+    .stat-title,
+    .product-title,
+    .article-title {
+      font-size: 0.9rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      margin-bottom: 0.7rem;
+    }
+
+    .principle-card p,
+    .stat-card p,
+    .product-card p,
+    .article-card p,
+    .quote-card p,
+    .join-card p,
+    .closing-card p {
+      color: var(--text-soft);
+      line-height: 1.72;
+      font-size: 0.96rem;
+    }
+
+    .product-outline {
+      display: grid;
+      gap: 0.55rem;
+      padding-left: 1.1rem;
+      color: var(--text-soft);
+      line-height: 1.65;
+      font-size: 0.92rem;
+    }
+
+    .product-outline li::marker {
+      color: var(--gold);
+    }
+
+    .product-preview-label {
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      margin-top: 0.2rem;
+    }
+
+    .stats-grid {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .stat-value {
+      display: block;
+      font-family: var(--font-heading);
+      font-size: 2rem;
+      color: var(--gold);
+      margin-bottom: 0.55rem;
+    }
+
+    .product-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .product-card {
+      display: grid;
+      gap: 1rem;
+      align-content: start;
+    }
+
+    .book-visual {
+      position: relative;
+      min-height: 240px;
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+      background:
+        radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 35%),
+        rgba(255, 255, 255, 0.02);
+      overflow: hidden;
+    }
+
+    .book-visual::after {
+      content: "";
+      position: absolute;
+      inset: 18px;
+      border: 1px solid rgba(212, 175, 55, 0.14);
+      pointer-events: none;
+    }
+
+    .book-cover {
+      position: relative;
+      width: min(170px, 72%);
+      aspect-ratio: 3 / 4.2;
+      padding: 1.05rem 0.95rem;
+      display: grid;
+      align-content: space-between;
+      background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(212, 175, 55, 0.04)),
+        #060606;
+      border: 1px solid rgba(212, 175, 55, 0.24);
+      box-shadow:
+        14px 18px 35px rgba(0, 0, 0, 0.45),
+        0 0 20px rgba(212, 175, 55, 0.05);
+    }
+
+    .book-cover::before {
+      content: "";
+      position: absolute;
+      left: 0.6rem;
+      top: 0.5rem;
+      bottom: 0.5rem;
+      width: 2px;
+      background: linear-gradient(180deg, rgba(212, 175, 55, 0.45), rgba(212, 175, 55, 0.08));
+    }
+
+    .book-cover.gold-wave::after,
+    .book-cover.river-line::after,
+    .book-cover.observer-grid::after {
+      content: "";
+      position: absolute;
+      inset: auto 0.9rem 1.05rem 0.9rem;
+      height: 54px;
+      opacity: 0.44;
+      pointer-events: none;
+    }
+
+    .book-cover.gold-wave::after {
+      background:
+        radial-gradient(circle at 20% 55%, rgba(212, 175, 55, 0.45), transparent 28%),
+        radial-gradient(circle at 55% 45%, rgba(212, 175, 55, 0.25), transparent 22%),
+        radial-gradient(circle at 82% 62%, rgba(212, 175, 55, 0.32), transparent 24%);
+    }
+
+    .book-cover.river-line::after {
+      background:
+        linear-gradient(110deg, transparent 0 12%, rgba(212, 175, 55, 0.2) 18%, transparent 24% 36%, rgba(212, 175, 55, 0.22) 42%, transparent 49% 64%, rgba(212, 175, 55, 0.18) 70%, transparent 76%);
+    }
+
+    .book-cover.observer-grid::after {
+      background:
+        linear-gradient(rgba(212, 175, 55, 0.16) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(212, 175, 55, 0.16) 1px, transparent 1px);
+      background-size: 15px 15px;
+    }
+
+    .cover-kicker {
+      font-family: var(--font-mono);
+      font-size: 0.58rem;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: rgba(212, 175, 55, 0.78);
+      margin-left: 0.45rem;
+    }
+
+    .cover-title {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      line-height: 1.2;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text);
+      margin-left: 0.45rem;
+      text-wrap: balance;
+    }
+
+    .cover-footer {
+      font-family: var(--font-mono);
+      font-size: 0.56rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: rgba(240, 240, 240, 0.54);
+      margin-left: 0.45rem;
+    }
+
+    .product-kicker,
+    .price-row,
+    .meta-strip,
+    .pill {
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .price {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      color: var(--gold);
+      letter-spacing: 0.05em;
+    }
+
+    .quote-card {
+      max-width: 760px;
+      gap: 0.8rem;
+      display: grid;
+    }
+
+    .quote-card blockquote {
+      font-family: var(--font-heading);
+      font-size: clamp(1.5rem, 2.8vw, 2.25rem);
+      line-height: 1.5;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+    }
+
+    .join-card {
+      display: grid;
+      gap: 1rem;
+      max-width: 760px;
+    }
+
+    .join-form input {
+      flex: 1 1 280px;
+      min-width: 0;
+      padding: 0.95rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+    }
+
+    .join-form input::placeholder {
+      color: var(--text-dim);
+    }
+
+    .article-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .article-card {
+      display: grid;
+      gap: 0.85rem;
+      align-content: start;
+    }
+
+    .footer-bar {
+      border-top: 1px solid var(--line);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      padding: 0 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 0.66rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+      background: rgba(0, 0, 0, 0.84);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .overlay {
+      z-index: 5000;
+      opacity: 0;
+      pointer-events: none;
+      display: grid;
+      place-items: center;
+      padding: 1.5rem;
+    }
+
+    .overlay.is-active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .overlay-shell {
+      width: min(920px, 100%);
+      min-height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 1.5rem;
+    }
+
+    .overlay-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: center;
+    }
+
+    .overlay-title {
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-dim);
+    }
+
+    .audio-toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.72rem 0.9rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.03);
+      transition:
+        border-color var(--ease-medium),
+        color var(--ease-medium),
+        background-color var(--ease-medium);
+    }
+
+    .audio-toggle:hover,
+    .audio-toggle:focus-visible {
+      border-color: rgba(212, 175, 55, 0.4);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.06);
+      outline: none;
+    }
+
+    .audio-icon {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: var(--gold);
+    }
+
+    .audio-label {
+      font-family: var(--font-mono);
+      font-size: 0.64rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+
+    .experience {
+      display: grid;
+      place-items: center;
+      padding: 1rem;
+    }
+
+    .experience-copy {
+      max-width: 760px;
+      font-size: clamp(1.2rem, 2.3vw, 1.8rem);
+      line-height: 1.95;
+      font-weight: 300;
+      color: var(--text);
+      opacity: 1;
+      transition: opacity 1.5s ease-in-out;
+      text-wrap: balance;
+    }
+
+    .experience-copy.is-fading {
+      opacity: 0;
+    }
+
+    #neural-drop-overlay {
+      position: fixed;
+      inset: 0;
+      background: #ffffff;
+      opacity: 0;
+      pointer-events: none;
+      z-index: 4999;
+      mix-blend-mode: overlay;
+    }
+
+    .drop-active {
+      animation: neuralDropFlash 0.8s ease-out forwards;
+    }
+
+    #toast-container {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 9999;
+      display: grid;
+      gap: 0.6rem;
+    }
+
+    .xbot-launcher {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      z-index: 9998;
+      min-width: 148px;
+      padding: 0.95rem 1.1rem;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      background: rgba(9, 9, 9, 0.92);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      backdrop-filter: blur(10px);
+      transition:
+        transform var(--ease-medium),
+        border-color var(--ease-medium),
+        color var(--ease-medium),
+        background-color var(--ease-medium),
+        opacity var(--ease-medium),
+        visibility var(--ease-medium);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    .xbot-launcher.is-hidden {
+      opacity: 0 !important;
+      visibility: hidden !important;
+      pointer-events: none !important;
+      transform: translateY(10px);
+    }
+
+    .xbot-launcher:hover,
+    .xbot-launcher:focus-visible {
+      transform: translateY(-1px);
+      border-color: rgba(212, 175, 55, 0.5);
+      color: var(--gold);
+      background: rgba(16, 16, 16, 0.96);
+      outline: none;
+    }
+
+    .app-interface.is-live ~ .xbot-launcher {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+    }
+
+    .xbot-panel {
+      position: fixed;
+      right: 20px;
+      bottom: 96px;
+      z-index: 9998;
+      width: min(420px, calc(100vw - 24px));
+      height: min(72vh, 680px);
+      min-height: 560px;
+      max-height: calc(100vh - 132px);
+      display: grid;
+      grid-template-rows: auto auto 1fr auto;
+      background: #080808;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      backdrop-filter: blur(12px);
+      isolation: isolate;
+      box-shadow:
+        0 24px 80px rgba(0, 0, 0, 0.72),
+        0 0 0 1px rgba(212, 175, 55, 0.05);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transform: translateY(10px);
+      transition:
+        opacity var(--ease-medium),
+        transform var(--ease-medium),
+        visibility var(--ease-medium);
+      overflow: hidden;
+    }
+
+    .xbot-panel.is-open {
+      opacity: 1;
+      visibility: visible;
+      pointer-events: auto;
+      transform: translateY(0);
+    }
+
+    .xbot-top,
+    .xbot-footer {
+      padding: 1rem 1rem 0.95rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #0a0a0a;
+      position: relative;
+      z-index: 2;
+      flex: 0 0 auto;
+    }
+
+    .xbot-footer {
+      border-bottom: 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding-top: 0.9rem;
+    }
+
+    .xbot-head {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: flex-start;
+      min-width: 0;
+    }
+
+    .xbot-title {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text);
+    }
+
+    .xbot-close {
+      color: var(--text-dim);
+      font-family: var(--font-mono);
+      font-size: 0.72rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding-top: 0.1rem;
+    }
+
+    .xbot-subtitle,
+    .xbot-note,
+    .xbot-message p {
+      color: var(--text-soft);
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      overflow-wrap: anywhere;
+    }
+
+    .xbot-subtitle {
+      margin-top: 0.45rem;
+    }
+
+    .xbot-quick {
+      padding: 0.9rem 1rem 1rem;
+      display: flex;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      background: #090909;
+      position: relative;
+      z-index: 2;
+    }
+
+    .xbot-chip {
+      padding: 0.65rem 0.75rem;
+      border: 1px solid rgba(212, 175, 55, 0.18);
+      background: rgba(255, 255, 255, 0.02);
+      color: var(--text);
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      transition:
+        border-color var(--ease-medium),
+        color var(--ease-medium),
+        background-color var(--ease-medium);
+    }
+
+    .xbot-chip:hover,
+    .xbot-chip:focus-visible {
+      border-color: rgba(212, 175, 55, 0.42);
+      color: var(--gold);
+      background: rgba(212, 175, 55, 0.06);
+      outline: none;
+    }
+
+    .xbot-messages {
+      overflow-y: auto;
+      padding: 1rem;
+      display: grid;
+      gap: 0.85rem;
+      align-content: start;
+      min-height: 0;
+      min-width: 0;
+      background: #080808;
+      position: relative;
+      z-index: 1;
+    }
+
+    .xbot-message {
+      max-width: 92%;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      background: #101010;
+      min-width: 0;
+    }
+
+    .xbot-message strong {
+      display: block;
+      margin-bottom: 0.4rem;
+      font-family: var(--font-mono);
+      font-size: 0.62rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+
+    .xbot-message.user {
+      margin-left: auto;
+      border-color: rgba(212, 175, 55, 0.18);
+    }
+
+    .xbot-form {
+      display: grid;
+      gap: 0.7rem;
+      min-width: 0;
+    }
+
+    .xbot-form input {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+      padding: 0.9rem 1rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      background: #0b0b0b;
+      color: var(--text);
+      position: relative;
+      z-index: 3;
+    }
+
+    .xbot-form input::placeholder {
+      color: rgba(240, 240, 240, 0.42);
+    }
+
+    .xbot-actions {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.8rem;
+      align-items: center;
+      flex-wrap: wrap;
+      min-width: 0;
+    }
+
+    .xbot-send {
+      padding: 0.8rem 1rem;
+      border: 1px solid rgba(212, 175, 55, 0.34);
+      background: var(--gold);
+      color: #050505;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      flex-shrink: 0;
+    }
+
+    .xbot-note {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .toast {
+      border-left: 3px solid var(--gold);
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold);
+      padding: 0.85rem 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      letter-spacing: 0.08em;
+      animation: slideIn 0.45s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .sr-only {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      padding: 0;
+      margin: -1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      border: 0;
+    }
+
+    @keyframes breathe {
+      0%,
+      100% {
+        transform: scale(1);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: scale(1.45);
+        opacity: 1;
+        box-shadow: 0 0 36px rgba(240, 240, 240, 0.45);
+      }
+    }
+
+    @keyframes blink {
+      50% {
+        opacity: 0.28;
+      }
+    }
+
+    @keyframes blinkCursor {
+      0%,
+      100% {
+        opacity: 1;
+      }
+
+      50% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes neuralDropFlash {
+      0% {
+        opacity: 0;
+        transform: scale(0.92);
+        filter: blur(20px);
+      }
+
+      20% {
+        opacity: 0.8;
+      }
+
+      50% {
+        opacity: 0.42;
+        filter: blur(0);
+      }
+
+      100% {
+        opacity: 0;
+        transform: scale(1.08);
+        filter: blur(28px);
+      }
+    }
+
+    @media (max-width: 1100px) {
+      .hero-shell,
+      .section-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .stats-grid,
+      .product-grid,
+      .article-grid,
+      .principle-list {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 860px) {
+      body {
+        overflow: hidden;
+      }
+
+      .app-main {
+        grid-template-columns: 1fr;
+      }
+
+      .sidebar {
+        display: none;
+      }
+
+      .mobile-controls {
+        display: flex;
+      }
+
+      .hero-shell {
+        min-height: auto;
+        padding-top: 1.2rem;
+      }
+
+      .typewriter-panel {
+        min-height: 280px;
+      }
+
+      .footer-bar {
+        padding: 0 1rem;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .site-header,
+      .footer-bar {
+        padding-left: 1rem;
+        padding-right: 1rem;
+      }
+
+      .status-indicators {
+        display: none;
+      }
+
+      .stats-grid,
+      .product-grid,
+      .article-grid,
+      .principle-list {
+        grid-template-columns: 1fr;
+      }
+
+      .hero-title {
+        font-size: 2.2rem;
+      }
+
+      .section-title {
+        font-size: 1.65rem;
+      }
+
+      .join-form {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .xbot-launcher {
+        right: 12px;
+        bottom: 12px;
+      }
+
+      .xbot-panel {
+        right: 12px;
+        bottom: 88px;
+        width: calc(100vw - 24px);
+        height: min(74vh, 640px);
+        min-height: 500px;
+        max-height: calc(100vh - 112px);
+      }
+
+      .xbot-actions {
+        align-items: stretch;
+      }
+
+      .xbot-send {
+        width: 100%;
+      }
+
+      .xbot-launcher {
+        bottom: 14px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="screen gateway" id="gateway">
+    <button class="entry-container" id="entry-trigger" type="button" aria-describedby="entry-text">
+      <span class="breathing-dot" aria-hidden="true"></span>
+      <span class="entry-text" id="entry-text">Enter the Void</span>
+    </button>
+  </div>
+
+  <div class="app-interface" id="app-interface">
+    <header class="site-header">
+      <div class="brand">INNER <span>VIRTUE</span> X</div>
+      <div class="status-indicators" aria-label="System status">
+        <span class="indicator">System Online</span>
+        <span class="indicator">Premium Library Active</span>
+        <span class="indicator">@innervirtuex</span>
+      </div>
+    </header>
+
+    <main class="app-main">
+      <aside class="sidebar">
+        <div class="control-group">
+          <h3>Audio Control</h3>
+          <button id="btn-audio" class="ui-btn" type="button">[ Unmute Audio ]</button>
+        </div>
+
+        <div class="control-group">
+          <h3>System Modules</h3>
+          <button class="ui-btn module-btn active" type="button" data-module="intro">> Welcome Sequence</button>
+          <button class="ui-btn module-btn" type="button" data-module="core">> Core Principles</button>
+          <button class="ui-btn module-btn" type="button" data-module="manifesto">> The Manifesto</button>
+          <button class="ui-btn module-btn" type="button" data-module="access">> Premium Access</button>
+        </div>
+
+        <div class="control-group">
+          <h3>Protocols</h3>
+          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 01: THE ANCHOR">> Protocol 01</button>
+          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 02: THE STILL RIVER">> Protocol 02</button>
+          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 03: THE OBSERVER">> Protocol 03</button>
+        </div>
+
+        <div class="control-group">
+          <h3>Diagnostics</h3>
+          <button id="btn-drop" class="ui-btn" type="button">> Trigger Neural Drop</button>
+        </div>
+      </aside>
+
+      <section class="content-region">
+        <canvas id="neural-canvas"></canvas>
+
+        <div class="content-scroll" id="content-scroll">
+          <div class="mobile-controls">
+            <button class="chip-btn module-btn active" type="button" data-module="intro">Welcome</button>
+            <button class="chip-btn module-btn" type="button" data-module="core">Principles</button>
+            <button class="chip-btn module-btn" type="button" data-module="manifesto">Manifesto</button>
+            <button class="chip-btn module-btn" type="button" data-module="access">Premium</button>
+            <button class="chip-btn protocol-btn" type="button" data-protocol="PROTOCOL 01: THE ANCHOR">Drop</button>
+          </div>
+
+          <section class="hero-shell" id="top">
+            <div class="hero-copy">
+              <span class="eyebrow">Digital Sanctuary for Self-Mastery</span>
+              <h1 class="hero-title">Master Your Mind. Live With Clarity.</h1>
+              <p class="hero-subtitle">
+                INNER VIRTUE X is a premium sanctuary for people who want calm emotional control, durable
+                resilience, and disciplined inner peace in daily life.
+              </p>
+              <div class="hero-actions">
+                <a class="cta-btn primary" href="#premium">Explore eBooks</a>
+                <a class="cta-btn" href="#join">Start Your Journey</a>
+              </div>
+              <p class="hero-note">
+                Rooted in Stoicism, contemplative philosophy, and practical self-observation, this experience
+                is designed to slow the mind down, build trust, and guide visitors toward premium digital
+                resources that create real inner transformation.
+              </p>
+              <div class="insight-chips">
+                <span class="pill">Awareness over reaction</span>
+                <span class="pill">Discipline over impulse</span>
+                <span class="pill">Inner peace over chaos</span>
+              </div>
+            </div>
+
+            <div class="typewriter-panel">
+              <div class="panel-top">
+                <span>Sanctuary Interface</span>
+                <span>Phase 02 Live</span>
+              </div>
+              <div id="typewriter-target" aria-live="polite"></div>
+              <div class="panel-bottom">
+                <span>@innervirtuex</span>
+                <span><span class="cursor">|</span></span>
+              </div>
+            </div>
+          </section>
+
+          <div class="sections">
+            <section class="section-block" id="philosophy">
+              <div class="section-grid">
+                <div class="section-label">Philosophy</div>
+                <div class="section-body">
+                  <h2 class="section-title">A Quieter Path to Strength</h2>
+                  <p class="section-copy">
+                    INNER VIRTUE X exists for people who are tired of noise, reaction, and emotional exhaustion.
+                    It is a modern philosophy brand for those who want to become more aware, more disciplined,
+                    and more internally stable.
+                  </p>
+                  <p class="section-copy">
+                    Inspired by Epictetus, Rumi, and Jiddu Krishnamurti, the brand translates timeless insight
+                    into practical mental training for ordinary life. The work here is not about escape. It is
+                    about learning to meet reality with clarity, steadiness, and self-respect.
+                  </p>
+                  <div class="principle-list">
+                    <article class="principle-card">
+                      <h3 class="principle-title">Awareness Over Reaction</h3>
+                      <p>Observe the mind before it carries you away. Space becomes your first form of power.</p>
+                    </article>
+                    <article class="principle-card">
+                      <h3 class="principle-title">Discipline Over Emotion</h3>
+                      <p>Use deliberate practice to respond from principle instead of temporary internal weather.</p>
+                    </article>
+                    <article class="principle-card">
+                      <h3 class="principle-title">Inner Peace Over Chaos</h3>
+                      <p>Stability is cultivated through attention, not found in the changing world outside you.</p>
+                    </article>
+                    <article class="principle-card">
+                      <h3 class="principle-title">Truth Over Illusion</h3>
+                      <p>See clearly. Name reality honestly. Clarity becomes lighter when nothing false is defended.</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="benefits">
+              <div class="section-grid">
+                <div class="section-label">Transformation</div>
+                <div class="section-body">
+                  <h2 class="section-title">What Your Inner Life Begins to Build</h2>
+                  <p class="section-copy">
+                    Every resource inside INNER VIRTUE X is designed to feel practical, quiet, and applicable.
+                    The purpose is not motivation. The purpose is inner order.
+                  </p>
+                  <div class="stats-grid">
+                    <article class="stat-card">
+                      <span class="stat-value">01</span>
+                      <h3 class="stat-title">Control Your Thoughts</h3>
+                      <p>Learn how to separate awareness from mental noise and direct attention with intention.</p>
+                    </article>
+                    <article class="stat-card">
+                      <span class="stat-value">02</span>
+                      <h3 class="stat-title">Master Emotional Reactions</h3>
+                      <p>Build the capacity to pause, process, and respond without emotional spillover.</p>
+                    </article>
+                    <article class="stat-card">
+                      <span class="stat-value">03</span>
+                      <h3 class="stat-title">Build Daily Discipline</h3>
+                      <p>Create routines that strengthen self-trust and reduce dependence on mood.</p>
+                    </article>
+                    <article class="stat-card">
+                      <span class="stat-value">04</span>
+                      <h3 class="stat-title">Develop Resilience</h3>
+                      <p>Remain steady under pressure and return to clarity faster when life becomes heavy.</p>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="premium">
+              <div class="section-grid">
+                <div class="section-label">Premium Library</div>
+                <div class="section-body">
+                  <h2 class="section-title">Digital Tools for Real Inner Transformation</h2>
+                  <p class="section-copy">
+                    These are premium eBooks and guided resources created to help people move from overthinking
+                    into observation, from reactivity into emotional discipline, and from drifting into daily structure.
+                  </p>
+                  <div class="product-grid">
+                    <article class="product-card">
+                      <div class="book-visual" aria-hidden="true">
+                        <div class="book-cover gold-wave">
+                          <div class="cover-kicker">Inner Virtue X</div>
+                          <div class="cover-title">Control Your Mind</div>
+                          <div class="cover-footer">Mental Clarity Edition</div>
+                        </div>
+                      </div>
+                      <div class="meta-strip">Premium eBook</div>
+                      <h3 class="product-title">Control Your Mind</h3>
+                      <p class="product-copy">
+                        A focused guide for people who feel mentally crowded, distracted, or trapped in repeated
+                        overthinking. This eBook teaches how to notice thought patterns early, separate awareness
+                        from noise, and return the mind to steadiness.
+                      </p>
+                      <div class="product-preview-label">Inside the eBook</div>
+                      <ul class="product-outline">
+                        <li>How overthinking forms and why awareness must come before control.</li>
+                        <li>Simple mental reset practices to stop spirals before they take over your day.</li>
+                        <li>Frameworks for directing attention, reducing internal noise, and thinking with clarity.</li>
+                      </ul>
+                      <div class="price-row">
+                        <span class="price">₹499</span>
+                      </div>
+                      <p class="product-copy">
+                        Ideal for deep thinkers, anxious minds, and anyone who wants calm focus instead of constant
+                        mental friction.
+                      </p>
+                      <div class="product-actions">
+                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="controlMind" href="#checkout">Buy with Razorpay</a>
+                        <a class="small-link payment-link" data-provider="stripe" data-product="controlMind" href="#checkout">Pay with Stripe</a>
+                        <a class="small-link" href="#insights">Preview Insight</a>
+                      </div>
+                    </article>
+
+                    <article class="product-card">
+                      <div class="book-visual" aria-hidden="true">
+                        <div class="book-cover river-line">
+                          <div class="cover-kicker">Inner Virtue X</div>
+                          <div class="cover-title">Emotional Discipline Guide</div>
+                          <div class="cover-footer">Calm Under Pressure</div>
+                        </div>
+                      </div>
+                      <div class="meta-strip">Transformation Guide</div>
+                      <h3 class="product-title">Emotional Discipline Guide</h3>
+                      <p class="product-copy">
+                        A practical emotional mastery guide for people who want to respond more wisely under pressure.
+                        It helps readers understand triggers, create space before reaction, and build emotional steadiness
+                        without becoming cold or disconnected.
+                      </p>
+                      <div class="product-preview-label">Inside the eBook</div>
+                      <ul class="product-outline">
+                        <li>How to identify emotional triggers before they become behaviors you regret.</li>
+                        <li>Response frameworks for anger, anxiety, overreaction, and emotional exhaustion.</li>
+                        <li>Practices for calm communication, better self-control, and mature emotional strength.</li>
+                      </ul>
+                      <div class="price-row">
+                        <span class="price">₹699</span>
+                      </div>
+                      <p class="product-copy">
+                        Built for calm under pressure, stronger boundaries, and the kind of self-command that feels
+                        quiet, clean, and real.
+                      </p>
+                      <div class="product-actions">
+                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="emotionalDiscipline" href="#checkout">Buy with Razorpay</a>
+                        <a class="small-link payment-link" data-provider="stripe" data-product="emotionalDiscipline" href="#checkout">Pay with Stripe</a>
+                        <a class="small-link" href="#join">Join Inner Circle</a>
+                      </div>
+                    </article>
+
+                    <article class="product-card">
+                      <div class="book-visual" aria-hidden="true">
+                        <div class="book-cover observer-grid">
+                          <div class="cover-kicker">Inner Virtue X</div>
+                          <div class="cover-title">Daily Stoic Resilience Journal</div>
+                          <div class="cover-footer">Daily Reflection Practice</div>
+                        </div>
+                      </div>
+                      <div class="meta-strip">Daily Practice Tool</div>
+                      <h3 class="product-title">Daily Stoic Resilience Journal</h3>
+                      <p class="product-copy">
+                        A reflective digital journal designed to help readers build resilience through small, consistent
+                        acts of attention. It gives structure to daily reflection so discipline becomes lived, not just admired.
+                      </p>
+                      <div class="product-preview-label">Inside the eBook</div>
+                      <ul class="product-outline">
+                        <li>Daily prompts for reflection, emotional review, and intentional correction.</li>
+                        <li>Stoic-inspired questions to strengthen perspective during stress and uncertainty.</li>
+                        <li>Weekly reset pages for discipline, gratitude, clarity, and resilient thinking.</li>
+                      </ul>
+                      <div class="price-row">
+                        <span class="price">₹799</span>
+                      </div>
+                      <p class="product-copy">
+                        Designed for instant digital access, consistent journaling, and a stronger inner structure over time.
+                      </p>
+                      <div class="product-actions">
+                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="resilienceJournal" href="#checkout">Buy with Razorpay</a>
+                        <a class="small-link payment-link" data-provider="stripe" data-product="resilienceJournal" href="#checkout">Pay with Stripe</a>
+                        <a class="small-link" href="#philosophy">Read Philosophy</a>
+                      </div>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="insights">
+              <div class="section-grid">
+                <div class="section-label">Featured Reflection</div>
+                <div class="section-body">
+                  <div class="quote-card">
+                    <blockquote>
+                      You may not control every event around you, but you can learn to meet each moment with a
+                      clearer mind and a steadier self.
+                    </blockquote>
+                    <p class="quote-meta">Inner mastery begins where reaction ends.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="blog">
+              <div class="section-grid">
+                <div class="section-label">Learning Archive</div>
+                <div class="section-body">
+                  <h2 class="section-title">Thoughtful Writing for Everyday Clarity</h2>
+                  <p class="section-copy">
+                    Each article is written to reduce confusion, deepen awareness, and give the reader something
+                    usable immediately.
+                  </p>
+                  <div class="article-grid">
+                    <article class="article-card">
+                      <div class="meta-strip">Overthinking</div>
+                      <h3 class="article-title">How to Stop Overthinking Without Silencing Yourself</h3>
+                      <p class="article-copy">
+                        Learn how to create space in the mind without becoming passive or disconnected from thought.
+                      </p>
+                      <a class="small-link" href="#join">Read Article</a>
+                    </article>
+                    <article class="article-card">
+                      <div class="meta-strip">Emotional Control</div>
+                      <h3 class="article-title">Emotional Discipline Is Not Suppression</h3>
+                      <p class="article-copy">
+                        Discover the difference between reacting less and feeling less, and why maturity requires depth.
+                      </p>
+                      <a class="small-link" href="#join">Read Article</a>
+                    </article>
+                    <article class="article-card">
+                      <div class="meta-strip">Self-Discipline</div>
+                      <h3 class="article-title">The Quiet Power of Daily Structure</h3>
+                      <p class="article-copy">
+                        See why discipline is a form of protection for your attention, energy, and long-term peace.
+                      </p>
+                      <a class="small-link" href="#join">Read Article</a>
+                    </article>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="join">
+              <div class="section-grid">
+                <div class="section-label">Inner Circle</div>
+                <div class="section-body">
+                  <div class="join-card">
+                    <h2 class="section-title">Receive Weekly Wisdom for a Clearer Mind</h2>
+                    <p class="form-copy">
+                      Join the INNER VIRTUE X community for weekly reflections on emotional mastery, discipline,
+                      resilience, and inner peace. Quiet insight. No noise. Signups are sent to your private mailing list
+                      through the site backend.
+                    </p>
+                    <form class="join-form" id="subscribe-form">
+                      <input
+                        id="email-input"
+                        type="email"
+                        name="email"
+                        placeholder="Enter your email"
+                        aria-label="Email address"
+                        required
+                      >
+                      <button class="cta-btn primary" type="submit">Subscribe</button>
+                    </form>
+                    <p class="form-copy">Weekly guidance for self-mastery. Unsubscribe anytime.</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="section-block" id="checkout">
+              <div class="section-grid">
+                <div class="section-label">Premium Access</div>
+                <div class="section-body">
+                  <div class="closing-card">
+                    <h2 class="section-title">Ready to Begin the Work Within</h2>
+                    <p class="footer-copy">
+                      Build trust, then convert. That is the rhythm of INNER VIRTUE X. Offer visitors a calm
+                      journey, then invite them into premium resources through simple checkout pathways.
+                    </p>
+                    <p class="footer-copy">
+                      Razorpay is the launch-first checkout path for INNER VIRTUE X. Stripe can stay as a secondary
+                      option, but your primary conversion flow should lead Indian buyers through Razorpay first.
+                    </p>
+                    <div class="hero-actions">
+                      <a class="cta-btn primary provider-link" data-provider="razorpay" href="https://example.com" target="_blank" rel="noreferrer">Open Razorpay Checkout</a>
+                      <a class="cta-btn provider-link" data-provider="stripe" href="https://example.com" target="_blank" rel="noreferrer">Open Stripe Checkout</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer-bar">
+      <span>Clarity Begins Within</span>
+      <div class="footer-links">
+        <a href="#philosophy">Philosophy</a>
+        <a href="#premium">eBooks</a>
+        <a href="#blog">Insights</a>
+        <a href="#join">@innervirtuex</a>
+        <a href="privacy-policy.html">Privacy</a>
+        <a href="terms-and-conditions.html">Terms</a>
+        <a href="contact.html">Contact</a>
+        <a href="refund-policy.html">Refunds</a>
+      </div>
+    </footer>
+  </div>
+
+  <section class="screen overlay is-hidden" id="experience-overlay" aria-live="polite" aria-atomic="true">
+    <div class="overlay-shell">
+      <div class="overlay-top">
+        <span class="overlay-title" id="overlay-title">Neural-Drop</span>
+        <button class="audio-toggle" id="audio-toggle" type="button" aria-pressed="false">
+          <span class="audio-icon" aria-hidden="true"></span>
+          <span class="audio-label">Unmute to experience</span>
+        </button>
+      </div>
+      <div class="experience">
+        <p class="experience-copy" id="experience-copy">
+          <span class="sr-only">Neural-Drop sequence begins.</span>
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <div id="neural-drop-overlay"></div>
+  <div id="toast-container"></div>
+
+  <button class="xbot-launcher" id="xbot-launcher" type="button" aria-expanded="false" aria-controls="xbot-panel">
+    Consult Xbot
+  </button>
+
+  <section class="xbot-panel" id="xbot-panel" aria-label="Xbot support assistant">
+    <div class="xbot-top">
+      <div class="xbot-head">
+        <div>
+          <div class="xbot-title">Xbot</div>
+          <div class="xbot-subtitle">A private concierge for payments, access, subscriptions, and calm support.</div>
+        </div>
+        <button class="xbot-close" id="xbot-close" type="button">Close</button>
+      </div>
+    </div>
+
+    <div class="xbot-quick">
+      <button class="xbot-chip" type="button" data-xbot-topic="ebook">What do I get?</button>
+      <button class="xbot-chip" type="button" data-xbot-topic="payment">Payment help</button>
+      <button class="xbot-chip" type="button" data-xbot-topic="refund">Refund policy</button>
+      <button class="xbot-chip" type="button" data-xbot-topic="subscription">Email support</button>
+      <button class="xbot-chip" type="button" data-xbot-topic="delivery">Delivery issue</button>
+    </div>
+
+    <div class="xbot-messages" id="xbot-messages">
+      <div class="xbot-message">
+        <strong>Xbot</strong>
+        <p>
+          Welcome. Ask naturally. I’ll help with buying, access, subscriptions, refunds, and what each resource is designed to do.
+        </p>
+      </div>
+    </div>
+
+    <div class="xbot-footer">
+      <form class="xbot-form" id="xbot-form">
+        <input id="xbot-input" type="text" name="message" placeholder="Ask Xbot about payments, delivery, or subscriptions" aria-label="Message Xbot">
+        <div class="xbot-actions">
+          <div class="xbot-note">Quiet support, immediate guidance, and a clear next step if anything needs follow-up.</div>
+          <button class="xbot-send" type="submit">Send</button>
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <audio id="drone-audio" loop preload="none" muted>
+    <source src="https://example.com/bass-drone.mp3" type="audio/mpeg">
+  </audio>
+
+  <script>
+    const CONFIG = {
+      audioSrc: "https://example.com/bass-drone.mp3",
+      subscribeEndpoint: "/api/subscribe",
+      xbotEndpoint: "/api/xbot",
+      subscribeMethod: "POST",
+      subscribeHeaders: {},
+      subscribeSuccessMessage: "You are in. Welcome to the Inner Circle.",
+      paymentLinks: {
+        stripe: {
+          controlMind: "",
+          emotionalDiscipline: "",
+          resilienceJournal: "",
+          library: ""
+        },
+        razorpay: {
+          controlMind: "https://razorpay.me/@atharvaverma",
+          emotionalDiscipline: "https://razorpay.me/@atharvaverma",
+          resilienceJournal: "https://razorpay.me/@atharvaverma",
+          library: "https://razorpay.me/@atharvaverma"
+        }
+      },
+      protocols: {
+        anchor: {
+          title: "PROTOCOL 01: THE ANCHOR",
+          audioSrc: "https://example.com/bass-drone.mp3",
+          holdMs: 5000,
+          text:
+            "You are standing in a freezing river. The water pulls at your legs. Your mind screams to run. But you do not move. You breathe. The cold is not your enemy. It is the only thing that is real right now. You are the observer. You are still."
+        },
+        river: {
+          title: "PROTOCOL 02: THE STILL RIVER",
+          audioSrc: "https://example.com/bass-drone.mp3",
+          holdMs: 5000,
+          text:
+            "The mind begins to rush toward its old patterns. You do not follow. You watch the current without stepping into it. The body softens. The breath slows. What passes through you no longer owns you."
+        },
+        observer: {
+          title: "PROTOCOL 03: THE OBSERVER",
+          audioSrc: "https://example.com/bass-drone.mp3",
+          holdMs: 5000,
+          text:
+            "Thought rises. Emotion follows. Habit reaches for control. You remain one step behind it all, silent and aware. In that quiet distance, freedom begins. You are not the storm. You are the one who sees it."
+        }
+      },
+      typingSpeedBase: 35,
+      typingSpeedVar: 45,
+      canvasParticleCount: 48
+    };
+
+    const MODULE_TEXTS = {
+      intro:
+        "Initializing sanctuary interface...\n\nINNER VIRTUE X is where modern self-mastery meets timeless stillness. Enter slowly. Breathe first. Then choose what part of yourself you are ready to train.",
+      core:
+        "CORE PRINCIPLES:\n\n1. Awareness over reaction.\n2. Discipline over emotion.\n3. Inner peace over external chaos.\n4. Truth over self-deception.\n\nClarity is not intensity. It is the refusal to be ruled by noise.",
+      manifesto:
+        "THE MANIFESTO:\n\nYou do not need louder motivation. You need a steadier nervous system, cleaner thought, and a life built from inward order. INNER VIRTUE X exists to make calm feel actionable and depth feel practical.",
+      access:
+        "PREMIUM ACCESS:\n\nThe premium library is built for people who want to train the mind with structure. Each eBook is a tool for reflection, emotional control, and disciplined daily practice. Enter through trust. Stay for transformation."
+    };
+
+    const PROTOCOLS_BY_TITLE = Object.values(CONFIG.protocols).reduce((map, protocol) => {
+      map[protocol.title] = protocol;
+      return map;
+    }, {});
+
+    const gateway = document.getElementById("gateway");
+    const entryTrigger = document.getElementById("entry-trigger");
+    const appInterface = document.getElementById("app-interface");
+    const contentScroll = document.getElementById("content-scroll");
+    const typewriterTarget = document.getElementById("typewriter-target");
+    const moduleButtons = Array.from(document.querySelectorAll(".module-btn"));
+    const protocolButtons = Array.from(document.querySelectorAll(".protocol-btn"));
+    const btnDrop = document.getElementById("btn-drop");
+    const subscribeForm = document.getElementById("subscribe-form");
+    const emailInput = document.getElementById("email-input");
+    const paymentLinks = Array.from(document.querySelectorAll(".payment-link"));
+    const providerLinks = Array.from(document.querySelectorAll(".provider-link"));
+    const neuralDropOverlay = document.getElementById("neural-drop-overlay");
+    const overlay = document.getElementById("experience-overlay");
+    const overlayTitle = document.getElementById("overlay-title");
+    const experienceCopy = document.getElementById("experience-copy");
+    const droneAudio = document.getElementById("drone-audio");
+    const audioToggle = document.getElementById("audio-toggle");
+    const xbotLauncher = document.getElementById("xbot-launcher");
+    const xbotPanel = document.getElementById("xbot-panel");
+    const xbotClose = document.getElementById("xbot-close");
+    const xbotMessages = document.getElementById("xbot-messages");
+    const xbotForm = document.getElementById("xbot-form");
+    const xbotInput = document.getElementById("xbot-input");
+    const xbotChips = Array.from(document.querySelectorAll("[data-xbot-topic]"));
+
+    let typeTimer = null;
+    let activeTimers = [];
+    let overlayRunning = false;
+    const xbotHistory = [];
+    const XBOT_MIN_THINK_MS = 1100;
+    const XBOT_TYPING_MIN_MS = 14;
+    const XBOT_TYPING_MAX_MS = 28;
+
+    const wait = (ms) =>
+      new Promise((resolve) => {
+        const id = window.setTimeout(resolve, ms);
+        activeTimers.push(id);
+      });
+
+    const clearTimers = () => {
+      if (typeTimer) {
+        window.clearTimeout(typeTimer);
+        typeTimer = null;
+      }
+      activeTimers.forEach((id) => window.clearTimeout(id));
+      activeTimers = [];
+    };
+
+    const randomDelay = (base = CONFIG.typingSpeedBase, variance = CONFIG.typingSpeedVar) =>
+      Math.floor(Math.random() * variance) + base;
+
+    const ui = {
+      showToast(message) {
+        const container = document.getElementById("toast-container");
+        const toast = document.createElement("div");
+        toast.className = "toast";
+        toast.textContent = `>> ${message}`;
+        container.appendChild(toast);
+
+        window.setTimeout(() => {
+          toast.style.opacity = "0";
+          window.setTimeout(() => toast.remove(), 350);
+        }, 2800);
+      }
+    };
+
+    const XBOT_RESPONSES = {
+      purchase:
+        "To buy a resource, open the premium section, choose the ebook you want, click the Razorpay button, complete the payment on Razorpay, and then follow the access or delivery instructions shown after checkout. If payment succeeds but access does not arrive, keep the confirmation and use support again straight away.",
+      ebook:
+        "Each INNER VIRTUE X product is a digital resource designed for calm self-mastery. The page explains what is inside each ebook or journal, including clarity exercises, emotional regulation frameworks, and daily reflection prompts.",
+      payment:
+        "Payments are handled through Razorpay on the live site. If payment succeeds but access is missing, the visitor should keep the payment confirmation, check the email used at checkout, and then continue through the support path on the site.",
+      refund:
+        "INNER VIRTUE X sells digital products, so completed purchases are generally final. Refunds may still be reviewed for duplicate charges, failed delivery, or unauthorized transactions reported promptly.",
+      subscription:
+        "Subscribers receive reflections and updates through Brevo. They can unsubscribe anytime from the footer of any email. If they do not receive emails, ask them to check promotions, spam, or re-subscribe with the correct address.",
+      delivery:
+        "If a digital product is not delivered, the buyer should verify payment success, check the email used at checkout, review spam or promotions folders, and then continue to the official support channel listed on the site.",
+      default:
+        "I can help with buying, payments, ebook access, subscriptions, and refund policy. Ask me directly what you need and I’ll guide you."
+    };
+
+    const XBOT_PROMPTS = {
+      ebook: "What do I receive after buying an ebook from INNER VIRTUE X?",
+      purchase: "How do I purchase an ebook from INNER VIRTUE X?",
+      payment: "I need help with payment on INNER VIRTUE X.",
+      refund: "What is your refund policy?",
+      subscription: "How do email updates and subscriptions work?",
+      delivery: "I paid but did not get my ebook."
+    };
+
+    const appendXbotMessage = (role, text) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = `xbot-message${role === "user" ? " user" : ""}`;
+
+      const label = document.createElement("strong");
+      label.textContent = role === "user" ? "You" : "Xbot";
+
+      const body = document.createElement("p");
+      body.textContent = text;
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(body);
+      xbotMessages.appendChild(wrapper);
+      xbotMessages.scrollTop = xbotMessages.scrollHeight;
+      return {
+        wrapper,
+        body
+      };
+    };
+
+    const waitXbot = (ms) =>
+      new Promise((resolve) => {
+        window.setTimeout(resolve, ms);
+      });
+
+    const revealXbotText = async (text) => {
+      const nodes = appendXbotMessage("bot", "");
+      let output = "";
+
+      for (const char of text) {
+        output += char;
+        nodes.body.textContent = output;
+        xbotMessages.scrollTop = xbotMessages.scrollHeight;
+        await waitXbot(Math.floor(Math.random() * (XBOT_TYPING_MAX_MS - XBOT_TYPING_MIN_MS + 1)) + XBOT_TYPING_MIN_MS);
+      }
+    };
+
+    const setXbotPending = (pending) => {
+      const submitButton = xbotForm.querySelector("button[type='submit']");
+      xbotInput.disabled = pending;
+      submitButton.disabled = pending;
+      submitButton.textContent = pending ? "Thinking..." : "Send";
+    };
+
+    const addXbotTyping = () => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "xbot-message";
+      wrapper.id = "xbot-typing";
+
+      const label = document.createElement("strong");
+      label.textContent = "Xbot";
+
+      const body = document.createElement("p");
+      body.textContent = "Thinking with clarity...";
+
+      wrapper.appendChild(label);
+      wrapper.appendChild(body);
+      xbotMessages.appendChild(wrapper);
+      xbotMessages.scrollTop = xbotMessages.scrollHeight;
+    };
+
+    const removeXbotTyping = () => {
+      const typing = document.getElementById("xbot-typing");
+      if (typing) {
+        typing.remove();
+      }
+    };
+
+    const resolveXbotReply = (message) => {
+      const text = message.toLowerCase();
+
+      if (
+        text.includes("purchase") ||
+        text.includes("buy") ||
+        text.includes("order") ||
+        text.includes("checkout") ||
+        text.includes("get it") ||
+        text.includes("how do i get") ||
+        text.includes("how to purchase") ||
+        text.includes("how can i purchase") ||
+        text.includes("how do i purchase") ||
+        text.includes("how can i buy") ||
+        text.includes("where do i pay")
+      ) {
+        return XBOT_RESPONSES.purchase;
+      }
+      if (text.includes("refund") || text.includes("cancel")) {
+        return XBOT_RESPONSES.refund;
+      }
+      if (text.includes("pay") || text.includes("payment") || text.includes("razorpay") || text.includes("stripe")) {
+        return XBOT_RESPONSES.payment;
+      }
+      if (text.includes("deliver") || text.includes("download") || text.includes("access") || text.includes("receive")) {
+        return XBOT_RESPONSES.delivery;
+      }
+      if (text.includes("email") || text.includes("subscribe") || text.includes("newsletter") || text.includes("unsubscribe")) {
+        return XBOT_RESPONSES.subscription;
+      }
+      if (text.includes("ebook") || text.includes("journal") || text.includes("guide") || text.includes("inside")) {
+        return XBOT_RESPONSES.ebook;
+      }
+
+      return XBOT_RESPONSES.default;
+    };
+
+    const askXbot = async (message) => {
+      appendXbotMessage("user", message);
+      xbotHistory.push({
+        role: "user",
+        content: message
+      });
+
+      addXbotTyping();
+      setXbotPending(true);
+      const startedAt = Date.now();
+
+      try {
+        const response = await fetch(CONFIG.xbotEndpoint, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            message,
+            history: xbotHistory
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(result.error || "Xbot could not respond right now");
+        }
+
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < XBOT_MIN_THINK_MS) {
+          await waitXbot(XBOT_MIN_THINK_MS - elapsed);
+        }
+
+        removeXbotTyping();
+        const reply = result.reply || XBOT_RESPONSES.default;
+        await revealXbotText(reply);
+        xbotHistory.push({
+          role: "assistant",
+          content: reply
+        });
+      } catch (error) {
+        const elapsed = Date.now() - startedAt;
+        if (elapsed < 700) {
+          await waitXbot(700 - elapsed);
+        }
+
+        removeXbotTyping();
+        const fallback = `${resolveXbotReply(message)} If you still need manual help, please continue through Instagram DM at @innervirtuex.`;
+        await revealXbotText(fallback);
+        xbotHistory.push({
+          role: "assistant",
+          content: fallback
+        });
+        ui.showToast(error.message || "Xbot fallback mode active");
+      } finally {
+        setXbotPending(false);
+      }
+    };
+
+    const toggleXbot = (nextState) => {
+      const open = typeof nextState === "boolean" ? nextState : !xbotPanel.classList.contains("is-open");
+      xbotPanel.classList.toggle("is-open", open);
+      xbotLauncher.setAttribute("aria-expanded", String(open));
+      xbotLauncher.textContent = open ? "Hide Xbot" : "Consult Xbot";
+      xbotLauncher.classList.toggle("is-hidden", open);
+
+      if (open) {
+        xbotInput.focus();
+      }
+    };
+
+    const applyAudioSource = (source) => {
+      if (!source) {
+        return;
+      }
+      droneAudio.src = source;
+      droneAudio.load();
+    };
+
+    const applyPaymentLinks = () => {
+      paymentLinks.forEach((link) => {
+        const provider = link.dataset.provider;
+        const product = link.dataset.product;
+        const url = CONFIG.paymentLinks?.[provider]?.[product] || CONFIG.paymentLinks?.[provider]?.library;
+
+        if (url) {
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          link.classList.remove("is-hidden-link");
+          return;
+        }
+
+        link.href = "#checkout";
+        link.classList.add("is-hidden-link");
+      });
+
+      providerLinks.forEach((link) => {
+        const provider = link.dataset.provider;
+        const url = CONFIG.paymentLinks?.[provider]?.library;
+
+        if (url) {
+          link.href = url;
+          link.target = "_blank";
+          link.rel = "noreferrer";
+          link.classList.remove("is-hidden-link");
+          return;
+        }
+
+        link.href = "#checkout";
+        link.classList.add("is-hidden-link");
+      });
+    };
+
+    class AudioManager {
+      constructor(audioElement, button) {
+        this.audio = audioElement;
+        this.button = button;
+        this.isMuted = true;
+
+        this.audio.muted = true;
+        this.audio.loop = true;
+        this.audio.volume = 0.42;
+        this.button.addEventListener("click", () => this.toggleMute());
+      }
+
+      updateButton() {
+        this.button.innerHTML = this.isMuted ? "[ Unmute Audio ]" : "[ Audio Active ]";
+        this.button.classList.toggle("active", !this.isMuted);
+      }
+
+      async prime() {
+        this.updateButton();
+        try {
+          this.audio.muted = true;
+          await this.audio.play();
+          this.audio.pause();
+          this.audio.currentTime = 0;
+        } catch (error) {
+          console.warn("Audio prime skipped.", error);
+        }
+      }
+
+      async playMuted() {
+        try {
+          this.audio.muted = true;
+          await this.audio.play();
+        } catch (error) {
+          console.warn("Muted audio playback could not start.", error);
+        }
+      }
+
+      stop() {
+        this.audio.pause();
+        this.audio.currentTime = 0;
+      }
+
+      async toggleMute() {
+        this.isMuted = !this.isMuted;
+        this.audio.muted = this.isMuted;
+        this.updateButton();
+
+        if (this.isMuted) {
+          ui.showToast("Audio muted");
+          return;
+        }
+
+        try {
+          await this.audio.play();
+          ui.showToast("Ambient audio active");
+        } catch (error) {
+          console.warn("Autoplay prevented.", error);
+          this.isMuted = true;
+          this.audio.muted = true;
+          this.updateButton();
+          ui.showToast("Browser blocked audio");
+        }
+      }
+    }
+
+    class TypewriterSystem {
+      constructor(element) {
+        this.element = element;
+      }
+
+      clear() {
+        if (typeTimer) {
+          window.clearTimeout(typeTimer);
+        }
+        this.element.textContent = "";
+      }
+
+      start(text) {
+        this.clear();
+        let index = 0;
+
+        const typeCharacter = () => {
+          if (index >= text.length) {
+            return;
+          }
+
+          const char = text.charAt(index);
+          this.element.textContent += char;
+          index += 1;
+
+          let delay = randomDelay();
+          if ([".", "!", "?", "\n"].includes(char)) {
+            delay += 180;
+          } else if (char === ",") {
+            delay += 90;
+          }
+
+          typeTimer = window.setTimeout(typeCharacter, delay);
+        };
+
+        typeCharacter();
+      }
+    }
+
+    class NeuralCanvas {
+      constructor(canvasId) {
+        this.canvas = document.getElementById(canvasId);
+        this.ctx = this.canvas.getContext("2d");
+        this.particles = [];
+        this.resize();
+        this.initParticles();
+        window.addEventListener("resize", () => this.resize());
+        this.animate();
+      }
+
+      resize() {
+        this.canvas.width = this.canvas.offsetWidth;
+        this.canvas.height = this.canvas.offsetHeight;
+      }
+
+      initParticles() {
+        this.particles = [];
+        for (let i = 0; i < CONFIG.canvasParticleCount; i += 1) {
+          this.particles.push({
+            x: Math.random() * this.canvas.width,
+            y: Math.random() * this.canvas.height,
+            vx: (Math.random() - 0.5) * 0.35,
+            vy: (Math.random() - 0.5) * 0.35,
+            size: Math.random() * 1.8 + 0.6
+          });
+        }
+      }
+
+      animate() {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+        this.ctx.fillStyle = "rgba(212, 175, 55, 0.55)";
+        this.ctx.strokeStyle = "rgba(122, 231, 235, 0.08)";
+
+        this.particles.forEach((particle, index) => {
+          particle.x += particle.vx;
+          particle.y += particle.vy;
+
+          if (particle.x < 0 || particle.x > this.canvas.width) {
+            particle.vx *= -1;
+          }
+          if (particle.y < 0 || particle.y > this.canvas.height) {
+            particle.vy *= -1;
+          }
+
+          this.ctx.beginPath();
+          this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
+          this.ctx.fill();
+
+          for (let j = index + 1; j < this.particles.length; j += 1) {
+            const peer = this.particles[j];
+            const distance = Math.hypot(particle.x - peer.x, particle.y - peer.y);
+            if (distance < 140) {
+              this.ctx.beginPath();
+              this.ctx.moveTo(particle.x, particle.y);
+              this.ctx.lineTo(peer.x, peer.y);
+              this.ctx.stroke();
+            }
+          }
+        });
+
+        window.requestAnimationFrame(() => this.animate());
+      }
+
+      explode() {
+        this.particles.forEach((particle) => {
+          particle.vx = (Math.random() - 0.5) * 10;
+          particle.vy = (Math.random() - 0.5) * 10;
+        });
+
+        window.setTimeout(() => {
+          this.particles.forEach((particle) => {
+            particle.vx = (Math.random() - 0.5) * 0.35;
+            particle.vy = (Math.random() - 0.5) * 0.35;
+          });
+        }, 850);
+      }
+    }
+
+    const audioManager = new AudioManager(droneAudio, document.getElementById("btn-audio"));
+    const typewriterSystem = new TypewriterSystem(typewriterTarget);
+    const neuralCanvas = new NeuralCanvas("neural-canvas");
+    applyAudioSource(CONFIG.audioSrc);
+    applyPaymentLinks();
+
+    const syncModuleButtons = (module) => {
+      moduleButtons.forEach((button) => {
+        button.classList.toggle("active", button.dataset.module === module);
+      });
+    };
+
+    const setOverlayAudioLabel = (muted) => {
+      audioToggle.setAttribute("aria-pressed", String(!muted));
+      audioToggle.querySelector(".audio-label").textContent = muted
+        ? "Unmute to experience"
+        : "Ambient audio active";
+    };
+
+    const fadeInOverlay = async () => {
+      overlay.classList.remove("is-hidden");
+      requestAnimationFrame(() => overlay.classList.add("is-active"));
+      await wait(850);
+    };
+
+    const fadeOutOverlay = async () => {
+      overlay.classList.remove("is-active");
+      await wait(1200);
+      overlay.classList.add("is-hidden");
+    };
+
+    const typeOverlayText = async (text) => {
+      experienceCopy.textContent = "";
+      const caret = document.createElement("span");
+      caret.className = "cursor";
+      caret.textContent = "|";
+      experienceCopy.appendChild(caret);
+
+      for (const char of text) {
+        caret.insertAdjacentText("beforebegin", char);
+        await wait(randomDelay(50, 30));
+      }
+
+      caret.remove();
+    };
+
+    const runProtocol = async (label) => {
+      const protocol = PROTOCOLS_BY_TITLE[label];
+      if (overlayRunning) {
+        return;
+      }
+
+      if (!protocol) {
+        ui.showToast("Protocol not configured");
+        return;
+      }
+
+      overlayRunning = true;
+      clearTimers();
+      overlayTitle.textContent = protocol.title;
+      experienceCopy.classList.remove("is-fading");
+      setOverlayAudioLabel(true);
+      applyAudioSource(protocol.audioSrc || CONFIG.audioSrc);
+      neuralDropOverlay.classList.remove("drop-active");
+      void neuralDropOverlay.offsetWidth;
+      neuralDropOverlay.classList.add("drop-active");
+      neuralCanvas.explode();
+
+      await audioManager.playMuted();
+      await fadeInOverlay();
+      await typeOverlayText(protocol.text);
+      await wait(protocol.holdMs || 5000);
+      experienceCopy.classList.add("is-fading");
+      await wait(1500);
+      await fadeOutOverlay();
+      experienceCopy.textContent = "";
+      experienceCopy.classList.remove("is-fading");
+      audioManager.stop();
+      applyAudioSource(CONFIG.audioSrc);
+      audioManager.audio.muted = audioManager.isMuted;
+      setOverlayAudioLabel(audioManager.audio.muted);
+      overlayRunning = false;
+    };
+
+    entryTrigger.addEventListener("click", async () => {
+      entryTrigger.disabled = true;
+      gateway.classList.add("is-hidden");
+      await wait(1200);
+      gateway.classList.add("hidden");
+      document.body.style.overflow = "hidden";
+      appInterface.classList.add("is-live");
+      typewriterSystem.start(MODULE_TEXTS.intro);
+      audioManager.prime();
+      ui.showToast("Sanctuary interface initialized");
+    });
+
+    moduleButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        const module = button.dataset.module;
+        syncModuleButtons(module);
+        typewriterSystem.start(MODULE_TEXTS[module]);
+        ui.showToast(`${module.toUpperCase()} module loaded`);
+        if (window.innerWidth < 860) {
+          contentScroll.scrollTo({ top: 0, behavior: "smooth" });
+        }
+      });
+    });
+
+    protocolButtons.forEach((button) => {
+      button.addEventListener("click", () => {
+        runProtocol(button.dataset.protocol);
+      });
+    });
+
+    btnDrop.addEventListener("click", () => {
+      neuralDropOverlay.classList.remove("drop-active");
+      void neuralDropOverlay.offsetWidth;
+      neuralDropOverlay.classList.add("drop-active");
+      neuralCanvas.explode();
+      ui.showToast("Neural drop executed");
+    });
+
+    audioToggle.addEventListener("click", async () => {
+      const nextMutedState = !audioManager.audio.muted;
+      audioManager.audio.muted = nextMutedState;
+      setOverlayAudioLabel(nextMutedState);
+
+      if (!nextMutedState) {
+        try {
+          await audioManager.audio.play();
+        } catch (error) {
+          console.warn("Overlay audio unmute failed.", error);
+          audioManager.audio.muted = true;
+          setOverlayAudioLabel(true);
+          ui.showToast("Browser blocked audio");
+          return;
+        }
+      }
+
+      ui.showToast(nextMutedState ? "Overlay audio muted" : "Overlay audio active");
+    });
+
+    xbotForm.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const message = xbotInput.value.trim();
+      if (!message) {
+        return;
+      }
+
+      xbotForm.reset();
+      askXbot(message);
+    });
+
+    xbotLauncher.addEventListener("click", () => {
+      toggleXbot();
+    });
+
+    xbotClose.addEventListener("click", () => {
+      toggleXbot(false);
+    });
+
+    xbotChips.forEach((chip) => {
+      chip.addEventListener("click", () => {
+        const topic = chip.dataset.xbotTopic;
+        toggleXbot(true);
+        const prompt = XBOT_PROMPTS[topic] || "Help me.";
+        askXbot(prompt);
+      });
+    });
+
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && xbotPanel.classList.contains("is-open")) {
+        toggleXbot(false);
+      }
+    });
+
+    subscribeForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const value = emailInput.value.trim();
+      if (!value) {
+        ui.showToast("Enter a valid email");
+        return;
+      }
+
+      const submitButton = subscribeForm.querySelector('button[type="submit"]');
+      submitButton.disabled = true;
+      submitButton.textContent = "Sending...";
+
+      try {
+        const response = await fetch(CONFIG.subscribeEndpoint, {
+          method: CONFIG.subscribeMethod || "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...CONFIG.subscribeHeaders
+          },
+          body: JSON.stringify({
+            email: value,
+            source: "innervirtuex-site",
+            page: "join-inner-circle",
+            timestamp: new Date().toISOString()
+          })
+        });
+
+        const result = await response.json().catch(() => ({}));
+
+        if (!response.ok) {
+          throw new Error(result.error || `Subscribe failed with status ${response.status}`);
+        }
+
+        ui.showToast(CONFIG.subscribeSuccessMessage);
+        subscribeForm.reset();
+      } catch (error) {
+        console.warn("Subscribe request failed.", error);
+        ui.showToast(error.message || "Subscription failed. Check backend setup");
+      } finally {
+        submitButton.disabled = false;
+        submitButton.textContent = "Subscribe";
+      }
+    });
+
+    paymentLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const provider = link.dataset.provider;
+        const product = link.dataset.product;
+        const url = CONFIG.paymentLinks?.[provider]?.[product] || CONFIG.paymentLinks?.[provider]?.library;
+        if (!url) {
+          event.preventDefault();
+          ui.showToast(`Add ${provider} link for ${product}`);
+        }
+      });
+    });
+
+    providerLinks.forEach((link) => {
+      link.addEventListener("click", (event) => {
+        const provider = link.dataset.provider;
+        const url = CONFIG.paymentLinks?.[provider]?.library;
+        if (!url) {
+          event.preventDefault();
+          ui.showToast(`Add ${provider} library link`);
+        }
+      });
+    });
+  </script>
+</body>
+</html>
