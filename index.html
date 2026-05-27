@@ -1,2671 +1,787 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INNER VIRTUE X | Sanctuary Interface</title>
-  <meta
-    name="description"
-    content="INNER VIRTUE X is a digital sanctuary for emotional mastery, resilience, and premium self-mastery resources."
-  >
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Inter:wght@300;400;500;600&display=swap"
-    rel="stylesheet"
-  >
-  <style>
-    :root {
-      --bg: #000000;
-      --panel-bg: rgba(10, 10, 10, 0.88);
-      --panel-soft: rgba(255, 255, 255, 0.03);
-      --line: rgba(255, 255, 255, 0.09);
-      --text: #f0f0f0;
-      --text-soft: rgba(240, 240, 240, 0.72);
-      --text-dim: rgba(240, 240, 240, 0.46);
-      --gold: #d4af37;
-      --cyan: #7ae7eb;
-      --violet: #7c5cff;
-      --success: #8de6a1;
-      --font-heading: "Cinzel", serif;
-      --font-body: "Inter", sans-serif;
-      --font-mono: "Courier New", Courier, monospace;
-      --ease-slow: 1.2s ease-in-out;
-      --ease-medium: 0.85s ease-in-out;
-      --shadow-glow: 0 0 24px rgba(212, 175, 55, 0.08);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: var(--font-body);
-      overflow: hidden;
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-      transition: background-color 1.4s ease;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button,
-    input {
-      color: inherit;
-      font: inherit;
-    }
-
-    button {
-      background: transparent;
-      border: 0;
-      cursor: pointer;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .screen {
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      transition: opacity var(--ease-slow), visibility var(--ease-slow);
-    }
-
-    .screen.is-hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .gateway {
-      z-index: 2000;
-      display: grid;
-      place-items: center;
-    }
-
-    .entry-container {
-      text-align: center;
-      cursor: pointer;
-      display: grid;
-      place-items: center;
-      gap: 1rem;
-    }
-
-    .breathing-dot {
-      width: 20px;
-      height: 20px;
-      border-radius: 50%;
-      background: var(--text);
-      box-shadow: 0 0 18px rgba(240, 240, 240, 0.3);
-      animation: breathe 4s ease-in-out infinite;
-    }
-
-    .entry-text {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.36em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      padding-left: 0.36em;
-    }
-
-    .app-interface {
-      position: relative;
-      z-index: 10;
-      height: 100vh;
-      opacity: 0;
-      display: grid;
-      grid-template-rows: 64px 1fr 42px;
-      transition: opacity 1.8s ease;
-    }
-
-    .app-interface.is-live {
-      opacity: 1;
-    }
-
-    .site-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0 1.5rem;
-      border-bottom: 1px solid var(--line);
-      background: rgba(0, 0, 0, 0.84);
-      backdrop-filter: blur(10px);
-    }
-
-    .brand {
-      font-family: var(--font-heading);
-      font-size: 0.85rem;
-      letter-spacing: 0.42em;
-      text-transform: uppercase;
-      color: var(--text);
-      white-space: nowrap;
-    }
-
-    .brand span {
-      color: var(--gold);
-    }
-
-    .status-indicators {
-      display: flex;
-      gap: 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .indicator::before {
-      content: "●";
-      color: var(--gold);
-      margin-right: 0.45rem;
-      animation: blink 2.2s ease-in-out infinite;
-    }
-
-    .app-main {
-      position: relative;
-      display: grid;
-      grid-template-columns: 290px minmax(0, 1fr);
-      min-height: 0;
-      overflow: hidden;
-    }
-
-    .sidebar {
-      position: relative;
-      z-index: 2;
-      border-right: 1px solid var(--line);
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-      background: rgba(0, 0, 0, 0.76);
-      backdrop-filter: blur(8px);
-    }
-
-    .control-group {
-      display: grid;
-      gap: 0.7rem;
-    }
-
-    .control-group h3 {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 0.2em;
-    }
-
-    .ui-btn,
-    .cta-btn,
-    .buy-btn,
-    .chip-btn,
-    .small-link {
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-      transition:
-        background-color var(--ease-medium),
-        color var(--ease-medium),
-        border-color var(--ease-medium),
-        transform var(--ease-medium);
-    }
-
-    .ui-btn {
-      width: 100%;
-      padding: 0.85rem 0.95rem;
-      text-align: left;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-    }
-
-    .ui-btn:hover,
-    .ui-btn:focus-visible,
-    .cta-btn:hover,
-    .cta-btn:focus-visible,
-    .buy-btn:hover,
-    .buy-btn:focus-visible,
-    .chip-btn:hover,
-    .chip-btn:focus-visible,
-    .small-link:hover,
-    .small-link:focus-visible {
-      color: var(--gold);
-      border-color: rgba(212, 175, 55, 0.45);
-      background: rgba(212, 175, 55, 0.06);
-      outline: none;
-      transform: translateY(-1px);
-    }
-
-    .ui-btn.active,
-    .chip-btn.active {
-      color: #000;
-      background: var(--gold);
-      border-color: var(--gold);
-    }
-
-    .is-hidden-link {
-      display: none !important;
-    }
-
-    .mobile-controls {
-      display: none;
-      position: sticky;
-      top: 0;
-      z-index: 3;
-      padding: 0.8rem 1rem;
-      background: rgba(0, 0, 0, 0.9);
-      border-bottom: 1px solid var(--line);
-      backdrop-filter: blur(8px);
-      gap: 0.65rem;
-      flex-wrap: wrap;
-    }
-
-    .content-region {
-      position: relative;
-      min-width: 0;
-      min-height: 0;
-      overflow: hidden;
-      background:
-        radial-gradient(circle at 18% 18%, rgba(212, 175, 55, 0.08), transparent 22%),
-        radial-gradient(circle at 82% 22%, rgba(212, 175, 55, 0.06), transparent 20%),
-        linear-gradient(180deg, rgba(212, 175, 55, 0.04), transparent 22%),
-        var(--bg);
-    }
-
-    .content-region::before,
-    .content-region::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    .content-region::before {
-      background:
-        radial-gradient(circle at 50% 18%, rgba(255, 244, 214, 0.07), transparent 14%),
-        linear-gradient(90deg, transparent 7%, rgba(212, 175, 55, 0.05) 7.2%, transparent 7.4%, transparent 92.6%, rgba(212, 175, 55, 0.05) 92.8%, transparent 93%),
-        linear-gradient(180deg, transparent 0 68%, rgba(212, 175, 55, 0.04) 68.2%, transparent 68.4%);
-      opacity: 0.95;
-    }
-
-    .content-region::after {
-      background:
-        radial-gradient(circle at 50% 20%, rgba(212, 175, 55, 0.08), transparent 18%),
-        linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 24%);
-      mask:
-        linear-gradient(to bottom, transparent 0, #000 14%, #000 100%);
-      opacity: 0.55;
-    }
-
-    #neural-canvas {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      opacity: 0.22;
-      z-index: 0;
-    }
-
-    .content-scroll {
-      position: relative;
-      z-index: 1;
-      height: 100%;
-      overflow-y: auto;
-      overflow-x: hidden;
-      padding: 0;
-      scrollbar-width: thin;
-      scrollbar-color: rgba(212, 175, 55, 0.28) transparent;
-    }
-
-    .hero-shell {
-      min-height: calc(100vh - 106px);
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
-      gap: 2rem;
-      align-items: center;
-      padding: clamp(1.5rem, 4vw, 4rem);
-      border-bottom: 1px solid var(--line);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-shell::before {
-      content: "";
-      position: absolute;
-      right: -8%;
-      top: 6%;
-      width: 420px;
-      height: 420px;
-      border-radius: 50%;
-      border: 1px solid rgba(212, 175, 55, 0.12);
-      box-shadow:
-        0 0 0 56px rgba(212, 175, 55, 0.04),
-        0 0 0 112px rgba(212, 175, 55, 0.025);
-      opacity: 0.72;
-      pointer-events: none;
-    }
-
-    .hero-copy {
-      max-width: 760px;
-      display: grid;
-      gap: 1.2rem;
-    }
-
-    .eyebrow {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .hero-title {
-      font-family: var(--font-heading);
-      font-size: clamp(2.5rem, 5vw, 5.2rem);
-      line-height: 1.06;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      text-wrap: balance;
-    }
-
-    .hero-subtitle,
-    .section-copy,
-    .product-copy,
-    .quote-meta,
-    .article-copy,
-    .form-copy,
-    .footer-copy,
-    .hero-note,
-    .typewriter-panel p {
-      color: var(--text-soft);
-      line-height: 1.78;
-      font-size: 1rem;
-    }
-
-    .hero-actions,
-    .product-actions,
-    .join-form,
-    .insight-chips {
-      display: flex;
-      gap: 0.85rem;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    .cta-btn,
-    .buy-btn,
-    .small-link,
-    .chip-btn {
-      padding: 0.9rem 1.1rem;
-      font-size: 0.78rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    .cta-btn.primary,
-    .buy-btn.primary {
-      background: var(--gold);
-      color: #000;
-      border-color: var(--gold);
-    }
-
-    .hero-note {
-      max-width: 620px;
-    }
-
-    .typewriter-panel {
-      justify-self: stretch;
-      background:
-        linear-gradient(180deg, rgba(255, 250, 235, 0.03), rgba(212, 175, 55, 0.04)),
-        rgba(255, 255, 255, 0.02);
-      border: 1px solid rgba(212, 175, 55, 0.12);
-      padding: clamp(1.25rem, 3vw, 2rem);
-      min-height: 340px;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-      gap: 1rem;
-      backdrop-filter: blur(12px);
-      box-shadow: var(--shadow-glow);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .typewriter-panel::before {
-      content: "";
-      position: absolute;
-      inset: 14px;
-      border: 1px solid rgba(212, 175, 55, 0.08);
-      pointer-events: none;
-    }
-
-    .panel-top,
-    .panel-bottom {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: center;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      color: var(--text-dim);
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-    }
-
-    #typewriter-target {
-      align-self: center;
-      font-family: var(--font-body);
-      font-size: clamp(1.02rem, 2vw, 1.26rem);
-      line-height: 1.95;
-      color: var(--text);
-      white-space: pre-wrap;
-      min-height: 210px;
-    }
-
-    .cursor {
-      display: inline-block;
-      width: 0.55ch;
-      color: var(--gold);
-      animation: blinkCursor 0.9s ease-in-out infinite;
-    }
-
-    .sections {
-      display: grid;
-      gap: 0;
-    }
-
-    .section-block {
-      position: relative;
-      padding: clamp(1.5rem, 4vw, 4rem);
-      border-bottom: 1px solid var(--line);
-    }
-
-    .section-grid {
-      display: grid;
-      grid-template-columns: 260px minmax(0, 1fr);
-      gap: clamp(1.5rem, 4vw, 3rem);
-      align-items: start;
-    }
-
-    .section-label {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.28em;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      padding-top: 0.4rem;
-    }
-
-    .section-body {
-      display: grid;
-      gap: 1.15rem;
-      max-width: 900px;
-    }
-
-    .section-title {
-      font-family: var(--font-heading);
-      font-size: clamp(1.8rem, 3.2vw, 3rem);
-      line-height: 1.12;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-
-    .principle-list,
-    .stats-grid,
-    .product-grid,
-    .article-grid {
-      display: grid;
-      gap: 1rem;
-    }
-
-    .principle-list {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
-    .principle-card,
-    .stat-card,
-    .product-card,
-    .article-card,
-    .quote-card,
-    .join-card,
-    .closing-card {
-      background: rgba(255, 255, 255, 0.025);
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1.2rem;
-      backdrop-filter: blur(10px);
-    }
-
-    .principle-title,
-    .stat-title,
-    .product-title,
-    .article-title {
-      font-size: 0.9rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      margin-bottom: 0.7rem;
-    }
-
-    .principle-card p,
-    .stat-card p,
-    .product-card p,
-    .article-card p,
-    .quote-card p,
-    .join-card p,
-    .closing-card p {
-      color: var(--text-soft);
-      line-height: 1.72;
-      font-size: 0.96rem;
-    }
-
-    .product-outline {
-      display: grid;
-      gap: 0.55rem;
-      padding-left: 1.1rem;
-      color: var(--text-soft);
-      line-height: 1.65;
-      font-size: 0.92rem;
-    }
-
-    .product-outline li::marker {
-      color: var(--gold);
-    }
-
-    .product-preview-label {
-      font-family: var(--font-mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      margin-top: 0.2rem;
-    }
-
-    .stats-grid {
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-
-    .stat-value {
-      display: block;
-      font-family: var(--font-heading);
-      font-size: 2rem;
-      color: var(--gold);
-      margin-bottom: 0.55rem;
-    }
-
-    .product-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .product-card {
-      display: grid;
-      gap: 1rem;
-      align-content: start;
-    }
-
-    .book-visual {
-      position: relative;
-      min-height: 240px;
-      display: grid;
-      place-items: center;
-      padding: 1rem;
-      background:
-        radial-gradient(circle at top, rgba(212, 175, 55, 0.12), transparent 35%),
-        rgba(255, 255, 255, 0.02);
-      overflow: hidden;
-    }
-
-    .book-visual::after {
-      content: "";
-      position: absolute;
-      inset: 18px;
-      border: 1px solid rgba(212, 175, 55, 0.14);
-      pointer-events: none;
-    }
-
-    .book-cover {
-      position: relative;
-      width: min(170px, 72%);
-      aspect-ratio: 3 / 4.2;
-      padding: 1.05rem 0.95rem;
-      display: grid;
-      align-content: space-between;
-      background:
-        linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(212, 175, 55, 0.04)),
-        #060606;
-      border: 1px solid rgba(212, 175, 55, 0.24);
-      box-shadow:
-        14px 18px 35px rgba(0, 0, 0, 0.45),
-        0 0 20px rgba(212, 175, 55, 0.05);
-    }
-
-    .book-cover::before {
-      content: "";
-      position: absolute;
-      left: 0.6rem;
-      top: 0.5rem;
-      bottom: 0.5rem;
-      width: 2px;
-      background: linear-gradient(180deg, rgba(212, 175, 55, 0.45), rgba(212, 175, 55, 0.08));
-    }
-
-    .book-cover.gold-wave::after,
-    .book-cover.river-line::after,
-    .book-cover.observer-grid::after {
-      content: "";
-      position: absolute;
-      inset: auto 0.9rem 1.05rem 0.9rem;
-      height: 54px;
-      opacity: 0.44;
-      pointer-events: none;
-    }
-
-    .book-cover.gold-wave::after {
-      background:
-        radial-gradient(circle at 20% 55%, rgba(212, 175, 55, 0.45), transparent 28%),
-        radial-gradient(circle at 55% 45%, rgba(212, 175, 55, 0.25), transparent 22%),
-        radial-gradient(circle at 82% 62%, rgba(212, 175, 55, 0.32), transparent 24%);
-    }
-
-    .book-cover.river-line::after {
-      background:
-        linear-gradient(110deg, transparent 0 12%, rgba(212, 175, 55, 0.2) 18%, transparent 24% 36%, rgba(212, 175, 55, 0.22) 42%, transparent 49% 64%, rgba(212, 175, 55, 0.18) 70%, transparent 76%);
-    }
-
-    .book-cover.observer-grid::after {
-      background:
-        linear-gradient(rgba(212, 175, 55, 0.16) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(212, 175, 55, 0.16) 1px, transparent 1px);
-      background-size: 15px 15px;
-    }
-
-    .cover-kicker {
-      font-family: var(--font-mono);
-      font-size: 0.58rem;
-      letter-spacing: 0.22em;
-      text-transform: uppercase;
-      color: rgba(212, 175, 55, 0.78);
-      margin-left: 0.45rem;
-    }
-
-    .cover-title {
-      font-family: var(--font-heading);
-      font-size: 1.15rem;
-      line-height: 1.2;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-left: 0.45rem;
-      text-wrap: balance;
-    }
-
-    .cover-footer {
-      font-family: var(--font-mono);
-      font-size: 0.56rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: rgba(240, 240, 240, 0.54);
-      margin-left: 0.45rem;
-    }
-
-    .product-kicker,
-    .price-row,
-    .meta-strip,
-    .pill {
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .price {
-      font-family: var(--font-heading);
-      font-size: 1.8rem;
-      color: var(--gold);
-      letter-spacing: 0.05em;
-    }
-
-    .quote-card {
-      max-width: 760px;
-      gap: 0.8rem;
-      display: grid;
-    }
-
-    .quote-card blockquote {
-      font-family: var(--font-heading);
-      font-size: clamp(1.5rem, 2.8vw, 2.25rem);
-      line-height: 1.5;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-    }
-
-    .join-card {
-      display: grid;
-      gap: 1rem;
-      max-width: 760px;
-    }
-
-    .join-form input {
-      flex: 1 1 280px;
-      min-width: 0;
-      padding: 0.95rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-    }
-
-    .join-form input::placeholder {
-      color: var(--text-dim);
-    }
-
-    .article-grid {
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-    }
-
-    .article-card {
-      display: grid;
-      gap: 0.85rem;
-      align-content: start;
-    }
-
-    .footer-bar {
-      border-top: 1px solid var(--line);
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 1rem;
-      padding: 0 1.5rem;
-      font-family: var(--font-mono);
-      font-size: 0.66rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-      background: rgba(0, 0, 0, 0.84);
-    }
-
-    .footer-links {
-      display: flex;
-      gap: 1rem;
-      flex-wrap: wrap;
-      justify-content: flex-end;
-    }
-
-    .overlay {
-      z-index: 5000;
-      opacity: 0;
-      pointer-events: none;
-      display: grid;
-      place-items: center;
-      padding: 1.5rem;
-    }
-
-    .overlay.is-active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .overlay-shell {
-      width: min(920px, 100%);
-      min-height: 100%;
-      display: grid;
-      grid-template-rows: auto 1fr;
-      gap: 1.5rem;
-    }
-
-    .overlay-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 1rem;
-      align-items: center;
-    }
-
-    .overlay-title {
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--text-dim);
-    }
-
-    .audio-toggle {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.65rem;
-      padding: 0.72rem 0.9rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: rgba(255, 255, 255, 0.03);
-      transition:
-        border-color var(--ease-medium),
-        color var(--ease-medium),
-        background-color var(--ease-medium);
-    }
-
-    .audio-toggle:hover,
-    .audio-toggle:focus-visible {
-      border-color: rgba(212, 175, 55, 0.4);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.06);
-      outline: none;
-    }
-
-    .audio-icon {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: var(--gold);
-    }
-
-    .audio-label {
-      font-family: var(--font-mono);
-      font-size: 0.64rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-    }
-
-    .experience {
-      display: grid;
-      place-items: center;
-      padding: 1rem;
-    }
-
-    .experience-copy {
-      max-width: 760px;
-      font-size: clamp(1.2rem, 2.3vw, 1.8rem);
-      line-height: 1.95;
-      font-weight: 300;
-      color: var(--text);
-      opacity: 1;
-      transition: opacity 1.5s ease-in-out;
-      text-wrap: balance;
-    }
-
-    .experience-copy.is-fading {
-      opacity: 0;
-    }
-
-    #neural-drop-overlay {
-      position: fixed;
-      inset: 0;
-      background: #ffffff;
-      opacity: 0;
-      pointer-events: none;
-      z-index: 4999;
-      mix-blend-mode: overlay;
-    }
-
-    .drop-active {
-      animation: neuralDropFlash 0.8s ease-out forwards;
-    }
-
-    #toast-container {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      z-index: 9999;
-      display: grid;
-      gap: 0.6rem;
-    }
-
-    .xbot-launcher {
-      position: fixed;
-      right: 20px;
-      bottom: 20px;
-      z-index: 9998;
-      min-width: 148px;
-      padding: 0.95rem 1.1rem;
-      border: 1px solid rgba(212, 175, 55, 0.3);
-      background: rgba(9, 9, 9, 0.92);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      backdrop-filter: blur(10px);
-      transition:
-        transform var(--ease-medium),
-        border-color var(--ease-medium),
-        color var(--ease-medium),
-        background-color var(--ease-medium),
-        opacity var(--ease-medium),
-        visibility var(--ease-medium);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-    }
-
-    .xbot-launcher.is-hidden {
-      opacity: 0 !important;
-      visibility: hidden !important;
-      pointer-events: none !important;
-      transform: translateY(10px);
-    }
-
-    .xbot-launcher:hover,
-    .xbot-launcher:focus-visible {
-      transform: translateY(-1px);
-      border-color: rgba(212, 175, 55, 0.5);
-      color: var(--gold);
-      background: rgba(16, 16, 16, 0.96);
-      outline: none;
-    }
-
-    .app-interface.is-live ~ .xbot-launcher {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .xbot-panel {
-      position: fixed;
-      right: 20px;
-      bottom: 96px;
-      z-index: 9998;
-      width: min(420px, calc(100vw - 24px));
-      height: min(72vh, 680px);
-      min-height: 560px;
-      max-height: calc(100vh - 132px);
-      display: grid;
-      grid-template-rows: auto auto 1fr auto;
-      background: #080808;
-      border: 1px solid rgba(212, 175, 55, 0.22);
-      backdrop-filter: blur(12px);
-      isolation: isolate;
-      box-shadow:
-        0 24px 80px rgba(0, 0, 0, 0.72),
-        0 0 0 1px rgba(212, 175, 55, 0.05);
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: translateY(10px);
-      transition:
-        opacity var(--ease-medium),
-        transform var(--ease-medium),
-        visibility var(--ease-medium);
-      overflow: hidden;
-    }
-
-    .xbot-panel.is-open {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-      transform: translateY(0);
-    }
-
-    .xbot-top,
-    .xbot-footer {
-      padding: 1rem 1rem 0.95rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: #0a0a0a;
-      position: relative;
-      z-index: 2;
-      flex: 0 0 auto;
-    }
-
-    .xbot-footer {
-      border-bottom: 0;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding-top: 0.9rem;
-    }
-
-    .xbot-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: flex-start;
-      min-width: 0;
-    }
-
-    .xbot-title {
-      font-family: var(--font-heading);
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text);
-    }
-
-    .xbot-close {
-      color: var(--text-dim);
-      font-family: var(--font-mono);
-      font-size: 0.72rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      padding-top: 0.1rem;
-    }
-
-    .xbot-subtitle,
-    .xbot-note,
-    .xbot-message p {
-      color: var(--text-soft);
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.92rem;
-      line-height: 1.65;
-      overflow-wrap: anywhere;
-    }
-
-    .xbot-subtitle {
-      margin-top: 0.45rem;
-    }
-
-    .xbot-quick {
-      padding: 0.9rem 1rem 1rem;
-      display: flex;
-      gap: 0.6rem;
-      flex-wrap: wrap;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      background: #090909;
-      position: relative;
-      z-index: 2;
-    }
-
-    .xbot-chip {
-      padding: 0.65rem 0.75rem;
-      border: 1px solid rgba(212, 175, 55, 0.18);
-      background: rgba(255, 255, 255, 0.02);
-      color: var(--text);
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      transition:
-        border-color var(--ease-medium),
-        color var(--ease-medium),
-        background-color var(--ease-medium);
-    }
-
-    .xbot-chip:hover,
-    .xbot-chip:focus-visible {
-      border-color: rgba(212, 175, 55, 0.42);
-      color: var(--gold);
-      background: rgba(212, 175, 55, 0.06);
-      outline: none;
-    }
-
-    .xbot-messages {
-      overflow-y: auto;
-      padding: 1rem;
-      display: grid;
-      gap: 0.85rem;
-      align-content: start;
-      min-height: 0;
-      min-width: 0;
-      background: #080808;
-      position: relative;
-      z-index: 1;
-    }
-
-    .xbot-message {
-      max-width: 92%;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      background: #101010;
-      min-width: 0;
-    }
-
-    .xbot-message strong {
-      display: block;
-      margin-bottom: 0.4rem;
-      font-family: var(--font-mono);
-      font-size: 0.62rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--gold);
-    }
-
-    .xbot-message.user {
-      margin-left: auto;
-      border-color: rgba(212, 175, 55, 0.18);
-    }
-
-    .xbot-form {
-      display: grid;
-      gap: 0.7rem;
-      min-width: 0;
-    }
-
-    .xbot-form input {
-      width: 100%;
-      min-width: 0;
-      max-width: 100%;
-      padding: 0.9rem 1rem;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      background: #0b0b0b;
-      color: var(--text);
-      position: relative;
-      z-index: 3;
-    }
-
-    .xbot-form input::placeholder {
-      color: rgba(240, 240, 240, 0.42);
-    }
-
-    .xbot-actions {
-      display: flex;
-      justify-content: space-between;
-      gap: 0.8rem;
-      align-items: center;
-      flex-wrap: wrap;
-      min-width: 0;
-    }
-
-    .xbot-send {
-      padding: 0.8rem 1rem;
-      border: 1px solid rgba(212, 175, 55, 0.34);
-      background: var(--gold);
-      color: #050505;
-      font-family: var(--font-mono);
-      font-size: 0.68rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      flex-shrink: 0;
-    }
-
-    .xbot-note {
-      font-size: 0.78rem;
-      color: var(--text-dim);
-      flex: 1 1 220px;
-      min-width: 0;
-    }
-
-    .toast {
-      border-left: 3px solid var(--gold);
-      background: rgba(212, 175, 55, 0.1);
-      color: var(--gold);
-      padding: 0.85rem 1rem;
-      font-family: var(--font-mono);
-      font-size: 0.78rem;
-      letter-spacing: 0.08em;
-      animation: slideIn 0.45s ease;
-      backdrop-filter: blur(6px);
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-
-    @keyframes breathe {
-      0%,
-      100% {
-        transform: scale(1);
-        opacity: 0.55;
-      }
-
-      50% {
-        transform: scale(1.45);
-        opacity: 1;
-        box-shadow: 0 0 36px rgba(240, 240, 240, 0.45);
-      }
-    }
-
-    @keyframes blink {
-      50% {
-        opacity: 0.28;
-      }
-    }
-
-    @keyframes blinkCursor {
-      0%,
-      100% {
-        opacity: 1;
-      }
-
-      50% {
-        opacity: 0;
-      }
-    }
-
-    @keyframes slideIn {
-      from {
-        transform: translateX(100%);
-        opacity: 0;
-      }
-
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes neuralDropFlash {
-      0% {
-        opacity: 0;
-        transform: scale(0.92);
-        filter: blur(20px);
-      }
-
-      20% {
-        opacity: 0.8;
-      }
-
-      50% {
-        opacity: 0.42;
-        filter: blur(0);
-      }
-
-      100% {
-        opacity: 0;
-        transform: scale(1.08);
-        filter: blur(28px);
-      }
-    }
-
-    @media (max-width: 1100px) {
-      .hero-shell,
-      .section-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .stats-grid,
-      .product-grid,
-      .article-grid,
-      .principle-list {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-      }
-    }
-
-    @media (max-width: 860px) {
-      body {
-        overflow: hidden;
-      }
-
-      .app-main {
-        grid-template-columns: 1fr;
-      }
-
-      .sidebar {
-        display: none;
-      }
-
-      .mobile-controls {
-        display: flex;
-      }
-
-      .hero-shell {
-        min-height: auto;
-        padding-top: 1.2rem;
-      }
-
-      .typewriter-panel {
-        min-height: 280px;
-      }
-
-      .footer-bar {
-        padding: 0 1rem;
-      }
-    }
-
-    @media (max-width: 640px) {
-      .site-header,
-      .footer-bar {
-        padding-left: 1rem;
-        padding-right: 1rem;
-      }
-
-      .status-indicators {
-        display: none;
-      }
-
-      .stats-grid,
-      .product-grid,
-      .article-grid,
-      .principle-list {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-title {
-        font-size: 2.2rem;
-      }
-
-      .section-title {
-        font-size: 1.65rem;
-      }
-
-      .join-form {
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .xbot-launcher {
-        right: 12px;
-        bottom: 12px;
-      }
-
-      .xbot-panel {
-        right: 12px;
-        bottom: 88px;
-        width: calc(100vw - 24px);
-        height: min(74vh, 640px);
-        min-height: 500px;
-        max-height: calc(100vh - 112px);
-      }
-
-      .xbot-actions {
-        align-items: stretch;
-      }
-
-      .xbot-send {
-        width: 100%;
-      }
-
-      .xbot-launcher {
-        bottom: 14px;
-      }
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      *,
-      *::before,
-      *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-        scroll-behavior: auto !important;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>INNER VIRTUE X | Master Your Mind</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--bg2:#080808;--bg3:#0d0d0d;--line:rgba(255,255,255,0.06);--text:#f0f0f0;--soft:rgba(240,240,240,0.65);--dim:rgba(240,240,240,0.35);--gold:#d4af37;--gold2:#f0cc5a;--gdim:rgba(212,175,55,0.12);--fh:"Cinzel",serif;--fb:"Inter",sans-serif;--fm:"Courier New",monospace}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}button{background:none;border:none;cursor:pointer;color:inherit;font:inherit}
+
+/* GATEWAY */
+#gateway{position:fixed;inset:0;z-index:9000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;transition:opacity 1.8s cubic-bezier(.4,0,.2,1),visibility 1.8s ease}
+#gateway.gone{opacity:0;visibility:hidden;pointer-events:none}
+.gw-rings{position:relative;width:200px;height:200px;display:flex;align-items:center;justify-content:center;margin-bottom:2rem;cursor:pointer}
+.gr{position:absolute;border-radius:50%;border:1px solid rgba(212,175,55,0.22);animation:rp 3.2s ease-in-out infinite}
+.gr1{width:200px;height:200px;animation-delay:0s}
+.gr2{width:162px;height:162px;animation-delay:.35s;border-color:rgba(212,175,55,0.16)}
+.gr3{width:124px;height:124px;animation-delay:.7s;border-color:rgba(212,175,55,0.1)}
+.gw-logo{width:100px;height:100px;position:relative;z-index:2;opacity:0;animation:lrev 2s ease forwards .4s;filter:drop-shadow(0 0 22px rgba(212,175,55,0.3))}
+.gw-brand{font-family:var(--fh);font-size:1.05rem;letter-spacing:.55em;text-transform:uppercase;opacity:0;animation:fup 1s ease forwards 1.4s;margin-bottom:.35rem}
+.gw-brand span{color:var(--gold)}
+.gw-sub{font-family:var(--fm);font-size:.6rem;letter-spacing:.38em;text-transform:uppercase;color:var(--dim);opacity:0;animation:fup 1s ease forwards 1.9s;margin-bottom:2.8rem}
+.gw-btn{opacity:0;animation:fup 1s ease forwards 2.6s;display:flex;flex-direction:column;align-items:center;gap:.85rem;cursor:pointer}
+.gw-ring-btn{width:50px;height:50px;border-radius:50%;border:1px solid rgba(212,175,55,0.38);display:flex;align-items:center;justify-content:center;animation:breathe 3.5s ease-in-out infinite}
+.gw-dot{width:10px;height:10px;border-radius:50%;background:var(--gold);box-shadow:0 0 14px rgba(212,175,55,.65)}
+.gw-lbl{font-family:var(--fm);font-size:.62rem;letter-spacing:.42em;text-transform:uppercase;color:var(--dim)}
+
+/* INTRO */
+#intro{position:fixed;inset:0;z-index:8000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;opacity:0;visibility:hidden;transition:opacity .8s ease,visibility .8s ease}
+#intro.show{opacity:1;visibility:visible}#intro.hide{opacity:0;visibility:hidden}
+.il{font-family:var(--fh);text-transform:uppercase;letter-spacing:.1em;line-height:1.12;opacity:0;transform:translateY(18px);transition:opacity .9s ease,transform .9s ease;margin-bottom:.9rem}
+.il.sub{font-family:var(--fb);font-size:1rem;letter-spacing:.04em;text-transform:none;font-weight:300;color:var(--soft);font-style:italic}
+.il.vis{opacity:1;transform:translateY(0)}
+.idiv{width:1px;height:0;background:linear-gradient(180deg,transparent,var(--gold),transparent);margin:0 auto 1.2rem;transition:height 1.1s ease}
+.idiv.grow{height:75px}
+#iskip{position:absolute;bottom:2rem;right:2rem;font-family:var(--fm);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);padding:.5rem .8rem;border:1px solid rgba(255,255,255,.1);transition:color .3s,border-color .3s}
+#iskip:hover{color:var(--gold);border-color:rgba(212,175,55,.35)}
+
+/* NAV */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;height:58px;display:flex;align-items:center;justify-content:space-between;padding:0 2rem;border-bottom:1px solid var(--line);background:rgba(0,0,0,.9);backdrop-filter:blur(20px);opacity:0;transition:opacity .8s ease}
+nav.show{opacity:1}
+.nb{display:flex;align-items:center;gap:.8rem}.nb svg{width:26px;height:26px}
+.nn{font-family:var(--fh);font-size:.8rem;letter-spacing:.46em;text-transform:uppercase}.nn span{color:var(--gold)}
+.nl{display:flex;gap:1.7rem;font-family:var(--fm);font-size:.61rem;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+.nl a{transition:color .3s}.nl a:hover{color:var(--gold)}
+.nig{padding:.48rem .95rem;border:1px solid rgba(212,175,55,.28);font-family:var(--fm);font-size:.61rem;letter-spacing:.17em;text-transform:uppercase;color:var(--gold);transition:background .3s,border-color .3s}
+.nig:hover{background:var(--gdim);border-color:var(--gold)}
+
+/* HERO */
+.hero{min-height:100vh;display:grid;grid-template-columns:1.1fr .9fr;align-items:center;gap:3rem;padding:80px 3rem 4rem;position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero::after{content:"";position:absolute;top:-12%;right:-6%;width:500px;height:500px;border-radius:50%;background:radial-gradient(circle,rgba(212,175,55,0.06),transparent 65%);pointer-events:none}
+canvas#bgc{position:absolute;inset:0;width:100%;height:100%;opacity:.13;pointer-events:none;z-index:0}
+.hl,.hr{position:relative;z-index:1}
+.htag{font-family:var(--fm);font-size:.63rem;letter-spacing:.34em;text-transform:uppercase;color:var(--dim);margin-bottom:1.3rem;display:flex;align-items:center;gap:.65rem}
+.htag::before{content:"";width:26px;height:1px;background:var(--gold);display:block}
+.h1{font-family:var(--fh);font-size:clamp(2.8rem,5vw,5.2rem);line-height:1.04;letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.5rem;background:linear-gradient(140deg,#fff 20%,var(--gold) 55%,rgba(255,255,255,.85) 90%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hsub{color:var(--soft);line-height:1.9;font-size:1rem;max-width:510px;margin-bottom:2rem;font-weight:300}
+.hbtns{display:flex;gap:.95rem;flex-wrap:wrap;margin-bottom:1.9rem}
+.btng{padding:.92rem 1.75rem;background:var(--gold);color:#000;font-family:var(--fm);font-size:.69rem;letter-spacing:.2em;text-transform:uppercase;transition:transform .3s,box-shadow .3s}
+.btng:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(212,175,55,.28)}
+.btno{padding:.92rem 1.75rem;border:1px solid rgba(212,175,55,.3);font-family:var(--fm);font-size:.69rem;letter-spacing:.2em;text-transform:uppercase;transition:all .3s}
+.btno:hover{border-color:var(--gold);color:var(--gold);background:var(--gdim)}
+.hpills{display:flex;gap:.55rem;flex-wrap:wrap}
+.pill{padding:.38rem .8rem;border:1px solid rgba(255,255,255,.09);font-family:var(--fm);font-size:.59rem;letter-spacing:.14em;text-transform:uppercase;color:var(--dim)}
+
+/* TYPEWRITER */
+.twp{background:linear-gradient(155deg,rgba(212,175,55,.05),rgba(0,0,0,.5));border:1px solid rgba(212,175,55,.13);padding:1.9rem;min-height:350px;display:grid;grid-template-rows:auto 1fr auto;gap:1.1rem;backdrop-filter:blur(12px);position:relative;overflow:hidden}
+.twp::before{content:"";position:absolute;inset:10px;border:1px solid rgba(212,175,55,.06);pointer-events:none}
+.twbar{display:flex;justify-content:space-between;font-family:var(--fm);font-size:.61rem;letter-spacing:.19em;text-transform:uppercase;color:var(--dim)}
+#tw{font-size:1.03rem;line-height:2.05;color:var(--text);white-space:pre-wrap;align-self:center;min-height:185px}
+.cur{display:inline-block;width:.44ch;color:var(--gold);animation:blkc .9s ease-in-out infinite}
+
+/* MARQUEE */
+.mq{overflow:hidden;border-top:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--bg2);padding:.82rem 0}
+.mqt{display:flex;animation:mqr 32s linear infinite;white-space:nowrap}
+.mqi{font-family:var(--fm);font-size:.63rem;letter-spacing:.27em;text-transform:uppercase;color:var(--dim);padding:0 2.1rem}
+.mqi span{color:var(--gold)}
+
+/* SECTIONS */
+section.blk{padding:clamp(3.5rem,7vw,6rem) clamp(1.5rem,4vw,4rem);border-bottom:1px solid var(--line)}
+.si{max-width:1200px;margin:0 auto}
+.sl{font-family:var(--fm);font-size:.63rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.st{font-family:var(--fh);font-size:clamp(1.85rem,3.2vw,3rem);line-height:1.1;letter-spacing:.07em;text-transform:uppercase;margin-bottom:1.1rem}
+.sc{color:var(--soft);line-height:1.9;font-size:.98rem;max-width:700px;margin-bottom:1.9rem;font-weight:300}
+.rv{opacity:0;transform:translateY(22px);transition:opacity .85s ease,transform .85s ease}
+.rv.in{opacity:1;transform:translateY(0)}
+
+/* PRINCIPLES */
+.pg{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line);margin-top:2.3rem}
+.pc{background:var(--bg2);padding:1.9rem 1.35rem;transition:background .4s}
+.pc:hover{background:var(--bg3)}
+.pn{font-family:var(--fh);font-size:2.3rem;color:rgba(212,175,55,.17);margin-bottom:.85rem;line-height:1}
+.pt{font-size:.78rem;letter-spacing:.17em;text-transform:uppercase;margin-bottom:.65rem}
+.pd{color:var(--soft);font-size:.87rem;line-height:1.78;font-weight:300}
+
+/* QUOTE SECTION — daily rotating */
+.qs{background:var(--bg2);text-align:center;padding:clamp(3.5rem,6vw,6rem) 2rem;border-bottom:1px solid var(--line)}
+.qw{max-width:820px;margin:0 auto}
+.qday{font-family:var(--fm);font-size:.6rem;letter-spacing:.3em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;display:flex;align-items:center;justify-content:center;gap:.8rem}
+.qday::before,.qday::after{content:"";flex:1;max-width:60px;height:1px;background:linear-gradient(90deg,transparent,rgba(212,175,55,.4))}
+.qday::after{background:linear-gradient(90deg,rgba(212,175,55,.4),transparent)}
+.bq{font-family:var(--fh);font-size:clamp(1.3rem,2.7vw,2.25rem);line-height:1.68;letter-spacing:.05em;text-transform:uppercase;color:var(--text);margin-bottom:1.1rem;min-height:110px;transition:opacity .55s ease}
+.bq.fade{opacity:0}
+.qauth{font-family:var(--fm);font-size:.64rem;letter-spacing:.27em;text-transform:uppercase;color:var(--gold)}
+.qdots{display:flex;gap:.52rem;justify-content:center;margin-top:1.3rem}
+.qd{width:5px;height:5px;border-radius:50%;background:var(--dim);cursor:pointer;transition:background .3s;border:none}
+.qd.on{background:var(--gold)}
+.qnav{display:flex;align-items:center;justify-content:center;gap:1.2rem;margin-top:1.5rem}
+.qnbtn{padding:.55rem 1.1rem;border:1px solid rgba(212,175,55,.22);font-family:var(--fm);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);transition:all .3s}
+.qnbtn:hover{border-color:var(--gold);color:var(--gold);background:var(--gdim)}
+.qdatestr{font-family:var(--fm);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-top:.7rem}
+
+/* PHILOSOPHER CARDS */
+.phg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.5rem;margin-top:2.4rem}
+.phc{background:var(--bg2);border:1px solid var(--line);overflow:hidden;position:relative;transition:border-color .4s,transform .4s}
+.phc:hover{border-color:rgba(212,175,55,.22);transform:translateY(-5px)}
+.phc::after{content:"";position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(90deg,transparent,var(--gold),transparent);opacity:0;transition:opacity .4s}
+.phc:hover::after{opacity:1}
+.ph-img{height:220px;position:relative;overflow:hidden;display:flex;align-items:center;justify-content:center}
+.ph-img svg{width:100%;height:100%}
+.ph-body{padding:1.4rem}
+.ph-era{font-family:var(--fm);font-size:.59rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:.45rem}
+.ph-name{font-family:var(--fh);font-size:1.12rem;letter-spacing:.1em;text-transform:uppercase;margin-bottom:.75rem}
+.ph-quote{font-size:.88rem;color:var(--soft);line-height:1.82;font-style:italic;margin-bottom:.85rem;padding-left:.85rem;border-left:1px solid rgba(212,175,55,.28);font-weight:300}
+.ph-desc{font-size:.83rem;color:var(--dim);line-height:1.74;font-weight:300}
+
+/* STATS */
+.sr{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--line)}
+.sb{background:var(--bg2);padding:2rem 1.4rem;text-align:center}
+.sn{font-family:var(--fh);font-size:2.6rem;color:var(--gold);display:block;line-height:1;margin-bottom:.42rem}
+.sk{font-family:var(--fm);font-size:.61rem;letter-spacing:.19em;text-transform:uppercase;color:var(--dim)}
+
+/* PRODUCTS */
+.prg{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.3rem}
+.prc{background:var(--bg2);border:1px solid var(--line);display:grid;gap:1rem;align-content:start;transition:border-color .4s,box-shadow .4s}
+.prc:hover{border-color:rgba(212,175,55,.2);box-shadow:0 0 38px rgba(212,175,55,.06)}
+.pv{min-height:205px;display:grid;place-items:center;background:radial-gradient(circle at top,rgba(212,175,55,.09),transparent 58%);position:relative;overflow:hidden}
+.bk{width:115px;aspect-ratio:3/4.2;background:#040404;border:1px solid rgba(212,175,55,.2);padding:.85rem .78rem;display:grid;align-content:space-between;box-shadow:10px 14px 28px rgba(0,0,0,.55);position:relative}
+.bk::before{content:"";position:absolute;left:.42rem;top:.42rem;bottom:.42rem;width:2px;background:linear-gradient(180deg,rgba(212,175,55,.45),rgba(212,175,55,.04))}
+.bs{font-family:var(--fm);font-size:.49rem;letter-spacing:.17em;text-transform:uppercase;color:rgba(212,175,55,.62)}
+.bt{font-family:var(--fh);font-size:.88rem;line-height:1.17;letter-spacing:.07em;text-transform:uppercase}
+.bf{font-family:var(--fm);font-size:.46rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.pb{padding:0 1.35rem 1.35rem;display:grid;gap:.82rem}
+.ptag{font-family:var(--fm);font-size:.59rem;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+.pname{font-size:.87rem;letter-spacing:.15em;text-transform:uppercase}
+.pdesc{color:var(--soft);font-size:.87rem;line-height:1.77;font-weight:300}
+.plist{padding-left:.95rem;display:grid;gap:.32rem}
+.plist li{color:var(--soft);font-size:.82rem;line-height:1.65;font-weight:300}
+.plist li::marker{color:var(--gold)}
+.pprice{font-family:var(--fh);font-size:1.85rem;color:var(--gold)}
+.pacts{display:flex;gap:.6rem;flex-wrap:wrap}
+.bbuy{padding:.78rem 1.05rem;background:var(--gold);color:#000;font-family:var(--fm);font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;transition:transform .3s,box-shadow .3s}
+.bbuy:hover{transform:translateY(-2px);box-shadow:0 5px 17px rgba(212,175,55,.27)}
+.bsm{padding:.78rem .9rem;border:1px solid rgba(255,255,255,.09);font-family:var(--fm);font-size:.63rem;letter-spacing:.13em;text-transform:uppercase;color:var(--soft);transition:all .3s}
+.bsm:hover{border-color:rgba(212,175,55,.36);color:var(--gold)}
+
+/* ARTICLES */
+.ag{display:grid;grid-template-columns:repeat(3,1fr);gap:1.4rem;margin-top:2.3rem}
+.ac{background:var(--bg2);border:1px solid var(--line);padding:1.7rem;display:grid;gap:.78rem;align-content:start;transition:border-color .4s,transform .4s}
+.ac:hover{border-color:rgba(212,175,55,.18);transform:translateY(-3px)}
+.atag{font-family:var(--fm);font-size:.59rem;letter-spacing:.17em;text-transform:uppercase;color:var(--gold)}
+.atitle{font-size:.92rem;letter-spacing:.1em;text-transform:uppercase;line-height:1.5}
+.acopy{color:var(--soft);font-size:.86rem;line-height:1.77;font-weight:300}
+.alink{font-family:var(--fm);font-size:.61rem;letter-spacing:.17em;text-transform:uppercase;color:var(--dim);transition:color .3s}
+.alink:hover{color:var(--gold)}
+
+/* INSTAGRAM */
+.igs{padding:clamp(3.5rem,6vw,5.5rem) clamp(1.5rem,4vw,4rem);text-align:center;background:linear-gradient(180deg,var(--bg),var(--bg2));border-bottom:1px solid var(--line)}
+.igi{max-width:640px;margin:0 auto}
+.igh{font-family:var(--fh);font-size:clamp(2.2rem,5vw,4.2rem);letter-spacing:.06em;text-transform:uppercase;background:linear-gradient(135deg,var(--gold),var(--gold2),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:.85rem}
+.igc{color:var(--soft);line-height:1.9;font-size:.98rem;margin-bottom:1.75rem;font-weight:300}
+.igst{display:flex;gap:2rem;justify-content:center;margin-bottom:1.8rem;flex-wrap:wrap}
+.igsi strong{display:block;font-family:var(--fh);font-size:1.55rem;color:var(--gold)}
+.igsi span{font-family:var(--fm);font-size:.59rem;letter-spacing:.17em;text-transform:uppercase;color:var(--dim)}
+.btig{display:inline-flex;align-items:center;gap:.65rem;padding:.92rem 1.9rem;background:var(--gold);color:#000;font-family:var(--fm);font-size:.69rem;letter-spacing:.19em;text-transform:uppercase;transition:transform .3s,box-shadow .3s}
+.btig:hover{transform:translateY(-2px);box-shadow:0 8px 26px rgba(212,175,55,.27)}
+
+/* JOIN */
+.jc{background:var(--bg2);border:1px solid rgba(212,175,55,.12);padding:2.4rem;max-width:700px;box-shadow:0 0 38px rgba(212,175,55,.055)}
+.jf{display:flex;gap:0;margin-top:1.4rem;flex-wrap:wrap}
+.jf input{flex:1 1 250px;min-width:0;padding:.95rem 1.05rem;border:1px solid rgba(255,255,255,.09);background:rgba(255,255,255,.02);color:var(--text);font-family:var(--fb);font-size:.9rem;outline:none;transition:border-color .3s}
+.jf input:focus{border-color:rgba(212,175,55,.36)}
+.jf input::placeholder{color:var(--dim)}
+.jf button{padding:.95rem 1.5rem;background:var(--gold);color:#000;font-family:var(--fm);font-size:.68rem;letter-spacing:.17em;text-transform:uppercase;border:none;cursor:pointer;transition:transform .3s}
+.jf button:hover{transform:translateY(-1px)}
+.jn{font-family:var(--fm);font-size:.59rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);margin-top:.65rem}
+
+/* FOOTER */
+footer{padding:1.75rem 2rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;background:rgba(0,0,0,.92)}
+.fb2{display:flex;align-items:center;gap:.65rem}
+.fb2 svg{width:24px;height:24px}
+.fb2 span{font-family:var(--fh);font-size:.77rem;letter-spacing:.4em;text-transform:uppercase}
+.fb2 span em{font-style:normal;color:var(--gold)}
+.fl{display:flex;gap:1.35rem;flex-wrap:wrap;font-family:var(--fm);font-size:.59rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+.fl a:hover{color:var(--gold)}
+.fc{font-family:var(--fm);font-size:.59rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim)}
+
+/* XBOT */
+.xbb{position:fixed;right:1.5rem;bottom:1.5rem;z-index:500;padding:.82rem 1.05rem;border:1px solid rgba(212,175,55,.27);background:rgba(3,3,3,.96);font-family:var(--fm);font-size:.63rem;letter-spacing:.15em;text-transform:uppercase;backdrop-filter:blur(12px);transition:all .4s;opacity:0;pointer-events:none}
+.xbb.on{opacity:1;pointer-events:auto}.xbb:hover{border-color:var(--gold);color:var(--gold)}
+.xbp{position:fixed;right:1.5rem;bottom:4.8rem;z-index:500;width:min(385px,calc(100vw - 2rem));height:min(60vh,590px);background:#060606;border:1px solid rgba(212,175,55,.17);display:grid;grid-template-rows:auto auto 1fr auto;box-shadow:0 18px 55px rgba(0,0,0,.7);opacity:0;visibility:hidden;transform:translateY(10px);transition:all .5s cubic-bezier(.16,1,.3,1);overflow:hidden}
+.xbp.open{opacity:1;visibility:visible;transform:translateY(0)}
+.xhd{padding:.92rem 1rem;border-bottom:1px solid rgba(255,255,255,.06);display:flex;justify-content:space-between;align-items:flex-start;background:#090909}
+.xbt{font-family:var(--fh);font-size:.86rem;letter-spacing:.11em;text-transform:uppercase}
+.xbs{font-size:.74rem;color:var(--soft);margin-top:.2rem}
+.xcx{font-family:var(--fm);font-size:.58rem;letter-spacing:.13em;text-transform:uppercase;color:var(--dim);padding-top:2px}
+.xcr{padding:.68rem;display:flex;gap:.42rem;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.05);background:#080808}
+.xc{padding:.43rem .68rem;border:1px solid rgba(212,175,55,.15);font-family:var(--fm);font-size:.55rem;letter-spacing:.11em;text-transform:uppercase;transition:all .3s}
+.xc:hover{border-color:rgba(212,175,55,.4);color:var(--gold)}
+.xms{overflow-y:auto;padding:.82rem;display:grid;gap:.62rem;align-content:start;background:#060606}
+.xm{padding:.78rem .92rem;border:1px solid rgba(255,255,255,.06);background:#0d0d0d;max-width:92%}
+.xm strong{display:block;font-family:var(--fm);font-size:.55rem;letter-spacing:.15em;text-transform:uppercase;color:var(--gold);margin-bottom:.27rem}
+.xm p{font-size:.84rem;color:var(--soft);line-height:1.63}
+.xm.usr{margin-left:auto;border-color:rgba(212,175,55,.13)}
+.xft{padding:.82rem;border-top:1px solid rgba(255,255,255,.06);background:#090909}
+.xff{display:grid;gap:.52rem}
+.xff input{width:100%;padding:.78rem .92rem;border:1px solid rgba(255,255,255,.08);background:#0a0a0a;color:var(--text);font-size:.84rem;outline:none;transition:border-color .3s}
+.xff input:focus{border-color:rgba(212,175,55,.3)}
+.xff input::placeholder{color:var(--dim)}
+.xfr{display:flex;justify-content:flex-end}
+.xfr button{padding:.62rem .95rem;background:var(--gold);color:#000;font-family:var(--fm);font-size:.6rem;letter-spacing:.15em;text-transform:uppercase}
+
+/* TOAST */
+#tb{position:fixed;bottom:1.5rem;left:1.5rem;z-index:9999;display:grid;gap:.42rem}
+.toast{padding:.72rem .92rem;border-left:2px solid var(--gold);background:rgba(8,8,8,.97);font-family:var(--fm);font-size:.68rem;letter-spacing:.1em;color:var(--gold);animation:sup .4s ease;backdrop-filter:blur(8px)}
+
+@keyframes rp{0%,100%{transform:scale(1);opacity:.6}50%{transform:scale(1.06);opacity:1}}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(212,175,55,.38)}50%{box-shadow:0 0 0 14px rgba(212,175,55,0)}}
+@keyframes lrev{0%{opacity:0;transform:scale(.82)}100%{opacity:1;transform:scale(1)}}
+@keyframes fup{0%{opacity:0;transform:translateY(13px)}100%{opacity:1;transform:translateY(0)}}
+@keyframes blkc{0%,100%{opacity:1}50%{opacity:0}}
+@keyframes mqr{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes sup{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+@media(max-width:1100px){.hero{grid-template-columns:1fr;min-height:auto;padding-top:72px}.phg{grid-template-columns:1fr 1fr}.sr,.pg{grid-template-columns:1fr 1fr}}
+@media(max-width:768px){nav .nl{display:none}.hero{padding:68px 1.5rem 3rem}section.blk{padding:3rem 1.5rem}.prg,.ag{grid-template-columns:1fr}.phg{grid-template-columns:1fr}.sr{grid-template-columns:1fr 1fr}.pg{grid-template-columns:1fr 1fr}footer{flex-direction:column;text-align:center}.xbb{right:1rem;bottom:1rem}.xbp{right:1rem;width:calc(100vw - 2rem)}}
+@media(max-width:520px){.sr,.pg{grid-template-columns:1fr}.h1{font-size:2.35rem}}
+</style>
 </head>
 <body>
-  <div class="screen gateway" id="gateway">
-    <button class="entry-container" id="entry-trigger" type="button" aria-describedby="entry-text">
-      <span class="breathing-dot" aria-hidden="true"></span>
-      <span class="entry-text" id="entry-text">Enter the Void</span>
-    </button>
+
+<!-- ══ GATEWAY ══ -->
+<div id="gateway">
+  <div class="gw-rings" id="gw-trigger" role="button" tabindex="0" aria-label="Enter InnerVirtueX">
+    <div class="gr gr1"></div><div class="gr gr2"></div><div class="gr gr3"></div>
+    <svg class="gw-logo" version="1.0" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600" preserveAspectRatio="xMidYMid meet" aria-hidden="true" style="width:110px;height:110px">
+<defs>
+  <radialGradient id="logoGrad" cx="55%" cy="40%" r="55%">
+    <stop offset="0%" stop-color="#ffffff"/>
+    <stop offset="40%" stop-color="#c8c8c8"/>
+    <stop offset="100%" stop-color="#606060"/>
+  </radialGradient>
+</defs>
+<g transform="translate(0,600) scale(0.1,-0.1)" fill="url(#logoGrad)" stroke="none">
+<path d="M3401 5429 c-19 -4 -41 -5 -49 -1 -9 3 -13 1 -9 -5 6 -10 -52 -25 -109 -28 -12 0 -29 -9 -38 -18 -10 -9 -23 -17 -30 -17 -7 0 -21 -9 -31 -20 -12 -13 -26 -18 -39 -14 -17 4 -18 3 -6 -5 15 -10 14 -12 -12 -15 -7 -1 -12 -7 -11 -14 2 -6 -3 -9 -10 -6 -7 2 -19 -7 -27 -21 -7 -14 -19 -25 -26 -25 -8 0 -11 -6 -7 -17 4 -11 3 -14 -6 -9 -6 4 -11 4 -10 -1 4 -16 -13 -43 -24 -36 -6 3 -7 1 -3 -6 4 -6 -2 -27 -13 -45 -13 -20 -19 -41 -14 -52 4 -12 3 -15 -6 -10 -18 12 -30 49 -20 62 6 7 11 26 12 43 1 17 5 31 8 31 4 0 9 18 13 40 3 23 10 39 14 36 6 -4 8 44 4 82 -2 14 -52 17 -52 3 0 -6 -8 -8 -19 -6 -10 2 -29 -2 -43 -9 -13 -7 -30 -10 -37 -8 -9 3 -11 0 -6 -8 6 -10 3 -12 -11 -6 -10 4 -15 4 -12 0 9 -9 -81 -56 -93 -48 -5 3 -8 0 -7 -7 2 -7 -2 -13 -9 -14 -6 0 -15 -4 -20 -9 -5 -5 -2 -6 6 -1 9 5 12 4 7 -3 -4 -7 -12 -12 -18 -12 -5 0 -23 -11 -40 -25 -16 -14 -27 -25 -24 -25 3 0 -12 -18 -34 -40 -21 -22 -49 -62 -62 -89 -12 -27 -25 -48 -28 -46 -3 2 -5 -7 -6 -18 0 -12 -6 -53 -13 -92 -7 -38 -9 -80 -6 -93 4 -16 2 -21 -6 -17 -8 6 -8 2 0 -13 6 -12 16 -24 22 -27 14 -9 27 4 13 13 -15 10 1 178 22 232 55 141 202 267 391 335 37 14 68 23 70 22 1 -2 -18 -71 -43 -153 -58 -190 -95 -255 -194 -336 -38 -31 -164 -108 -176 -108 -2 0 21 37 50 83 29 45 72 119 94 163 23 45 48 89 57 98 12 12 13 16 3 16 -7 -1 -39 -34 -70 -74 -81 -104 -198 -263 -198 -270 0 -10 35 7 47 23 15 19 17 7 3 -19 -7 -13 -7 -21 0 -25 6 -4 7 -11 4 -17 -4 -6 0 -6 13 1 11 6 23 7 27 4 3 -3 6 -1 6 6 0 7 4 10 9 7 4 -3 19 3 31 14 13 11 32 20 42 20 11 0 17 4 13 9 -3 6 10 17 30 27 19 9 35 20 35 25 0 5 7 9 15 9 8 0 14 3 13 8 -2 4 11 21 27 39 17 17 44 49 61 70 17 21 41 39 53 40 12 1 19 -2 16 -8 -4 -5 -1 -9 6 -9 7 0 4 -7 -7 -15 -16 -13 -16 -14 -1 -9 12 4 17 1 17 -11 0 -9 -4 -14 -8 -11 -4 2 -14 0 -22 -6 -12 -8 -11 -9 4 -4 15 5 17 2 13 -13 -3 -15 -1 -18 11 -14 11 5 13 3 7 -7 -6 -10 -4 -12 8 -7 9 3 19 2 22 -3 3 -5 -8 -7 -25 -5 -16 2 -32 0 -35 -6 -4 -5 -13 -9 -21 -9 -23 0 -162 -62 -207 -93 -16 -11 -31 -17 -34 -13 -3 3 -14 -4 -24 -16 -11 -11 -19 -18 -19 -13 0 4 -15 -4 -34 -19 -38 -28 -51 -33 -40 -13 4 7 3 9 -2 4 -5 -5 -9 -12 -9 -17 0 -5 -22 -25 -49 -46 -27 -21 -46 -31 -42 -23 4 8 1 6 -7 -3 -8 -10 -17 -16 -20 -13 -4 3 -5 2 -2 -2 7 -9 -16 -34 -26 -27 -8 5 -13 -9 -10 -28 0 -4 -5 -5 -13 -2 -8 3 -17 0 -22 -7 -4 -8 -3 -10 4 -5 7 4 12 4 12 1 0 -3 -19 -15 -42 -25 -24 -11 -37 -20 -29 -20 7 0 -1 -13 -20 -29 -40 -35 -54 -32 -15 4 14 13 26 27 26 30 -1 21 1 25 11 20 6 -4 9 -1 8 6 -4 18 36 81 45 72 4 -4 4 1 0 11 -6 15 -4 17 6 11 10 -6 12 -4 7 9 -4 9 0 33 8 54 21 57 41 174 47 285 1 20 6 37 11 37 5 0 7 10 4 23 -3 12 1 40 8 62 12 34 12 43 -1 62 -18 29 -25 29 -54 -2 -13 -14 -30 -25 -37 -25 -8 0 -16 -7 -20 -15 -5 -14 -7 -14 -23 0 -12 11 -20 13 -25 5 -3 -6 -1 -9 6 -8 6 2 14 -3 17 -11 2 -8 0 -11 -6 -7 -6 3 -14 1 -19 -7 -13 -21 -63 -48 -75 -41 -7 5 -9 2 -5 -8 6 -16 -10 -38 -28 -38 -5 0 -4 4 4 9 7 5 12 13 10 18 -2 5 -17 -7 -34 -26 -16 -19 -23 -31 -15 -26 8 5 0 -6 -17 -24 -18 -18 -33 -38 -33 -44 0 -7 -5 -6 -11 3 -9 12 -10 11 -6 -7 3 -15 1 -20 -9 -16 -10 4 -12 0 -7 -13 5 -13 3 -15 -7 -9 -8 5 -11 4 -7 -2 4 -6 1 -26 -7 -43 -7 -18 -15 -29 -18 -24 -3 5 -3 3 -1 -4 1 -7 -1 -21 -6 -31 -20 -37 -33 -184 -21 -246 6 -33 12 -69 13 -80 6 -39 28 -81 48 -94 23 -14 36 -7 41 24 3 20 16 35 32 35 4 0 5 -8 2 -17 -5 -15 -4 -15 9 1 8 11 15 30 15 42 0 32 48 258 71 337 11 38 19 71 16 73 -6 6 -94 -184 -116 -252 -11 -33 -28 -100 -37 -148 -10 -48 -21 -83 -26 -78 -4 4 -18 46 -29 92 -17 67 -20 102 -16 175 8 130 48 221 140 323 36 39 276 207 284 198 2 -1 -3 -16 -11 -32 -8 -16 -22 -92 -31 -169 -19 -173 -23 -197 -46 -263 -24 -70 -77 -155 -149 -242 -38 -46 -57 -77 -55 -90 2 -11 -4 -25 -14 -32 -10 -7 -24 -27 -31 -45 -8 -17 -18 -29 -22 -27 -5 3 -7 0 -6 -8 2 -7 -3 -12 -10 -10 -8 1 -11 -2 -7 -8 3 -5 -4 -20 -16 -32 -12 -13 -27 -36 -35 -53 -7 -16 -13 -26 -14 -20 0 5 -12 -15 -27 -45 -16 -30 -32 -58 -38 -62 -5 -4 -6 -8 -1 -8 4 0 1 -11 -8 -25 -9 -14 -14 -30 -11 -35 3 -5 -1 -12 -8 -17 -22 -13 -37 -86 -22 -107 11 -15 14 -15 25 -1 11 13 15 13 23 3 6 -9 7 -8 3 5 -3 10 3 26 15 38 11 11 17 24 14 29 -4 6 -2 10 4 10 5 0 13 9 16 20 4 11 11 17 17 14 6 -4 8 -2 5 3 -4 6 1 17 10 24 9 8 14 9 10 3 -3 -6 -1 -11 6 -11 7 0 13 12 14 25 1 18 -1 21 -8 11 -6 -9 -9 -10 -9 -2 0 7 8 17 19 22 10 6 24 24 31 41 14 35 34 41 26 8 -3 -13 -3 -17 0 -10 3 6 10 9 16 6 7 -5 7 -1 0 11 -7 14 -5 28 10 54 33 60 41 65 70 42 l25 -20 44 23 c24 13 50 21 58 18 8 -2 11 0 7 6 -4 6 2 8 16 4 16 -4 19 -2 13 8 -5 9 -4 11 3 6 7 -4 12 -2 12 5 0 7 3 9 7 6 3 -4 11 -3 17 2 13 10 46 22 46 17 0 -8 -95 -58 -115 -60 -32 -5 -94 -38 -100 -54 -11 -30 20 -43 124 -53 107 -10 192 -2 271 26 23 8 47 12 53 8 6 -3 7 -1 3 5 -5 8 0 12 13 12 12 0 21 4 21 10 0 5 8 7 18 3 9 -3 14 -2 10 2 -10 10 47 46 64 41 7 -1 10 -1 6 1 -9 5 98 93 113 93 6 0 9 5 7 12 -5 14 40 64 54 60 5 -1 6 2 3 9 -9 14 32 52 48 44 6 -4 -3 7 -21 24 -18 17 -43 31 -57 31 -13 0 -27 5 -30 10 -3 6 -12 10 -18 10 -7 0 -6 -4 3 -10 24 -15 -5 -12 -47 5 -42 18 -46 18 -38 4 4 -5 -9 -3 -28 5 -20 8 -38 11 -42 8 -3 -4 -9 -2 -13 4 -4 6 -39 8 -90 4 -51 -3 -82 -1 -82 5 0 6 -4 4 -8 -3 -5 -8 -16 -10 -28 -6 -10 4 -16 3 -11 -1 9 -11 -82 -47 -96 -38 -6 3 -7 1 -4 -4 9 -14 -19 -37 -33 -28 -5 3 -10 -1 -10 -10 0 -11 -5 -15 -14 -12 -10 4 -13 1 -9 -9 4 -10 0 -12 -13 -7 -11 4 -15 3 -10 -5 3 -6 2 -13 -3 -16 -12 -8 -22 7 -13 20 4 5 23 21 42 36 19 14 44 34 55 45 27 25 78 61 88 61 5 0 12 4 15 8 4 4 1 4 -5 0 -7 -4 -13 -5 -13 -3 0 11 82 47 92 41 6 -4 8 -3 5 3 -3 5 10 17 30 26 20 9 31 11 25 5 -17 -17 21 -44 81 -58 29 -6 59 -14 67 -17 29 -9 168 -5 226 8 73 16 60 12 119 39 28 13 54 23 58 22 5 -1 6 2 2 8 -3 5 3 10 14 10 12 0 21 4 21 10 0 5 17 18 38 29 20 11 43 29 50 40 7 12 17 21 23 21 15 0 46 36 55 62 7 23 -8 42 -46 58 -17 7 -30 16 -30 21 0 5 -7 9 -15 9 -8 0 -35 7 -60 15 -53 19 -107 28 -152 28 -18 0 -33 5 -33 10 0 6 3 7 6 4 4 -3 16 -1 28 5 11 7 29 11 40 9 11 -1 16 2 12 8 -5 7 -1 8 9 5 8 -4 22 -1 30 6 8 7 15 10 15 7 0 -3 21 6 46 19 25 13 50 22 55 19 5 -4 6 0 3 8 -6 16 21 42 35 33 5 -3 12 1 15 10 4 10 2 13 -7 8 -6 -4 -1 4 13 18 14 13 31 33 38 44 7 10 10 13 6 5 -4 -9 -3 -12 4 -7 6 3 13 20 17 36 4 18 11 27 17 24 7 -5 8 -2 3 6 -4 7 -3 15 4 19 6 4 13 20 15 37 5 40 46 145 55 140 4 -3 7 10 7 29 0 24 -4 31 -15 27 -8 -3 -12 -1 -9 4 8 11 -26 13 -71 3z"/>
+<path d="M2355 3041 c-3 -6 -14 -8 -25 -6 -12 2 -18 0 -15 -6 6 -8 1 -10 -37 -13 -7 -1 -19 -7 -27 -14 -11 -10 -16 -10 -29 0 -12 10 -14 10 -8 1 4 -8 -3 -24 -19 -40 -14 -16 -21 -29 -15 -31 6 -2 6 -10 1 -20 -4 -9 -11 -30 -14 -47 -3 -16 -11 -43 -18 -60 -7 -16 -13 -37 -14 -45 -3 -42 -19 -97 -34 -114 -11 -14 -12 -17 -2 -11 11 6 13 4 7 -11 -19 -47 -54 -179 -50 -186 3 -4 0 -8 -6 -8 -7 0 -10 -6 -7 -14 3 -8 -1 -20 -9 -26 -8 -7 -14 -20 -14 -30 0 -17 -47 -57 -62 -52 -4 1 -5 -4 -2 -11 2 -7 -9 -26 -26 -42 -16 -16 -30 -26 -30 -23 0 3 -19 -13 -43 -36 -42 -41 -51 -76 -20 -76 9 0 13 -6 9 -15 -5 -13 -2 -14 15 -4 17 9 20 8 14 -2 -6 -9 -3 -11 8 -6 9 3 28 -4 44 -16 15 -12 28 -20 28 -18 0 2 10 1 23 -3 12 -4 20 -12 16 -17 -3 -6 0 -9 7 -8 22 5 60 -12 53 -22 -3 -6 0 -10 7 -8 32 4 44 -2 24 -12 -16 -8 -15 -8 8 -4 19 4 37 -1 57 -15 15 -11 35 -20 43 -20 9 0 19 -4 22 -10 3 -6 -1 -7 -12 -4 -17 5 -17 5 0 -6 10 -7 21 -9 24 -7 5 6 9 3 56 -38 31 -27 42 -32 31 -12 -4 6 5 1 19 -12 15 -14 27 -21 27 -17 0 4 6 2 13 -3 31 -26 108 -81 113 -81 3 0 29 -16 59 -35 30 -19 55 -32 55 -29 0 3 11 -7 25 -22 13 -14 23 -30 20 -33 -2 -4 8 -7 23 -6 15 0 32 -6 37 -13 6 -7 17 -14 25 -15 9 -2 32 -15 51 -30 20 -15 44 -27 53 -27 9 0 14 -4 11 -10 -4 -6 1 -7 11 -3 12 4 15 3 10 -6 -4 -6 -4 -10 1 -9 4 1 18 -3 30 -10 29 -16 69 4 51 25 -7 9 -7 13 1 13 7 0 4 14 -8 38 -30 56 -71 153 -71 167 0 8 -5 15 -10 17 -6 2 -12 16 -14 32 -2 15 -7 31 -12 34 -10 8 -67 127 -66 139 0 4 -3 13 -8 18 -4 6 -19 31 -33 56 -18 35 -22 51 -14 64 7 13 6 16 -2 11 -13 -8 -53 54 -46 72 3 7 0 10 -5 7 -6 -3 -10 1 -10 10 0 9 -6 26 -14 38 -8 12 -13 34 -11 50 2 15 -1 25 -5 22 -5 -3 -7 -13 -4 -23 5 -15 5 -15 -6 1 -6 9 -8 23 -4 30 4 6 4 9 -1 5 -4 -4 -14 0 -21 10 -17 22 -18 38 -1 24 10 -8 13 -6 13 7 0 11 -6 17 -13 14 -8 -3 -15 6 -19 26 -4 17 -10 29 -14 26 -4 -2 -6 7 -4 20 1 16 -2 23 -9 18 -6 -4 -8 0 -4 10 3 10 2 17 -2 17 -12 0 -67 159 -64 183 2 9 -1 17 -5 17 -5 0 -9 6 -10 13 0 6 -6 41 -12 77 -6 36 -13 79 -15 95 -14 111 -18 131 -27 143 -12 14 -34 16 -43 3z"/>
+<path d="M1292 1845 c-18 -8 -40 -12 -50 -9 -15 5 -15 4 -2 -6 13 -9 12 -11 -5 -8 -11 2 -26 -3 -33 -12 -12 -13 -13 -13 -7 0 4 8 -5 2 -19 -15 -31 -36 -20 -55 33 -55 20 0 56 -5 81 -11 25 -6 52 -12 60 -13 23 -3 74 -18 85 -25 6 -3 15 -6 20 -6 25 -2 94 -29 90 -35 -3 -5 7 -11 23 -15 50 -12 121 -48 115 -58 -4 -6 2 -8 15 -5 12 4 20 2 16 -3 -3 -5 4 -9 15 -9 19 0 26 -11 22 -33 -1 -5 3 -6 9 -2 6 3 8 12 4 18 -3 7 1 4 10 -7 8 -10 19 -15 25 -11 6 3 11 3 11 -2 1 -4 32 -28 70 -53 65 -42 92 -71 53 -55 -14 5 -15 4 -6 -6 10 -9 15 -10 27 0 10 8 16 9 21 1 3 -5 3 -10 -2 -10 -4 -1 6 -9 23 -18 48 -27 85 -60 88 -78 2 -10 12 -18 24 -19 13 -1 18 3 15 9 -4 6 9 -2 29 -19 20 -16 35 -35 33 -42 -2 -7 2 -10 9 -7 7 2 23 -4 36 -16 13 -11 27 -20 32 -20 4 0 7 -5 5 -12 -1 -7 13 -20 32 -30 19 -9 37 -21 40 -25 3 -4 19 -14 34 -22 15 -8 26 -20 23 -27 -3 -7 1 -18 9 -24 12 -10 13 -8 10 12 -4 22 -4 22 10 4 8 -11 15 -16 15 -11 0 4 11 -4 24 -18 13 -13 42 -37 65 -51 23 -15 39 -31 36 -36 -3 -6 -1 -18 5 -27 9 -15 10 -14 4 7 -6 22 -5 23 10 11 9 -7 16 -10 16 -7 0 4 9 2 20 -4 11 -6 18 -15 15 -21 -4 -5 -3 -8 2 -7 13 4 93 -45 87 -53 -3 -5 3 -6 12 -2 12 4 15 3 10 -5 -4 -7 -1 -12 8 -12 9 0 24 -8 34 -18 10 -10 24 -16 32 -14 8 3 10 0 5 -7 -4 -8 -2 -11 6 -10 20 3 50 -12 43 -22 -3 -5 6 -8 19 -7 13 1 36 -7 53 -18 16 -11 49 -28 75 -38 25 -10 59 -24 75 -31 17 -7 41 -16 55 -18 14 -3 70 -14 124 -26 55 -12 108 -18 119 -15 11 3 17 2 14 -3 -3 -5 9 -8 26 -7 18 1 64 3 102 4 39 2 84 7 100 11 17 4 46 10 66 12 19 2 45 10 57 16 12 7 28 11 35 10 26 -3 38 1 31 13 -5 8 -2 9 10 5 10 -4 15 -3 11 3 -3 6 0 10 8 10 8 0 26 9 39 20 14 10 28 17 32 15 3 -3 4 -2 1 2 -6 8 24 43 37 43 5 0 6 -6 1 -12 -10 -17 -14 -42 -5 -33 4 4 8 11 8 16 1 5 2 10 4 12 2 3 11 40 12 54 1 7 4 10 8 8 11 -7 37 30 32 44 -3 9 0 11 7 7 7 -5 10 -2 9 6 -2 7 2 12 9 11 7 -2 10 4 6 13 -3 8 -1 25 5 37 22 44 32 103 26 157 -6 58 -40 176 -56 197 -5 7 -6 18 -2 24 4 8 3 9 -4 5 -7 -4 -19 7 -29 31 -10 21 -21 39 -25 41 -5 2 -3 12 2 22 11 21 4 28 -27 25 -12 -1 -20 2 -17 6 3 5 -4 14 -16 21 -11 7 -20 20 -20 30 0 21 -16 32 -25 18 -5 -8 -12 -7 -23 2 -15 11 -15 11 -5 -2 7 -10 8 -21 3 -30 -6 -9 0 -29 16 -57 29 -52 29 -54 7 -47 -15 5 -15 4 -3 -4 8 -6 18 -9 22 -6 9 6 17 -24 26 -106 7 -68 -12 -185 -29 -174 -5 3 -6 -1 -4 -8 3 -8 -2 -22 -11 -33 -8 -11 -12 -13 -8 -5 7 12 5 13 -8 3 -8 -7 -19 -9 -23 -5 -5 4 -5 1 -1 -6 4 -7 12 -9 18 -6 8 5 9 1 5 -10 -4 -10 -7 -21 -7 -24 0 -4 -5 0 -10 8 -8 13 -10 13 -10 -1 0 -20 -34 -51 -45 -42 -4 5 -4 2 0 -6 6 -11 4 -13 -8 -8 -9 3 -16 3 -16 -1 3 -19 -3 -30 -18 -36 -10 -3 -31 -14 -48 -25 -35 -23 -49 -26 -39 -9 4 7 3 8 -5 4 -6 -4 -8 -12 -5 -18 5 -8 1 -9 -10 -5 -10 4 -15 3 -11 -3 9 -14 -8 -12 -24 3 -11 10 -13 10 -7 1 4 -7 1 -12 -8 -12 -9 0 -16 -4 -16 -10 0 -5 -10 -10 -22 -10 -13 1 -57 -2 -98 -6 -81 -7 -204 11 -179 26 7 5 -6 6 -31 3 -31 -4 -41 -3 -36 5 4 7 2 12 -4 12 -6 0 -8 5 -4 12 4 7 3 8 -5 4 -6 -4 -9 -12 -5 -17 3 -5 -10 -3 -28 5 -49 21 -72 29 -80 28 -5 -1 -8 2 -8 8 0 5 -9 10 -21 10 -11 0 -18 4 -15 9 4 5 -2 7 -13 4 -10 -3 -22 0 -25 6 -5 7 0 9 11 5 14 -5 15 -4 4 4 -8 6 -20 8 -27 5 -6 -2 -21 5 -32 17 -12 14 -25 19 -33 14 -8 -5 -11 -2 -7 8 4 10 0 14 -16 14 -13 -1 -21 5 -20 15 1 11 -6 15 -21 13 -12 -1 -33 8 -47 21 -13 12 -43 34 -67 49 -23 15 -44 33 -48 41 -3 8 -9 15 -15 15 -5 0 -6 -6 -3 -12 4 -7 -6 1 -20 17 -15 17 -24 23 -19 15 4 -8 -7 0 -25 18 -18 17 -37 32 -43 32 -6 0 -34 20 -62 43 -28 24 -61 49 -74 56 -20 11 -21 15 -10 28 12 15 11 15 -11 4 -15 -8 -21 -9 -17 -2 12 19 -4 33 -22 19 -10 -7 -14 -8 -9 -3 8 9 -20 45 -36 45 -6 0 -2 -7 9 -16 18 -14 18 -15 -3 -4 -13 6 -23 14 -23 18 0 4 -21 20 -48 37 -26 16 -58 40 -72 53 -14 12 -41 33 -60 45 -19 12 -42 28 -51 37 -34 30 -49 40 -56 40 -5 0 -8 5 -8 12 0 6 -12 15 -27 19 -41 11 -119 68 -112 82 5 8 3 8 -7 0 -16 -16 -33 -17 -24 -3 4 6 3 10 -2 8 -12 -3 -123 53 -123 62 0 5 6 10 13 13 6 2 0 4 -15 3 -14 0 -24 -5 -20 -10 3 -5 -2 -6 -12 -3 -10 4 -21 7 -24 7 -4 0 -1 4 7 9 10 7 8 9 -10 9 -13 -1 -57 7 -97 16 -90 20 -235 21 -280 1z"/>
+</g>
+</svg>
+      <defs>
+        <radialGradient id="gface" cx="55%" cy="38%" r="52%">
+          <stop offset="0%" stop-color="#e0e0e0"/>
+          <stop offset="45%" stop-color="#b8b8b8"/>
+          <stop offset="100%" stop-color="#606060"/>
+        </radialGradient>
+        <radialGradient id="gbeard" cx="50%" cy="30%" r="60%">
+          <stop offset="0%" stop-color="#c8c8c8"/>
+          <stop offset="100%" stop-color="#585858"/>
+        </radialGradient>
+      </defs>
+      <!-- Wavy hair background left side -->
+      <path d="M58 55 Q42 70 44 95 Q46 118 52 130 Q56 140 62 145" stroke="#1a1a1a" stroke-width="4" fill="none" stroke-linecap="round"/>
+      <path d="M56 55 Q38 72 41 98 Q43 122 50 134" stroke="#2a2a2a" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+      <!-- HEAD — side profile facing right -->
+      <path d="M62 52 Q80 28 108 30 Q138 30 150 50 Q162 70 158 95 Q156 118 148 132 Q138 148 120 155 Q102 158 88 150 Q70 140 64 122 Q56 100 62 52Z" fill="url(#gface)" stroke="#111" stroke-width="3.5"/>
+      <!-- Forehead/brow shadow highlight -->
+      <path d="M110 38 Q132 40 148 56 Q158 68 155 90" stroke="rgba(100,100,100,0.3)" stroke-width="8" fill="none" stroke-linecap="round"/>
+      <!-- LAUREL WREATH — across top of head -->
+      <g fill="url(#gface)" stroke="#0f0f0f" stroke-width="2.2">
+        <!-- Branch stem across top -->
+        <path d="M58 52 Q88 28 118 30 Q138 28 148 48" stroke="#151515" stroke-width="2.5" fill="none"/>
+        <!-- Left large leaves -->
+        <ellipse cx="62" cy="44" rx="12" ry="7" transform="rotate(-50 62 44)"/>
+        <ellipse cx="72" cy="33" rx="12" ry="7" transform="rotate(-32 72 33)"/>
+        <ellipse cx="85" cy="26" rx="12" ry="7" transform="rotate(-15 85 26)"/>
+        <!-- Top leaves -->
+        <ellipse cx="100" cy="23" rx="12" ry="7" transform="rotate(0 100 23)"/>
+        <ellipse cx="114" cy="25" rx="11" ry="6.5" transform="rotate(14 114 25)"/>
+        <!-- Right leaves -->
+        <ellipse cx="126" cy="32" rx="11" ry="6.5" transform="rotate(30 126 32)"/>
+        <ellipse cx="136" cy="42" rx="10" ry="6" transform="rotate(46 136 42)"/>
+      </g>
+      <!-- EAR — left side profile -->
+      <ellipse cx="66" cy="95" rx="8" ry="11" fill="url(#gface)" stroke="#111" stroke-width="2.8"/>
+      <path d="M70 88 Q75 94 70 100" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <!-- BROW ridge — strong, facing right -->
+      <path d="M95 65 Q110 58 126 62" stroke="#1a1a1a" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+      <!-- EYE — right side profile, one visible eye -->
+      <path d="M100 72 Q110 66 122 70" stroke="#111" stroke-width="2.8" fill="none" stroke-linecap="round"/>
+      <ellipse cx="110" cy="74" rx="5" ry="3" fill="#111"/>
+      <ellipse cx="111" cy="73" rx="2" ry="1.5" fill="#333"/>
+      <!-- NOSE — sharp stoic profile pointing right -->
+      <path d="M124 68 L138 88 Q142 96 136 100 Q130 102 126 98" stroke="#111" stroke-width="2.8" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+      <!-- LIPS / MOUTH -->
+      <path d="M112 114 Q122 120 134 116" stroke="#1a1a1a" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      <path d="M116 114 Q123 118 130 115" stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- BEARD — full flowing, multi-strand -->
+      <path d="M76 112 Q68 130 72 150 Q78 168 90 178 Q100 184 110 180 Q124 174 130 162 Q138 148 134 130 Q130 118 124 112" fill="url(#gbeard)" stroke="#0f0f0f" stroke-width="3.2"/>
+      <!-- Beard inner strands -->
+      <path d="M84 118 Q80 138 84 158 Q88 172 96 178" stroke="#1a1a1a" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+      <path d="M96 120 Q92 142 96 162 Q100 174 106 178" stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <path d="M108 120 Q106 142 108 162 Q110 174 112 178" stroke="#1a1a1a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+      <path d="M120 118 Q122 138 120 156 Q116 170 110 178" stroke="#1a1a1a" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+      <!-- NECK -->
+      <rect x="82" y="152" width="30" height="22" rx="2" fill="url(#gface)" stroke="#111" stroke-width="2.8"/>
+      <!-- DRAPED ROBE / TOGA — flowing from shoulders -->
+      <path d="M52 185 Q62 168 80 158 L82 174 L82 185Z" fill="url(#gbeard)" stroke="#111" stroke-width="2.8"/>
+      <path d="M166 185 Q155 165 136 156 L130 172 L130 185Z" fill="url(#gbeard)" stroke="#111" stroke-width="2.8"/>
+      <!-- Robe neckline folds -->
+      <path d="M52 185 Q82 170 110 180 Q138 170 166 185" stroke="#111" stroke-width="2.5" fill="none"/>
+      <path d="M60 185 Q90 174 110 180 Q130 174 158 185" stroke="#1a1a1a" stroke-width="1.5" fill="none"/>
+      <!-- Hair flowing behind on left -->
+      <path d="M60 52 Q46 78 48 110 Q50 136 60 150" stroke="#1a1a1a" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+    </svg>
   </div>
-
-  <div class="app-interface" id="app-interface">
-    <header class="site-header">
-      <div class="brand">INNER <span>VIRTUE</span> X</div>
-      <div class="status-indicators" aria-label="System status">
-        <span class="indicator">System Online</span>
-        <span class="indicator">Premium Library Active</span>
-        <span class="indicator">@innervirtuex</span>
-      </div>
-    </header>
-
-    <main class="app-main">
-      <aside class="sidebar">
-        <div class="control-group">
-          <h3>Audio Control</h3>
-          <button id="btn-audio" class="ui-btn" type="button">[ Unmute Audio ]</button>
-        </div>
-
-        <div class="control-group">
-          <h3>System Modules</h3>
-          <button class="ui-btn module-btn active" type="button" data-module="intro">> Welcome Sequence</button>
-          <button class="ui-btn module-btn" type="button" data-module="core">> Core Principles</button>
-          <button class="ui-btn module-btn" type="button" data-module="manifesto">> The Manifesto</button>
-          <button class="ui-btn module-btn" type="button" data-module="access">> Premium Access</button>
-        </div>
-
-        <div class="control-group">
-          <h3>Protocols</h3>
-          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 01: THE ANCHOR">> Protocol 01</button>
-          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 02: THE STILL RIVER">> Protocol 02</button>
-          <button class="ui-btn protocol-btn" type="button" data-protocol="PROTOCOL 03: THE OBSERVER">> Protocol 03</button>
-        </div>
-
-        <div class="control-group">
-          <h3>Diagnostics</h3>
-          <button id="btn-drop" class="ui-btn" type="button">> Trigger Neural Drop</button>
-        </div>
-      </aside>
-
-      <section class="content-region">
-        <canvas id="neural-canvas"></canvas>
-
-        <div class="content-scroll" id="content-scroll">
-          <div class="mobile-controls">
-            <button class="chip-btn module-btn active" type="button" data-module="intro">Welcome</button>
-            <button class="chip-btn module-btn" type="button" data-module="core">Principles</button>
-            <button class="chip-btn module-btn" type="button" data-module="manifesto">Manifesto</button>
-            <button class="chip-btn module-btn" type="button" data-module="access">Premium</button>
-            <button class="chip-btn protocol-btn" type="button" data-protocol="PROTOCOL 01: THE ANCHOR">Drop</button>
-          </div>
-
-          <section class="hero-shell" id="top">
-            <div class="hero-copy">
-              <span class="eyebrow">Digital Sanctuary for Self-Mastery</span>
-              <h1 class="hero-title">Master Your Mind. Live With Clarity.</h1>
-              <p class="hero-subtitle">
-                INNER VIRTUE X is a premium sanctuary for people who want calm emotional control, durable
-                resilience, and disciplined inner peace in daily life.
-              </p>
-              <div class="hero-actions">
-                <a class="cta-btn primary" href="#premium">Explore eBooks</a>
-                <a class="cta-btn" href="#join">Start Your Journey</a>
-              </div>
-              <p class="hero-note">
-                Rooted in Stoicism, contemplative philosophy, and practical self-observation, this experience
-                is designed to slow the mind down, build trust, and guide visitors toward premium digital
-                resources that create real inner transformation.
-              </p>
-              <div class="insight-chips">
-                <span class="pill">Awareness over reaction</span>
-                <span class="pill">Discipline over impulse</span>
-                <span class="pill">Inner peace over chaos</span>
-              </div>
-            </div>
-
-            <div class="typewriter-panel">
-              <div class="panel-top">
-                <span>Sanctuary Interface</span>
-                <span>Phase 02 Live</span>
-              </div>
-              <div id="typewriter-target" aria-live="polite"></div>
-              <div class="panel-bottom">
-                <span>@innervirtuex</span>
-                <span><span class="cursor">|</span></span>
-              </div>
-            </div>
-          </section>
-
-          <div class="sections">
-            <section class="section-block" id="philosophy">
-              <div class="section-grid">
-                <div class="section-label">Philosophy</div>
-                <div class="section-body">
-                  <h2 class="section-title">A Quieter Path to Strength</h2>
-                  <p class="section-copy">
-                    INNER VIRTUE X exists for people who are tired of noise, reaction, and emotional exhaustion.
-                    It is a modern philosophy brand for those who want to become more aware, more disciplined,
-                    and more internally stable.
-                  </p>
-                  <p class="section-copy">
-                    Inspired by Epictetus, Rumi, and Jiddu Krishnamurti, the brand translates timeless insight
-                    into practical mental training for ordinary life. The work here is not about escape. It is
-                    about learning to meet reality with clarity, steadiness, and self-respect.
-                  </p>
-                  <div class="principle-list">
-                    <article class="principle-card">
-                      <h3 class="principle-title">Awareness Over Reaction</h3>
-                      <p>Observe the mind before it carries you away. Space becomes your first form of power.</p>
-                    </article>
-                    <article class="principle-card">
-                      <h3 class="principle-title">Discipline Over Emotion</h3>
-                      <p>Use deliberate practice to respond from principle instead of temporary internal weather.</p>
-                    </article>
-                    <article class="principle-card">
-                      <h3 class="principle-title">Inner Peace Over Chaos</h3>
-                      <p>Stability is cultivated through attention, not found in the changing world outside you.</p>
-                    </article>
-                    <article class="principle-card">
-                      <h3 class="principle-title">Truth Over Illusion</h3>
-                      <p>See clearly. Name reality honestly. Clarity becomes lighter when nothing false is defended.</p>
-                    </article>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="benefits">
-              <div class="section-grid">
-                <div class="section-label">Transformation</div>
-                <div class="section-body">
-                  <h2 class="section-title">What Your Inner Life Begins to Build</h2>
-                  <p class="section-copy">
-                    Every resource inside INNER VIRTUE X is designed to feel practical, quiet, and applicable.
-                    The purpose is not motivation. The purpose is inner order.
-                  </p>
-                  <div class="stats-grid">
-                    <article class="stat-card">
-                      <span class="stat-value">01</span>
-                      <h3 class="stat-title">Control Your Thoughts</h3>
-                      <p>Learn how to separate awareness from mental noise and direct attention with intention.</p>
-                    </article>
-                    <article class="stat-card">
-                      <span class="stat-value">02</span>
-                      <h3 class="stat-title">Master Emotional Reactions</h3>
-                      <p>Build the capacity to pause, process, and respond without emotional spillover.</p>
-                    </article>
-                    <article class="stat-card">
-                      <span class="stat-value">03</span>
-                      <h3 class="stat-title">Build Daily Discipline</h3>
-                      <p>Create routines that strengthen self-trust and reduce dependence on mood.</p>
-                    </article>
-                    <article class="stat-card">
-                      <span class="stat-value">04</span>
-                      <h3 class="stat-title">Develop Resilience</h3>
-                      <p>Remain steady under pressure and return to clarity faster when life becomes heavy.</p>
-                    </article>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="premium">
-              <div class="section-grid">
-                <div class="section-label">Premium Library</div>
-                <div class="section-body">
-                  <h2 class="section-title">Digital Tools for Real Inner Transformation</h2>
-                  <p class="section-copy">
-                    These are premium eBooks and guided resources created to help people move from overthinking
-                    into observation, from reactivity into emotional discipline, and from drifting into daily structure.
-                  </p>
-                  <div class="product-grid">
-                    <article class="product-card">
-                      <div class="book-visual" aria-hidden="true">
-                        <div class="book-cover gold-wave">
-                          <div class="cover-kicker">Inner Virtue X</div>
-                          <div class="cover-title">Control Your Mind</div>
-                          <div class="cover-footer">Mental Clarity Edition</div>
-                        </div>
-                      </div>
-                      <div class="meta-strip">Premium eBook</div>
-                      <h3 class="product-title">Control Your Mind</h3>
-                      <p class="product-copy">
-                        A focused guide for people who feel mentally crowded, distracted, or trapped in repeated
-                        overthinking. This eBook teaches how to notice thought patterns early, separate awareness
-                        from noise, and return the mind to steadiness.
-                      </p>
-                      <div class="product-preview-label">Inside the eBook</div>
-                      <ul class="product-outline">
-                        <li>How overthinking forms and why awareness must come before control.</li>
-                        <li>Simple mental reset practices to stop spirals before they take over your day.</li>
-                        <li>Frameworks for directing attention, reducing internal noise, and thinking with clarity.</li>
-                      </ul>
-                      <div class="price-row">
-                        <span class="price">₹499</span>
-                      </div>
-                      <p class="product-copy">
-                        Ideal for deep thinkers, anxious minds, and anyone who wants calm focus instead of constant
-                        mental friction.
-                      </p>
-                      <div class="product-actions">
-                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="controlMind" href="#checkout">Buy with Razorpay</a>
-                        <a class="small-link payment-link" data-provider="stripe" data-product="controlMind" href="#checkout">Pay with Stripe</a>
-                        <a class="small-link" href="#insights">Preview Insight</a>
-                      </div>
-                    </article>
-
-                    <article class="product-card">
-                      <div class="book-visual" aria-hidden="true">
-                        <div class="book-cover river-line">
-                          <div class="cover-kicker">Inner Virtue X</div>
-                          <div class="cover-title">Emotional Discipline Guide</div>
-                          <div class="cover-footer">Calm Under Pressure</div>
-                        </div>
-                      </div>
-                      <div class="meta-strip">Transformation Guide</div>
-                      <h3 class="product-title">Emotional Discipline Guide</h3>
-                      <p class="product-copy">
-                        A practical emotional mastery guide for people who want to respond more wisely under pressure.
-                        It helps readers understand triggers, create space before reaction, and build emotional steadiness
-                        without becoming cold or disconnected.
-                      </p>
-                      <div class="product-preview-label">Inside the eBook</div>
-                      <ul class="product-outline">
-                        <li>How to identify emotional triggers before they become behaviors you regret.</li>
-                        <li>Response frameworks for anger, anxiety, overreaction, and emotional exhaustion.</li>
-                        <li>Practices for calm communication, better self-control, and mature emotional strength.</li>
-                      </ul>
-                      <div class="price-row">
-                        <span class="price">₹699</span>
-                      </div>
-                      <p class="product-copy">
-                        Built for calm under pressure, stronger boundaries, and the kind of self-command that feels
-                        quiet, clean, and real.
-                      </p>
-                      <div class="product-actions">
-                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="emotionalDiscipline" href="#checkout">Buy with Razorpay</a>
-                        <a class="small-link payment-link" data-provider="stripe" data-product="emotionalDiscipline" href="#checkout">Pay with Stripe</a>
-                        <a class="small-link" href="#join">Join Inner Circle</a>
-                      </div>
-                    </article>
-
-                    <article class="product-card">
-                      <div class="book-visual" aria-hidden="true">
-                        <div class="book-cover observer-grid">
-                          <div class="cover-kicker">Inner Virtue X</div>
-                          <div class="cover-title">Daily Stoic Resilience Journal</div>
-                          <div class="cover-footer">Daily Reflection Practice</div>
-                        </div>
-                      </div>
-                      <div class="meta-strip">Daily Practice Tool</div>
-                      <h3 class="product-title">Daily Stoic Resilience Journal</h3>
-                      <p class="product-copy">
-                        A reflective digital journal designed to help readers build resilience through small, consistent
-                        acts of attention. It gives structure to daily reflection so discipline becomes lived, not just admired.
-                      </p>
-                      <div class="product-preview-label">Inside the eBook</div>
-                      <ul class="product-outline">
-                        <li>Daily prompts for reflection, emotional review, and intentional correction.</li>
-                        <li>Stoic-inspired questions to strengthen perspective during stress and uncertainty.</li>
-                        <li>Weekly reset pages for discipline, gratitude, clarity, and resilient thinking.</li>
-                      </ul>
-                      <div class="price-row">
-                        <span class="price">₹799</span>
-                      </div>
-                      <p class="product-copy">
-                        Designed for instant digital access, consistent journaling, and a stronger inner structure over time.
-                      </p>
-                      <div class="product-actions">
-                        <a class="buy-btn primary payment-link" data-provider="razorpay" data-product="resilienceJournal" href="#checkout">Buy with Razorpay</a>
-                        <a class="small-link payment-link" data-provider="stripe" data-product="resilienceJournal" href="#checkout">Pay with Stripe</a>
-                        <a class="small-link" href="#philosophy">Read Philosophy</a>
-                      </div>
-                    </article>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="insights">
-              <div class="section-grid">
-                <div class="section-label">Featured Reflection</div>
-                <div class="section-body">
-                  <div class="quote-card">
-                    <blockquote>
-                      You may not control every event around you, but you can learn to meet each moment with a
-                      clearer mind and a steadier self.
-                    </blockquote>
-                    <p class="quote-meta">Inner mastery begins where reaction ends.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="blog">
-              <div class="section-grid">
-                <div class="section-label">Learning Archive</div>
-                <div class="section-body">
-                  <h2 class="section-title">Thoughtful Writing for Everyday Clarity</h2>
-                  <p class="section-copy">
-                    Each article is written to reduce confusion, deepen awareness, and give the reader something
-                    usable immediately.
-                  </p>
-                  <div class="article-grid">
-                    <article class="article-card">
-                      <div class="meta-strip">Overthinking</div>
-                      <h3 class="article-title">How to Stop Overthinking Without Silencing Yourself</h3>
-                      <p class="article-copy">
-                        Learn how to create space in the mind without becoming passive or disconnected from thought.
-                      </p>
-                      <a class="small-link" href="#join">Read Article</a>
-                    </article>
-                    <article class="article-card">
-                      <div class="meta-strip">Emotional Control</div>
-                      <h3 class="article-title">Emotional Discipline Is Not Suppression</h3>
-                      <p class="article-copy">
-                        Discover the difference between reacting less and feeling less, and why maturity requires depth.
-                      </p>
-                      <a class="small-link" href="#join">Read Article</a>
-                    </article>
-                    <article class="article-card">
-                      <div class="meta-strip">Self-Discipline</div>
-                      <h3 class="article-title">The Quiet Power of Daily Structure</h3>
-                      <p class="article-copy">
-                        See why discipline is a form of protection for your attention, energy, and long-term peace.
-                      </p>
-                      <a class="small-link" href="#join">Read Article</a>
-                    </article>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="join">
-              <div class="section-grid">
-                <div class="section-label">Inner Circle</div>
-                <div class="section-body">
-                  <div class="join-card">
-                    <h2 class="section-title">Receive Weekly Wisdom for a Clearer Mind</h2>
-                    <p class="form-copy">
-                      Join the INNER VIRTUE X community for weekly reflections on emotional mastery, discipline,
-                      resilience, and inner peace. Quiet insight. No noise. Signups are sent to your private mailing list
-                      through the site backend.
-                    </p>
-                    <form class="join-form" id="subscribe-form">
-                      <input
-                        id="email-input"
-                        type="email"
-                        name="email"
-                        placeholder="Enter your email"
-                        aria-label="Email address"
-                        required
-                      >
-                      <button class="cta-btn primary" type="submit">Subscribe</button>
-                    </form>
-                    <p class="form-copy">Weekly guidance for self-mastery. Unsubscribe anytime.</p>
-                  </div>
-                </div>
-              </div>
-            </section>
-
-            <section class="section-block" id="checkout">
-              <div class="section-grid">
-                <div class="section-label">Premium Access</div>
-                <div class="section-body">
-                  <div class="closing-card">
-                    <h2 class="section-title">Ready to Begin the Work Within</h2>
-                    <p class="footer-copy">
-                      Build trust, then convert. That is the rhythm of INNER VIRTUE X. Offer visitors a calm
-                      journey, then invite them into premium resources through simple checkout pathways.
-                    </p>
-                    <p class="footer-copy">
-                      Razorpay is the launch-first checkout path for INNER VIRTUE X. Stripe can stay as a secondary
-                      option, but your primary conversion flow should lead Indian buyers through Razorpay first.
-                    </p>
-                    <div class="hero-actions">
-                      <a class="cta-btn primary provider-link" data-provider="razorpay" href="https://example.com" target="_blank" rel="noreferrer">Open Razorpay Checkout</a>
-                      <a class="cta-btn provider-link" data-provider="stripe" href="https://example.com" target="_blank" rel="noreferrer">Open Stripe Checkout</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
-    </main>
-
-    <footer class="footer-bar">
-      <span>Clarity Begins Within</span>
-      <div class="footer-links">
-        <a href="#philosophy">Philosophy</a>
-        <a href="#premium">eBooks</a>
-        <a href="#blog">Insights</a>
-        <a href="#join">@innervirtuex</a>
-        <a href="privacy-policy.html">Privacy</a>
-        <a href="terms-and-conditions.html">Terms</a>
-        <a href="contact.html">Contact</a>
-        <a href="refund-policy.html">Refunds</a>
-      </div>
-    </footer>
-  </div>
-
-  <section class="screen overlay is-hidden" id="experience-overlay" aria-live="polite" aria-atomic="true">
-    <div class="overlay-shell">
-      <div class="overlay-top">
-        <span class="overlay-title" id="overlay-title">Neural-Drop</span>
-        <button class="audio-toggle" id="audio-toggle" type="button" aria-pressed="false">
-          <span class="audio-icon" aria-hidden="true"></span>
-          <span class="audio-label">Unmute to experience</span>
-        </button>
-      </div>
-      <div class="experience">
-        <p class="experience-copy" id="experience-copy">
-          <span class="sr-only">Neural-Drop sequence begins.</span>
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <div id="neural-drop-overlay"></div>
-  <div id="toast-container"></div>
-
-  <button class="xbot-launcher" id="xbot-launcher" type="button" aria-expanded="false" aria-controls="xbot-panel">
-    Consult Xbot
+  <div class="gw-brand">INNER <span>VIRTUE</span> X</div>
+  <div class="gw-sub">Modern Stoicism · Mind &amp; Soul</div>
+  <button class="gw-btn" id="gw-enter" type="button" aria-label="Enter the sanctuary">
+    <div class="gw-ring-btn"><div class="gw-dot"></div></div>
+    <span class="gw-lbl">Enter the Void</span>
   </button>
+</div>
 
-  <section class="xbot-panel" id="xbot-panel" aria-label="Xbot support assistant">
-    <div class="xbot-top">
-      <div class="xbot-head">
-        <div>
-          <div class="xbot-title">Xbot</div>
-          <div class="xbot-subtitle">A private concierge for payments, access, subscriptions, and calm support.</div>
-        </div>
-        <button class="xbot-close" id="xbot-close" type="button">Close</button>
-      </div>
+<!-- ══ INTRO ══ -->
+<div id="intro">
+  <div id="iseq" style="max-width:680px;width:100%"></div>
+  <button id="iskip" type="button">Skip ›</button>
+</div>
+
+<!-- ══ NAV ══ -->
+<nav id="nav">
+  <div class="nb">
+    <svg viewBox="0 0 220 220" fill="none" aria-hidden="true">
+      <defs><radialGradient id="nf" cx="55%" cy="38%" r="52%"><stop offset="0%" stop-color="#ddd"/><stop offset="100%" stop-color="#666"/></radialGradient></defs>
+      <path d="M62 52 Q80 28 108 30 Q138 30 150 50 Q162 70 158 95 Q156 118 148 132 Q138 148 120 155 Q102 158 88 150 Q70 140 64 122 Q56 100 62 52Z" fill="url(#nf)" stroke="#111" stroke-width="3"/>
+      <g fill="url(#nf)" stroke="#111" stroke-width="2"><ellipse cx="62" cy="44" rx="12" ry="7" transform="rotate(-50 62 44)"/><ellipse cx="72" cy="33" rx="12" ry="7" transform="rotate(-32 72 33)"/><ellipse cx="85" cy="26" rx="12" ry="7" transform="rotate(-15 85 26)"/><ellipse cx="100" cy="23" rx="12" ry="7"/><ellipse cx="114" cy="25" rx="11" ry="6.5" transform="rotate(14 114 25)"/><ellipse cx="126" cy="32" rx="11" ry="6.5" transform="rotate(30 126 32)"/></g>
+      <path d="M76 112 Q68 130 72 150 Q78 168 90 178 Q100 184 110 180 Q124 174 130 162 Q138 148 134 130 Q130 118 124 112" fill="url(#nf)" stroke="#111" stroke-width="2.8"/>
+    </svg>
+    <div class="nn">INNER <span>VIRTUE</span> X</div>
+  </div>
+  <div class="nl"><a href="#philosophy">Philosophy</a><a href="#thinkers">Thinkers</a><a href="#library">Library</a><a href="#insights">Insights</a><a href="#join">Inner Circle</a></div>
+  <a class="nig" href="https://instagram.com/innervirtuex" target="_blank" rel="noreferrer">@innervirtuex</a>
+</nav>
+
+<!-- ══ HERO ══ -->
+<section class="hero" id="top">
+  <canvas id="bgc"></canvas>
+  <div class="hl rv">
+    <p class="htag">Modern Stoicism · Mind &amp; Soul · Daily Depth</p>
+    <h1 class="h1">Silence the<br>Noise.<br>Master the Self.</h1>
+    <p class="hsub">InnerVirtueX is a sanctuary for those who seek mental clarity, emotional discipline, and the kind of self-awareness that changes everything — quietly, permanently.</p>
+    <div class="hbtns"><a class="btng" href="#library">Explore the Library</a><a class="btno" href="#philosophy">The Philosophy</a></div>
+    <div class="hpills"><span class="pill">Awareness over reaction</span><span class="pill">Discipline over impulse</span><span class="pill">Inner peace over chaos</span></div>
+  </div>
+  <div class="hr rv" style="transition-delay:.15s">
+    <div class="twp">
+      <div class="twbar"><span>Sanctuary Interface</span><span>Phase 02 · Live</span></div>
+      <div id="tw"><span class="cur">|</span></div>
+      <div class="twbar"><span>@innervirtuex</span><span>System Online ●</span></div>
     </div>
+  </div>
+</section>
 
-    <div class="xbot-quick">
-      <button class="xbot-chip" type="button" data-xbot-topic="ebook">What do I get?</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="payment">Payment help</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="refund">Refund policy</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="subscription">Email support</button>
-      <button class="xbot-chip" type="button" data-xbot-topic="delivery">Delivery issue</button>
+<!-- ══ MARQUEE ══ -->
+<div class="mq" aria-hidden="true">
+  <div class="mqt"><span class="mqi"><span>◆</span>Mental Clarity</span><span class="mqi"><span>◆</span>Modern Stoicism</span><span class="mqi"><span>◆</span>Self-Awareness</span><span class="mqi"><span>◆</span>Inner Strength</span><span class="mqi"><span>◆</span>Emotional Discipline</span><span class="mqi"><span>◆</span>Daily Deep Thoughts</span><span class="mqi"><span>◆</span>Philosophy for Life</span><span class="mqi"><span>◆</span>Mental Clarity</span><span class="mqi"><span>◆</span>Modern Stoicism</span><span class="mqi"><span>◆</span>Self-Awareness</span><span class="mqi"><span>◆</span>Inner Strength</span><span class="mqi"><span>◆</span>Emotional Discipline</span><span class="mqi"><span>◆</span>Daily Deep Thoughts</span><span class="mqi"><span>◆</span>Philosophy for Life</span></div>
+</div>
+
+<!-- ══ PHILOSOPHY ══ -->
+<section class="blk" id="philosophy">
+  <div class="si">
+    <div class="rv"><p class="sl">The Foundation</p><h2 class="st">A Quieter Path<br>to Real Strength</h2><p class="sc">InnerVirtueX was built for people exhausted by noise, reaction, and emotional drift. This is modern philosophy meeting daily life — not to motivate you, but to transform how you see yourself.</p></div>
+    <div class="pg rv"><div class="pc"><div class="pn">01</div><div class="pt">Awareness Over Reaction</div><p class="pd">Observe the mind before it carries you away. Space between stimulus and response is where real power lives.</p></div><div class="pc"><div class="pn">02</div><div class="pt">Discipline Over Emotion</div><p class="pd">Respond from principle, not from the weather of the moment. Consistency is the deepest form of self-respect.</p></div><div class="pc"><div class="pn">03</div><div class="pt">Inner Peace Over Chaos</div><p class="pd">Stability isn't found outside — it's cultivated through attention, honesty and daily practice.</p></div><div class="pc"><div class="pn">04</div><div class="pt">Truth Over Illusion</div><p class="pd">See clearly. Name reality honestly. Clarity becomes lighter when nothing false is defended inside you.</p></div></div>
+  </div>
+</section>
+
+<!-- ══ DAILY QUOTES ══ -->
+<div class="qs">
+  <div class="qw rv">
+    <div class="qday" id="qdaytitle">Daily Wisdom</div>
+    <blockquote class="bq" id="bq"></blockquote>
+    <div class="qauth" id="qauth"></div>
+    <div class="qdatestr" id="qdatestr"></div>
+    <div class="qdots" id="qdots"></div>
+    <div class="qnav">
+      <button class="qnbtn" id="qprev">‹ Prev</button>
+      <button class="qnbtn" id="qnext">Next ›</button>
     </div>
+  </div>
+</div>
 
-    <div class="xbot-messages" id="xbot-messages">
-      <div class="xbot-message">
-        <strong>Xbot</strong>
-        <p>
-          Welcome. Ask naturally. I’ll help with buying, access, subscriptions, refunds, and what each resource is designed to do.
-        </p>
-      </div>
+<!-- ══ PHILOSOPHERS WITH PORTRAIT ILLUSTRATIONS ══ -->
+<section class="blk" id="thinkers">
+  <div class="si">
+    <div class="rv"><p class="sl">The Minds Behind the Movement</p><h2 class="st">Philosophers Who<br>Changed Inner Worlds</h2><p class="sc">These thinkers didn't just write words — they built frameworks for living. Their work is the foundation of everything InnerVirtueX explores.</p></div>
+    <div class="phg" id="phg"></div>
+  </div>
+</section>
+
+<!-- ══ STATS ══ -->
+<section class="blk" style="padding:0;border-bottom:1px solid var(--line)">
+  <div class="sr rv"><div class="sb"><span class="sn">01</span><span class="sk">Control Your Thoughts</span></div><div class="sb"><span class="sn">02</span><span class="sk">Master Emotions</span></div><div class="sb"><span class="sn">03</span><span class="sk">Build Daily Discipline</span></div><div class="sb"><span class="sn">04</span><span class="sk">Develop Resilience</span></div></div>
+</section>
+
+<!-- ══ LIBRARY ══ -->
+<section class="blk" id="library">
+  <div class="si">
+    <div class="rv"><p class="sl">Premium Library</p><h2 class="st">Digital Tools for<br>Real Inner Transformation</h2><p class="sc">Not motivation. Not hype. Precision-built resources for people serious about transforming how they think, feel, and move through the world.</p></div>
+    <div class="prg">
+      <article class="prc rv"><div class="pv"><div class="bk"><div class="bs">Inner Virtue X</div><div class="bt">Control Your Mind</div><div class="bf">Mental Clarity Edition</div></div></div><div class="pb"><div class="ptag">Premium eBook</div><div class="pname">Control Your Mind</div><p class="pdesc">For deep thinkers trapped in mental loops. Learn to separate awareness from noise, stop spirals before they consume your day.</p><ul class="plist"><li>How overthinking forms — and why awareness comes before control.</li><li>Mental reset practices for clarity under pressure.</li><li>Frameworks for directing attention with intention.</li></ul><div class="pprice">₹499</div><div class="pacts"><a class="bbuy" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Buy Now</a><a class="bsm" href="#join">Preview</a></div></div></article>
+      <article class="prc rv" style="transition-delay:.1s"><div class="pv"><div class="bk"><div class="bs">Inner Virtue X</div><div class="bt">Emotional Discipline Guide</div><div class="bf">Calm Under Pressure</div></div></div><div class="pb"><div class="ptag">Transformation Guide</div><div class="pname">Emotional Discipline Guide</div><p class="pdesc">For those who react before they think. Identify triggers, build the pause, respond with calm that feels clean and permanent.</p><ul class="plist"><li>Identify emotional triggers before they become regrets.</li><li>Response frameworks for anger, anxiety, exhaustion.</li><li>Mature emotional strength without becoming cold.</li></ul><div class="pprice">₹699</div><div class="pacts"><a class="bbuy" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Buy Now</a><a class="bsm" href="#join">Preview</a></div></div></article>
+      <article class="prc rv" style="transition-delay:.2s"><div class="pv"><div class="bk"><div class="bs">Inner Virtue X</div><div class="bt">Daily Stoic Resilience Journal</div><div class="bf">Daily Reflection Practice</div></div></div><div class="pb"><div class="ptag">Daily Practice Tool</div><div class="pname">Stoic Resilience Journal</div><p class="pdesc">Discipline becomes real when practiced daily. This journal gives structure to reflection so resilience is built, not just admired.</p><ul class="plist"><li>Daily prompts for reflection, review and correction.</li><li>Stoic questions to strengthen perspective under pressure.</li><li>Weekly reset pages for discipline, clarity and gratitude.</li></ul><div class="pprice">₹799</div><div class="pacts"><a class="bbuy" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Buy Now</a><a class="bsm" href="#join">Preview</a></div></div></article>
     </div>
-
-    <div class="xbot-footer">
-      <form class="xbot-form" id="xbot-form">
-        <input id="xbot-input" type="text" name="message" placeholder="Ask Xbot about payments, delivery, or subscriptions" aria-label="Message Xbot">
-        <div class="xbot-actions">
-          <div class="xbot-note">Quiet support, immediate guidance, and a clear next step if anything needs follow-up.</div>
-          <button class="xbot-send" type="submit">Send</button>
-        </div>
-      </form>
-    </div>
-  </section>
-
-  <audio id="drone-audio" loop preload="none" muted>
-    <source src="https://example.com/bass-drone.mp3" type="audio/mpeg">
-  </audio>
-
-  <script>
-    const CONFIG = {
-      audioSrc: "https://example.com/bass-drone.mp3",
-      subscribeEndpoint: "/api/subscribe",
-      xbotEndpoint: "/api/xbot",
-      subscribeMethod: "POST",
-      subscribeHeaders: {},
-      subscribeSuccessMessage: "You are in. Welcome to the Inner Circle.",
-      paymentLinks: {
-        stripe: {
-          controlMind: "",
-          emotionalDiscipline: "",
-          resilienceJournal: "",
-          library: ""
-        },
-        razorpay: {
-          controlMind: "https://razorpay.me/@atharvaverma",
-          emotionalDiscipline: "https://razorpay.me/@atharvaverma",
-          resilienceJournal: "https://razorpay.me/@atharvaverma",
-          library: "https://razorpay.me/@atharvaverma"
-        }
-      },
-      protocols: {
-        anchor: {
-          title: "PROTOCOL 01: THE ANCHOR",
-          audioSrc: "https://example.com/bass-drone.mp3",
-          holdMs: 5000,
-          text:
-            "You are standing in a freezing river. The water pulls at your legs. Your mind screams to run. But you do not move. You breathe. The cold is not your enemy. It is the only thing that is real right now. You are the observer. You are still."
-        },
-        river: {
-          title: "PROTOCOL 02: THE STILL RIVER",
-          audioSrc: "https://example.com/bass-drone.mp3",
-          holdMs: 5000,
-          text:
-            "The mind begins to rush toward its old patterns. You do not follow. You watch the current without stepping into it. The body softens. The breath slows. What passes through you no longer owns you."
-        },
-        observer: {
-          title: "PROTOCOL 03: THE OBSERVER",
-          audioSrc: "https://example.com/bass-drone.mp3",
-          holdMs: 5000,
-          text:
-            "Thought rises. Emotion follows. Habit reaches for control. You remain one step behind it all, silent and aware. In that quiet distance, freedom begins. You are not the storm. You are the one who sees it."
-        }
-      },
-      typingSpeedBase: 35,
-      typingSpeedVar: 45,
-      canvasParticleCount: 48
-    };
-
-    const MODULE_TEXTS = {
-      intro:
-        "Initializing sanctuary interface...\n\nINNER VIRTUE X is where modern self-mastery meets timeless stillness. Enter slowly. Breathe first. Then choose what part of yourself you are ready to train.",
-      core:
-        "CORE PRINCIPLES:\n\n1. Awareness over reaction.\n2. Discipline over emotion.\n3. Inner peace over external chaos.\n4. Truth over self-deception.\n\nClarity is not intensity. It is the refusal to be ruled by noise.",
-      manifesto:
-        "THE MANIFESTO:\n\nYou do not need louder motivation. You need a steadier nervous system, cleaner thought, and a life built from inward order. INNER VIRTUE X exists to make calm feel actionable and depth feel practical.",
-      access:
-        "PREMIUM ACCESS:\n\nThe premium library is built for people who want to train the mind with structure. Each eBook is a tool for reflection, emotional control, and disciplined daily practice. Enter through trust. Stay for transformation."
-    };
-
-    const PROTOCOLS_BY_TITLE = Object.values(CONFIG.protocols).reduce((map, protocol) => {
-      map[protocol.title] = protocol;
-      return map;
-    }, {});
-
-    const gateway = document.getElementById("gateway");
-    const entryTrigger = document.getElementById("entry-trigger");
-    const appInterface = document.getElementById("app-interface");
-    const contentScroll = document.getElementById("content-scroll");
-    const typewriterTarget = document.getElementById("typewriter-target");
-    const moduleButtons = Array.from(document.querySelectorAll(".module-btn"));
-    const protocolButtons = Array.from(document.querySelectorAll(".protocol-btn"));
-    const btnDrop = document.getElementById("btn-drop");
-    const subscribeForm = document.getElementById("subscribe-form");
-    const emailInput = document.getElementById("email-input");
-    const paymentLinks = Array.from(document.querySelectorAll(".payment-link"));
-    const providerLinks = Array.from(document.querySelectorAll(".provider-link"));
-    const neuralDropOverlay = document.getElementById("neural-drop-overlay");
-    const overlay = document.getElementById("experience-overlay");
-    const overlayTitle = document.getElementById("overlay-title");
-    const experienceCopy = document.getElementById("experience-copy");
-    const droneAudio = document.getElementById("drone-audio");
-    const audioToggle = document.getElementById("audio-toggle");
-    const xbotLauncher = document.getElementById("xbot-launcher");
-    const xbotPanel = document.getElementById("xbot-panel");
-    const xbotClose = document.getElementById("xbot-close");
-    const xbotMessages = document.getElementById("xbot-messages");
-    const xbotForm = document.getElementById("xbot-form");
-    const xbotInput = document.getElementById("xbot-input");
-    const xbotChips = Array.from(document.querySelectorAll("[data-xbot-topic]"));
-
-    let typeTimer = null;
-    let activeTimers = [];
-    let overlayRunning = false;
-    const xbotHistory = [];
-    const XBOT_MIN_THINK_MS = 1100;
-    const XBOT_TYPING_MIN_MS = 14;
-    const XBOT_TYPING_MAX_MS = 28;
-
-    const wait = (ms) =>
-      new Promise((resolve) => {
-        const id = window.setTimeout(resolve, ms);
-        activeTimers.push(id);
-      });
-
-    const clearTimers = () => {
-      if (typeTimer) {
-        window.clearTimeout(typeTimer);
-        typeTimer = null;
-      }
-      activeTimers.forEach((id) => window.clearTimeout(id));
-      activeTimers = [];
-    };
-
-    const randomDelay = (base = CONFIG.typingSpeedBase, variance = CONFIG.typingSpeedVar) =>
-      Math.floor(Math.random() * variance) + base;
-
-    const ui = {
-      showToast(message) {
-        const container = document.getElementById("toast-container");
-        const toast = document.createElement("div");
-        toast.className = "toast";
-        toast.textContent = `>> ${message}`;
-        container.appendChild(toast);
-
-        window.setTimeout(() => {
-          toast.style.opacity = "0";
-          window.setTimeout(() => toast.remove(), 350);
-        }, 2800);
-      }
-    };
-
-    const XBOT_RESPONSES = {
-      purchase:
-        "To buy a resource, open the premium section, choose the ebook you want, click the Razorpay button, complete the payment on Razorpay, and then follow the access or delivery instructions shown after checkout. If payment succeeds but access does not arrive, keep the confirmation and use support again straight away.",
-      ebook:
-        "Each INNER VIRTUE X product is a digital resource designed for calm self-mastery. The page explains what is inside each ebook or journal, including clarity exercises, emotional regulation frameworks, and daily reflection prompts.",
-      payment:
-        "Payments are handled through Razorpay on the live site. If payment succeeds but access is missing, the visitor should keep the payment confirmation, check the email used at checkout, and then continue through the support path on the site.",
-      refund:
-        "INNER VIRTUE X sells digital products, so completed purchases are generally final. Refunds may still be reviewed for duplicate charges, failed delivery, or unauthorized transactions reported promptly.",
-      subscription:
-        "Subscribers receive reflections and updates through Brevo. They can unsubscribe anytime from the footer of any email. If they do not receive emails, ask them to check promotions, spam, or re-subscribe with the correct address.",
-      delivery:
-        "If a digital product is not delivered, the buyer should verify payment success, check the email used at checkout, review spam or promotions folders, and then continue to the official support channel listed on the site.",
-      default:
-        "I can help with buying, payments, ebook access, subscriptions, and refund policy. Ask me directly what you need and I’ll guide you."
-    };
-
-    const XBOT_PROMPTS = {
-      ebook: "What do I receive after buying an ebook from INNER VIRTUE X?",
-      purchase: "How do I purchase an ebook from INNER VIRTUE X?",
-      payment: "I need help with payment on INNER VIRTUE X.",
-      refund: "What is your refund policy?",
-      subscription: "How do email updates and subscriptions work?",
-      delivery: "I paid but did not get my ebook."
-    };
-
-    const appendXbotMessage = (role, text) => {
-      const wrapper = document.createElement("div");
-      wrapper.className = `xbot-message${role === "user" ? " user" : ""}`;
-
-      const label = document.createElement("strong");
-      label.textContent = role === "user" ? "You" : "Xbot";
-
-      const body = document.createElement("p");
-      body.textContent = text;
-
-      wrapper.appendChild(label);
-      wrapper.appendChild(body);
-      xbotMessages.appendChild(wrapper);
-      xbotMessages.scrollTop = xbotMessages.scrollHeight;
-      return {
-        wrapper,
-        body
-      };
-    };
-
-    const waitXbot = (ms) =>
-      new Promise((resolve) => {
-        window.setTimeout(resolve, ms);
-      });
-
-    const revealXbotText = async (text) => {
-      const nodes = appendXbotMessage("bot", "");
-      let output = "";
-
-      for (const char of text) {
-        output += char;
-        nodes.body.textContent = output;
-        xbotMessages.scrollTop = xbotMessages.scrollHeight;
-        await waitXbot(Math.floor(Math.random() * (XBOT_TYPING_MAX_MS - XBOT_TYPING_MIN_MS + 1)) + XBOT_TYPING_MIN_MS);
-      }
-    };
-
-    const setXbotPending = (pending) => {
-      const submitButton = xbotForm.querySelector("button[type='submit']");
-      xbotInput.disabled = pending;
-      submitButton.disabled = pending;
-      submitButton.textContent = pending ? "Thinking..." : "Send";
-    };
-
-    const addXbotTyping = () => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "xbot-message";
-      wrapper.id = "xbot-typing";
-
-      const label = document.createElement("strong");
-      label.textContent = "Xbot";
-
-      const body = document.createElement("p");
-      body.textContent = "Thinking with clarity...";
-
-      wrapper.appendChild(label);
-      wrapper.appendChild(body);
-      xbotMessages.appendChild(wrapper);
-      xbotMessages.scrollTop = xbotMessages.scrollHeight;
-    };
-
-    const removeXbotTyping = () => {
-      const typing = document.getElementById("xbot-typing");
-      if (typing) {
-        typing.remove();
-      }
-    };
-
-    const resolveXbotReply = (message) => {
-      const text = message.toLowerCase();
-
-      if (
-        text.includes("purchase") ||
-        text.includes("buy") ||
-        text.includes("order") ||
-        text.includes("checkout") ||
-        text.includes("get it") ||
-        text.includes("how do i get") ||
-        text.includes("how to purchase") ||
-        text.includes("how can i purchase") ||
-        text.includes("how do i purchase") ||
-        text.includes("how can i buy") ||
-        text.includes("where do i pay")
-      ) {
-        return XBOT_RESPONSES.purchase;
-      }
-      if (text.includes("refund") || text.includes("cancel")) {
-        return XBOT_RESPONSES.refund;
-      }
-      if (text.includes("pay") || text.includes("payment") || text.includes("razorpay") || text.includes("stripe")) {
-        return XBOT_RESPONSES.payment;
-      }
-      if (text.includes("deliver") || text.includes("download") || text.includes("access") || text.includes("receive")) {
-        return XBOT_RESPONSES.delivery;
-      }
-      if (text.includes("email") || text.includes("subscribe") || text.includes("newsletter") || text.includes("unsubscribe")) {
-        return XBOT_RESPONSES.subscription;
-      }
-      if (text.includes("ebook") || text.includes("journal") || text.includes("guide") || text.includes("inside")) {
-        return XBOT_RESPONSES.ebook;
-      }
-
-      return XBOT_RESPONSES.default;
-    };
-
-    const askXbot = async (message) => {
-      appendXbotMessage("user", message);
-      xbotHistory.push({
-        role: "user",
-        content: message
-      });
-
-      addXbotTyping();
-      setXbotPending(true);
-      const startedAt = Date.now();
-
-      try {
-        const response = await fetch(CONFIG.xbotEndpoint, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message,
-            history: xbotHistory
-          })
-        });
-
-        const result = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          throw new Error(result.error || "Xbot could not respond right now");
-        }
-
-        const elapsed = Date.now() - startedAt;
-        if (elapsed < XBOT_MIN_THINK_MS) {
-          await waitXbot(XBOT_MIN_THINK_MS - elapsed);
-        }
-
-        removeXbotTyping();
-        const reply = result.reply || XBOT_RESPONSES.default;
-        await revealXbotText(reply);
-        xbotHistory.push({
-          role: "assistant",
-          content: reply
-        });
-      } catch (error) {
-        const elapsed = Date.now() - startedAt;
-        if (elapsed < 700) {
-          await waitXbot(700 - elapsed);
-        }
-
-        removeXbotTyping();
-        const fallback = `${resolveXbotReply(message)} If you still need manual help, please continue through Instagram DM at @innervirtuex.`;
-        await revealXbotText(fallback);
-        xbotHistory.push({
-          role: "assistant",
-          content: fallback
-        });
-        ui.showToast(error.message || "Xbot fallback mode active");
-      } finally {
-        setXbotPending(false);
-      }
-    };
-
-    const toggleXbot = (nextState) => {
-      const open = typeof nextState === "boolean" ? nextState : !xbotPanel.classList.contains("is-open");
-      xbotPanel.classList.toggle("is-open", open);
-      xbotLauncher.setAttribute("aria-expanded", String(open));
-      xbotLauncher.textContent = open ? "Hide Xbot" : "Consult Xbot";
-      xbotLauncher.classList.toggle("is-hidden", open);
-
-      if (open) {
-        xbotInput.focus();
-      }
-    };
-
-    const applyAudioSource = (source) => {
-      if (!source) {
-        return;
-      }
-      droneAudio.src = source;
-      droneAudio.load();
-    };
-
-    const applyPaymentLinks = () => {
-      paymentLinks.forEach((link) => {
-        const provider = link.dataset.provider;
-        const product = link.dataset.product;
-        const url = CONFIG.paymentLinks?.[provider]?.[product] || CONFIG.paymentLinks?.[provider]?.library;
-
-        if (url) {
-          link.href = url;
-          link.target = "_blank";
-          link.rel = "noreferrer";
-          link.classList.remove("is-hidden-link");
-          return;
-        }
-
-        link.href = "#checkout";
-        link.classList.add("is-hidden-link");
-      });
-
-      providerLinks.forEach((link) => {
-        const provider = link.dataset.provider;
-        const url = CONFIG.paymentLinks?.[provider]?.library;
-
-        if (url) {
-          link.href = url;
-          link.target = "_blank";
-          link.rel = "noreferrer";
-          link.classList.remove("is-hidden-link");
-          return;
-        }
-
-        link.href = "#checkout";
-        link.classList.add("is-hidden-link");
-      });
-    };
-
-    class AudioManager {
-      constructor(audioElement, button) {
-        this.audio = audioElement;
-        this.button = button;
-        this.isMuted = true;
-
-        this.audio.muted = true;
-        this.audio.loop = true;
-        this.audio.volume = 0.42;
-        this.button.addEventListener("click", () => this.toggleMute());
-      }
-
-      updateButton() {
-        this.button.innerHTML = this.isMuted ? "[ Unmute Audio ]" : "[ Audio Active ]";
-        this.button.classList.toggle("active", !this.isMuted);
-      }
-
-      async prime() {
-        this.updateButton();
-        try {
-          this.audio.muted = true;
-          await this.audio.play();
-          this.audio.pause();
-          this.audio.currentTime = 0;
-        } catch (error) {
-          console.warn("Audio prime skipped.", error);
-        }
-      }
-
-      async playMuted() {
-        try {
-          this.audio.muted = true;
-          await this.audio.play();
-        } catch (error) {
-          console.warn("Muted audio playback could not start.", error);
-        }
-      }
-
-      stop() {
-        this.audio.pause();
-        this.audio.currentTime = 0;
-      }
-
-      async toggleMute() {
-        this.isMuted = !this.isMuted;
-        this.audio.muted = this.isMuted;
-        this.updateButton();
-
-        if (this.isMuted) {
-          ui.showToast("Audio muted");
-          return;
-        }
-
-        try {
-          await this.audio.play();
-          ui.showToast("Ambient audio active");
-        } catch (error) {
-          console.warn("Autoplay prevented.", error);
-          this.isMuted = true;
-          this.audio.muted = true;
-          this.updateButton();
-          ui.showToast("Browser blocked audio");
-        }
-      }
-    }
-
-    class TypewriterSystem {
-      constructor(element) {
-        this.element = element;
-      }
-
-      clear() {
-        if (typeTimer) {
-          window.clearTimeout(typeTimer);
-        }
-        this.element.textContent = "";
-      }
-
-      start(text) {
-        this.clear();
-        let index = 0;
-
-        const typeCharacter = () => {
-          if (index >= text.length) {
-            return;
-          }
-
-          const char = text.charAt(index);
-          this.element.textContent += char;
-          index += 1;
-
-          let delay = randomDelay();
-          if ([".", "!", "?", "\n"].includes(char)) {
-            delay += 180;
-          } else if (char === ",") {
-            delay += 90;
-          }
-
-          typeTimer = window.setTimeout(typeCharacter, delay);
-        };
-
-        typeCharacter();
-      }
-    }
-
-    class NeuralCanvas {
-      constructor(canvasId) {
-        this.canvas = document.getElementById(canvasId);
-        this.ctx = this.canvas.getContext("2d");
-        this.particles = [];
-        this.resize();
-        this.initParticles();
-        window.addEventListener("resize", () => this.resize());
-        this.animate();
-      }
-
-      resize() {
-        this.canvas.width = this.canvas.offsetWidth;
-        this.canvas.height = this.canvas.offsetHeight;
-      }
-
-      initParticles() {
-        this.particles = [];
-        for (let i = 0; i < CONFIG.canvasParticleCount; i += 1) {
-          this.particles.push({
-            x: Math.random() * this.canvas.width,
-            y: Math.random() * this.canvas.height,
-            vx: (Math.random() - 0.5) * 0.35,
-            vy: (Math.random() - 0.5) * 0.35,
-            size: Math.random() * 1.8 + 0.6
-          });
-        }
-      }
-
-      animate() {
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-        this.ctx.fillStyle = "rgba(212, 175, 55, 0.55)";
-        this.ctx.strokeStyle = "rgba(122, 231, 235, 0.08)";
-
-        this.particles.forEach((particle, index) => {
-          particle.x += particle.vx;
-          particle.y += particle.vy;
-
-          if (particle.x < 0 || particle.x > this.canvas.width) {
-            particle.vx *= -1;
-          }
-          if (particle.y < 0 || particle.y > this.canvas.height) {
-            particle.vy *= -1;
-          }
-
-          this.ctx.beginPath();
-          this.ctx.arc(particle.x, particle.y, particle.size, 0, Math.PI * 2);
-          this.ctx.fill();
-
-          for (let j = index + 1; j < this.particles.length; j += 1) {
-            const peer = this.particles[j];
-            const distance = Math.hypot(particle.x - peer.x, particle.y - peer.y);
-            if (distance < 140) {
-              this.ctx.beginPath();
-              this.ctx.moveTo(particle.x, particle.y);
-              this.ctx.lineTo(peer.x, peer.y);
-              this.ctx.stroke();
-            }
-          }
-        });
-
-        window.requestAnimationFrame(() => this.animate());
-      }
-
-      explode() {
-        this.particles.forEach((particle) => {
-          particle.vx = (Math.random() - 0.5) * 10;
-          particle.vy = (Math.random() - 0.5) * 10;
-        });
-
-        window.setTimeout(() => {
-          this.particles.forEach((particle) => {
-            particle.vx = (Math.random() - 0.5) * 0.35;
-            particle.vy = (Math.random() - 0.5) * 0.35;
-          });
-        }, 850);
-      }
-    }
-
-    const audioManager = new AudioManager(droneAudio, document.getElementById("btn-audio"));
-    const typewriterSystem = new TypewriterSystem(typewriterTarget);
-    const neuralCanvas = new NeuralCanvas("neural-canvas");
-    applyAudioSource(CONFIG.audioSrc);
-    applyPaymentLinks();
-
-    const syncModuleButtons = (module) => {
-      moduleButtons.forEach((button) => {
-        button.classList.toggle("active", button.dataset.module === module);
-      });
-    };
-
-    const setOverlayAudioLabel = (muted) => {
-      audioToggle.setAttribute("aria-pressed", String(!muted));
-      audioToggle.querySelector(".audio-label").textContent = muted
-        ? "Unmute to experience"
-        : "Ambient audio active";
-    };
-
-    const fadeInOverlay = async () => {
-      overlay.classList.remove("is-hidden");
-      requestAnimationFrame(() => overlay.classList.add("is-active"));
-      await wait(850);
-    };
-
-    const fadeOutOverlay = async () => {
-      overlay.classList.remove("is-active");
-      await wait(1200);
-      overlay.classList.add("is-hidden");
-    };
-
-    const typeOverlayText = async (text) => {
-      experienceCopy.textContent = "";
-      const caret = document.createElement("span");
-      caret.className = "cursor";
-      caret.textContent = "|";
-      experienceCopy.appendChild(caret);
-
-      for (const char of text) {
-        caret.insertAdjacentText("beforebegin", char);
-        await wait(randomDelay(50, 30));
-      }
-
-      caret.remove();
-    };
-
-    const runProtocol = async (label) => {
-      const protocol = PROTOCOLS_BY_TITLE[label];
-      if (overlayRunning) {
-        return;
-      }
-
-      if (!protocol) {
-        ui.showToast("Protocol not configured");
-        return;
-      }
-
-      overlayRunning = true;
-      clearTimers();
-      overlayTitle.textContent = protocol.title;
-      experienceCopy.classList.remove("is-fading");
-      setOverlayAudioLabel(true);
-      applyAudioSource(protocol.audioSrc || CONFIG.audioSrc);
-      neuralDropOverlay.classList.remove("drop-active");
-      void neuralDropOverlay.offsetWidth;
-      neuralDropOverlay.classList.add("drop-active");
-      neuralCanvas.explode();
-
-      await audioManager.playMuted();
-      await fadeInOverlay();
-      await typeOverlayText(protocol.text);
-      await wait(protocol.holdMs || 5000);
-      experienceCopy.classList.add("is-fading");
-      await wait(1500);
-      await fadeOutOverlay();
-      experienceCopy.textContent = "";
-      experienceCopy.classList.remove("is-fading");
-      audioManager.stop();
-      applyAudioSource(CONFIG.audioSrc);
-      audioManager.audio.muted = audioManager.isMuted;
-      setOverlayAudioLabel(audioManager.audio.muted);
-      overlayRunning = false;
-    };
-
-    entryTrigger.addEventListener("click", async () => {
-      entryTrigger.disabled = true;
-      gateway.classList.add("is-hidden");
-      await wait(1200);
-      gateway.classList.add("hidden");
-      document.body.style.overflow = "hidden";
-      appInterface.classList.add("is-live");
-      typewriterSystem.start(MODULE_TEXTS.intro);
-      audioManager.prime();
-      ui.showToast("Sanctuary interface initialized");
+  </div>
+</section>
+
+<!-- ══ INSIGHTS ══ -->
+<section class="blk" id="insights">
+  <div class="si">
+    <div class="rv"><p class="sl">Learning Archive</p><h2 class="st">Thoughts That<br>Actually Land</h2><p class="sc">Each piece written to reduce confusion, deepen awareness, and leave you with something usable before you finish reading.</p></div>
+    <div class="ag"><article class="ac rv"><div class="atag">Overthinking</div><h3 class="atitle">How to Stop Overthinking Without Silencing Yourself</h3><p class="acopy">There is a difference between quieting the mind and numbing it. This piece shows how to create space without losing depth.</p><a class="alink" href="#join">Read →</a></article><article class="ac rv" style="transition-delay:.1s"><div class="atag">Emotional Control</div><h3 class="atitle">Emotional Discipline Is Not Suppression</h3><p class="acopy">Maturity isn't about feeling less. It's about being present with what you feel without being carried away by it.</p><a class="alink" href="#join">Read →</a></article><article class="ac rv" style="transition-delay:.2s"><div class="atag">Self-Discipline</div><h3 class="atitle">The Quiet Power of Daily Structure</h3><p class="acopy">Discipline is protection — for your attention, your energy, and the version of yourself you are becoming.</p><a class="alink" href="#join">Read →</a></article></div>
+  </div>
+</section>
+
+<!-- ══ INSTAGRAM ══ -->
+<div class="igs"><div class="igi rv"><p class="sl" style="margin-bottom:.7rem">The Community</p><div class="igh">@innervirtuex</div><p class="igc">Daily deep thoughts. Modern Stoicism. Philosophy that actually hits. Join minds who chose clarity over noise.</p><div class="igst"><div class="igsi"><strong>Daily</strong><span>New Content</span></div><div class="igsi"><strong>Real</strong><span>Dopamine Shifts</span></div><div class="igsi"><strong>Free</strong><span>Wisdom. Always.</span></div></div><a class="btig" href="https://instagram.com/innervirtuex" target="_blank" rel="noreferrer">Follow on Instagram</a></div></div>
+
+<!-- ══ JOIN ══ -->
+<section class="blk" id="join">
+  <div class="si"><div class="rv"><p class="sl">Inner Circle</p><h2 class="st">One Thought. Every Week.<br>That Changes Everything.</h2><p class="sc" style="margin-bottom:1.4rem">Weekly reflections on emotional mastery, discipline, resilience, and inner peace — sent quietly to your inbox. No noise. Just signal.</p><div class="jc"><p style="font-family:var(--fm);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)">Join the movement</p><form class="jf" id="jform"><input type="email" id="jemail" placeholder="Enter your email address" required aria-label="Email"><button type="submit">Subscribe</button></form><p class="jn">Weekly guidance. Unsubscribe anytime. No spam — ever.</p></div></div></div>
+</section>
+
+<!-- ══ FOOTER ══ -->
+<footer>
+  <div class="fb2">
+    <svg viewBox="0 0 220 220" fill="none" aria-hidden="true"><defs><radialGradient id="ff" cx="55%" cy="38%" r="52%"><stop offset="0%" stop-color="#d0d0d0"/><stop offset="100%" stop-color="#585858"/></radialGradient></defs><path d="M62 52 Q80 28 108 30 Q138 30 150 50 Q162 70 158 95 Q156 118 148 132 Q138 148 120 155 Q102 158 88 150 Q70 140 64 122 Q56 100 62 52Z" fill="url(#ff)" stroke="#111" stroke-width="3"/><g fill="url(#ff)" stroke="#111" stroke-width="2"><ellipse cx="62" cy="44" rx="12" ry="7" transform="rotate(-50 62 44)"/><ellipse cx="72" cy="33" rx="12" ry="7" transform="rotate(-32 72 33)"/><ellipse cx="85" cy="26" rx="12" ry="7" transform="rotate(-15 85 26)"/><ellipse cx="100" cy="23" rx="12" ry="7"/><ellipse cx="114" cy="25" rx="11" ry="6.5" transform="rotate(14 114 25)"/></g><path d="M76 112 Q68 130 72 150 Q78 168 90 178 Q100 184 110 180 Q124 174 130 162 Q138 148 134 130" fill="url(#ff)" stroke="#111" stroke-width="2.8"/></svg>
+    <span>INNER <em>VIRTUE</em> X</span>
+  </div>
+  <div class="fl"><a href="#philosophy">Philosophy</a><a href="#library">eBooks</a><a href="#insights">Insights</a><a href="privacy-policy.html">Privacy</a><a href="terms-and-conditions.html">Terms</a><a href="contact.html">Contact</a><a href="refund-policy.html">Refunds</a></div>
+  <div class="fc">Clarity Begins Within</div>
+</footer>
+
+<!-- ══ XBOT ══ -->
+<button class="xbb" id="xbb" type="button">Consult Xbot</button>
+<section class="xbp" id="xbp" aria-label="Xbot assistant">
+  <div class="xhd"><div><div class="xbt">Xbot</div><div class="xbs">Payment · Access · Support</div></div><button class="xcx" id="xbc" type="button">Close</button></div>
+  <div class="xcr"><button class="xc" data-q="ebook">What do I get?</button><button class="xc" data-q="payment">Payment help</button><button class="xc" data-q="refund">Refunds</button><button class="xc" data-q="delivery">Delivery issue</button></div>
+  <div class="xms" id="xms"><div class="xm"><strong>Xbot</strong><p>Welcome. Ask me anything about buying, access, subscriptions, or refunds.</p></div></div>
+  <div class="xft"><form class="xff" id="xff"><input type="text" id="xfi" placeholder="Ask about payments, delivery…" aria-label="Message"><div class="xfr"><button type="submit">Send</button></div></form></div>
+</section>
+<div id="tb"></div>
+
+<script>
+// ══════════════════════════════════════
+// DATA
+// ══════════════════════════════════════
+
+// 365 daily quotes — uses day-of-year to pick quote, rotates annually
+const ALL_QUOTES = [
+  {t:"You have power over your mind — not outside events. Realize this, and you will find strength.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"Until you make the unconscious conscious, it will direct your life and you will call it fate.",a:"Carl Jung",ph:"jung"},
+  {t:"It is not that I'm brave — it is that I know what deserves my fear and what does not.",a:"Seneca",ph:"seneca"},
+  {t:"Yesterday I was clever, so I wanted to change the world. Today I am wise, so I am changing myself.",a:"Rumi",ph:"rumi"},
+  {t:"Make the best use of what is in your power, and take the rest as it happens.",a:"Epictetus",ph:"epictetus"},
+  {t:"The first step in finding truth is to be free of all authorities, including me.",a:"Jiddu Krishnamurti",ph:"jk"},
+  {t:"Waste no more time arguing about what a good man should be. Be one.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"He who fears death will never do anything worthy of a man who is alive.",a:"Seneca",ph:"seneca"},
+  {t:"Out beyond ideas of wrongdoing and rightdoing, there is a field. I'll meet you there.",a:"Rumi",ph:"rumi"},
+  {t:"First say to yourself what you would be, and then do what you have to do.",a:"Epictetus",ph:"epictetus"},
+  {t:"No man is free who is not master of himself.",a:"Epictetus",ph:"epictetus"},
+  {t:"The wound is the place where the light enters you.",a:"Rumi",ph:"rumi"},
+  {t:"We suffer more in imagination than in reality.",a:"Seneca",ph:"seneca"},
+  {t:"Very little is needed to make a happy life; it is all within yourself, in your way of thinking.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"The privilege of a lifetime is to become who you truly are.",a:"Carl Jung",ph:"jung"},
+  {t:"Silence is the language of God. All else is poor translation.",a:"Rumi",ph:"rumi"},
+  {t:"Seek not the good in external things — seek it in yourself.",a:"Epictetus",ph:"epictetus"},
+  {t:"Dwell on the beauty of life. Watch the stars, and see yourself running with them.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"What we resist, persists.",a:"Carl Jung",ph:"jung"},
+  {t:"Begin at once to live, and count each separate day as a separate life.",a:"Seneca",ph:"seneca"},
+  {t:"The quieter you become, the more you are able to hear.",a:"Rumi",ph:"rumi"},
+  {t:"Man is disturbed not by things but by the opinions he has about things.",a:"Epictetus",ph:"epictetus"},
+  {t:"The happiness of your life depends upon the quality of your thoughts.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"Who looks outside, dreams. Who looks inside, awakes.",a:"Carl Jung",ph:"jung"},
+  {t:"Omnia aliena sunt, tempus tantum nostrum est. All things are alien — time alone is ours.",a:"Seneca",ph:"seneca"},
+  {t:"I searched for God and found only myself. I searched for myself and found only God.",a:"Rumi",ph:"rumi"},
+  {t:"It's not what happens to you but how you react that matters.",a:"Epictetus",ph:"epictetus"},
+  {t:"Confine yourself to the present.",a:"Marcus Aurelius",ph:"marcus"},
+  {t:"You are not the victim of the world but the master of your own destiny.",a:"Carl Jung",ph:"jung"},
+  {t:"If you want to improve, be content to be thought foolish and stupid.",a:"Epictetus",ph:"epictetus"},
+];
+
+const PHILOSOPHERS = [
+  {id:"marcus",name:"Marcus Aurelius",era:"Rome · 121–180 AD",
+   quote:"You have power over your mind — not outside events.",
+   desc:"Emperor. Stoic. His private journal Meditations remains the most honest self-examination ever written.",
+   bg:"#0d0a00", accent:"#d4a017", hair:"#8a7a5a", skin:"#c4a882", beard:"#7a6a4a"},
+  {id:"seneca",name:"Seneca",era:"Rome · 4 BC – 65 AD",
+   quote:"We suffer more in imagination than in reality.",
+   desc:"Philosopher, statesman. Seneca wrote about time, death, and anger with surgical precision.",
+   bg:"#000a0a", accent:"#40a080", hair:"#6a8a7a", skin:"#b89a7a", beard:"#5a7a6a"},
+  {id:"epictetus",name:"Epictetus",era:"Greece · 50–135 AD",
+   quote:"No man is free who is not master of himself.",
+   desc:"Born a slave, became the greatest Stoic teacher. He taught one thing: the dichotomy of control.",
+   bg:"#0a0500", accent:"#e08040", hair:"#3a2a1a", skin:"#a07850", beard:"#2a1a0a"},
+  {id:"jung",name:"Carl Jung",era:"Switzerland · 1875–1961",
+   quote:"Who looks outside, dreams. Who looks inside, awakes.",
+   desc:"Shadow work, archetypes, individuation — his framework for the psyche remains unmatched.",
+   bg:"#00000d", accent:"#6060c0", hair:"#c0c0c0", skin:"#d4b896", beard:"#b0b0b0"},
+  {id:"rumi",name:"Rumi",era:"Persia · 1207–1273",
+   quote:"The wound is the place where the light enters you.",
+   desc:"Sufi mystic and poet. Rumi dissolved the boundary between philosophy and feeling.",
+   bg:"#0a0008", accent:"#b060a0", hair:"#1a0a1a", skin:"#c09070", beard:"#100808"},
+  {id:"jk",name:"Jiddu Krishnamurti",era:"India · 1895–1986",
+   quote:"Freedom is found beyond the boundaries of thought.",
+   desc:"He refused to be anyone's guru. Krishnamurti asked the questions most are too afraid to sit with.",
+   bg:"#00080a", accent:"#40a0b0", hair:"#0a0a0a", skin:"#b07850", beard:"#080808"},
+];
+
+// ── PHILOSOPHER PORTRAIT SVGs ────────────────────────────
+function mkPortrait(p) {
+  const s=p.skin, h=p.hair, b=p.beard, ac=p.accent, bg=p.bg;
+  return `<svg viewBox="0 0 300 220" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+  <defs>
+    <radialGradient id="pf_${p.id}" cx="52%" cy="36%" r="55%">
+      <stop offset="0%" stop-color="${s}"/>
+      <stop offset="55%" stop-color="${s}cc"/>
+      <stop offset="100%" stop-color="${s}66"/>
+    </radialGradient>
+    <radialGradient id="pb_${p.id}" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="${b}"/>
+      <stop offset="100%" stop-color="${b}99"/>
+    </radialGradient>
+    <radialGradient id="pglow_${p.id}" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="${ac}" stop-opacity="0.12"/>
+      <stop offset="100%" stop-color="${bg}" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <!-- Background -->
+  <rect width="300" height="220" fill="${bg}"/>
+  <rect width="300" height="220" fill="url(#pglow_${p.id})"/>
+  <!-- Decorative corner lines -->
+  <path d="M16 16L38 16 M16 16L16 38" stroke="${ac}" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M284 16L262 16 M284 16L284 38" stroke="${ac}" stroke-width="1" fill="none" opacity="0.5"/>
+  <path d="M16 204L38 204 M16 204L16 182" stroke="${ac}" stroke-width="1" fill="none" opacity="0.3"/>
+  <path d="M284 204L262 204 M284 204L284 182" stroke="${ac}" stroke-width="1" fill="none" opacity="0.3"/>
+  <!-- Subtle circle -->
+  <circle cx="150" cy="100" r="80" fill="none" stroke="${ac}" stroke-width="0.5" opacity="0.12"/>
+  <circle cx="150" cy="100" r="65" fill="none" stroke="${ac}" stroke-width="0.5" opacity="0.08"/>
+  <!-- === PHILOSOPHER HEAD: side profile facing RIGHT === -->
+  <!-- Hair back -->
+  <path d="M96 62 Q78 80 80 108 Q82 130 90 148" stroke="${h}" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.9"/>
+  <path d="M94 62 Q74 84 78 114 Q80 136 88 150" stroke="${h}" stroke-width="3" fill="none" stroke-linecap="round" opacity="0.6"/>
+  <!-- Head shape — side profile -->
+  <path d="M100 54 Q116 36 138 36 Q162 36 172 56 Q184 76 180 102 Q178 124 166 138 Q154 152 138 156 Q120 158 108 148 Q94 136 90 118 Q84 96 100 54Z" fill="url(#pf_${p.id})" stroke="${h}44" stroke-width="2.5"/>
+  <!-- Hair top/crown style -->
+  <path d="M100 54 Q112 38 138 36 Q156 34 168 48" stroke="${h}" stroke-width="4" fill="none" stroke-linecap="round"/>
+  <path d="M102 52 Q116 40 140 38" stroke="${h}" stroke-width="2.5" fill="none" stroke-linecap="round" opacity="0.5"/>
+  <!-- ${p.id==='marcus'||p.id==='seneca'||p.id==='epictetus'?'Laurel wreath':p.id==='jung'?'Glasses':'Headpiece'} -->
+  ${p.id==='marcus'||p.id==='seneca'||p.id==='epictetus'?`
+  <g fill="${h}" stroke="${h}55" stroke-width="1.8" opacity="0.9">
+    <ellipse cx="104" cy="48" rx="9" ry="5.5" transform="rotate(-48 104 48)"/>
+    <ellipse cx="114" cy="38" rx="9" ry="5.5" transform="rotate(-28 114 38)"/>
+    <ellipse cx="126" cy="31" rx="9" ry="5.5" transform="rotate(-10 126 31)"/>
+    <ellipse cx="140" cy="28" rx="9" ry="5.5" transform="rotate(8 140 28)"/>
+    <ellipse cx="153" cy="32" rx="9" ry="5.5" transform="rotate(25 153 32)"/>
+    <path d="M100 52 Q136 24 164 44" stroke="${h}" stroke-width="2" fill="none"/>
+  </g>`:p.id==='jung'?`
+  <path d="M126 80 Q132 76 140 78 Q148 80 152 76" stroke="${ac}" stroke-width="2" fill="none" stroke-linecap="round"/>
+  <path d="M126 80 Q124 86 128 88 Q134 90 138 86 Q142 82 140 78" fill="none" stroke="${ac}" stroke-width="1.5"/>
+  <path d="M152 76 Q150 82 154 84 Q160 86 164 82 Q166 78 164 74" fill="none" stroke="${ac}" stroke-width="1.5"/>`:``}
+  <!-- Ear -->
+  <ellipse cx="92" cy="106" rx="7" ry="9.5" fill="url(#pf_${p.id})" stroke="${h}44" stroke-width="2.2"/>
+  <path d="M96 100 Q100 106 96 112" stroke="${h}66" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+  <!-- Brow -->
+  <path d="M126 74 Q138 67 152 70" stroke="${h}" stroke-width="3.2" fill="none" stroke-linecap="round"/>
+  <!-- Eye -->
+  <path d="M130 80 Q140 73 152 77" stroke="${h}cc" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+  <ellipse cx="140" cy="80" rx="5" ry="3.5" fill="${h}"/>
+  <ellipse cx="141" cy="79" rx="2" ry="1.8" fill="${bg}" opacity="0.6"/>
+  <!-- Nose — strong stoic profile -->
+  <path d="M152 72 L164 90 Q168 98 162 102 Q156 104 152 100" stroke="${h}bb" stroke-width="2.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Mouth -->
+  <path d="M138 118 Q148 124 160 120" stroke="${h}99" stroke-width="2.2" fill="none" stroke-linecap="round"/>
+  <!-- Beard / chin area -->
+  <path d="M108 122 Q100 142 104 162 Q110 178 122 184 Q134 188 144 182 Q158 174 162 158 Q168 142 162 126 Q158 116 150 112" fill="url(#pb_${p.id})" stroke="${h}44" stroke-width="2.5"/>
+  <path d="M116 128 Q112 148 116 166 Q120 178 128 184" stroke="${h}44" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+  <path d="M130 128 Q126 150 128 168 Q132 180 134 184" stroke="${h}44" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  <path d="M144 128 Q148 148 146 166 Q142 178 136 184" stroke="${h}44" stroke-width="1.4" fill="none" stroke-linecap="round"/>
+  <!-- Neck -->
+  <rect x="114" y="152" width="26" height="20" rx="2" fill="url(#pf_${p.id})" stroke="${h}44" stroke-width="2.2"/>
+  <!-- Shoulders / robe -->
+  <path d="M72 210 Q84 188 108 172 L110 190 L110 210Z" fill="url(#pb_${p.id})" stroke="${h}44" stroke-width="2.5"/>
+  <path d="M220 210 Q208 186 168 172 L164 190 L164 210Z" fill="url(#pb_${p.id})" stroke="${h}44" stroke-width="2.5"/>
+  <path d="M72 210 Q110 192 140 200 Q162 192 220 210" stroke="${h}66" stroke-width="2" fill="none"/>
+  <!-- Accent line bottom -->
+  <line x1="80" y1="214" x2="220" y2="214" stroke="${ac}" stroke-width="0.8" opacity="0.5"/>
+</svg>`;
+}
+
+function renderPhilosophers(){
+  const g=document.getElementById("phg");
+  PHILOSOPHERS.forEach((p,i)=>{
+    const c=document.createElement("div");
+    c.className="phc rv"; c.style.transitionDelay=`${i*0.08}s`;
+    c.innerHTML=`<div class="ph-img">${mkPortrait(p)}</div><div class="ph-body"><div class="ph-era">${p.era}</div><div class="ph-name">${p.name}</div><p class="ph-quote">${p.quote}</p><p class="ph-desc">${p.desc}</p></div>`;
+    g.appendChild(c);
+  });
+}
+
+// ── DAILY QUOTE SYSTEM ───────────────────────────────────
+// Uses day-of-year so quote changes every midnight automatically
+function getDayOfYear(d){ const s=new Date(d.getFullYear(),0,0);return Math.floor((d-s)/86400000); }
+function getDateStr(d){ return d.toLocaleDateString("en-US",{weekday:"long",year:"numeric",month:"long",day:"numeric"}); }
+
+let qCur=0;
+const QEL=()=>document.getElementById("bq");
+const QAEL=()=>document.getElementById("qauth");
+
+function initQuotes(){
+  const today=new Date();
+  const doy=getDayOfYear(today);
+  // Seed today's quote using day of year, cycling through the pool
+  qCur=doy % ALL_QUOTES.length;
+  document.getElementById("qdatestr").textContent=`Daily wisdom · ${getDateStr(today)}`;
+  buildDots();
+  setQuote(qCur,false);
+  // Auto-rotate every 8s within the same day's selection (show nearby quotes)
+  setInterval(()=>rotateQ(1),8000);
+}
+
+function buildDots(){
+  const el=document.getElementById("qdots"); el.innerHTML="";
+  // Show 5 dots around today's quote
+  for(let i=0;i<5;i++){
+    const d=document.createElement("button");
+    d.className="qd"+(i===2?" on":"");
+    d.setAttribute("aria-label",`Quote ${i+1}`);
+    d.addEventListener("click",()=>setQuote((qCur-2+i+ALL_QUOTES.length)%ALL_QUOTES.length,true));
+    el.appendChild(d);
+  }
+}
+
+function setQuote(idx,animate){
+  const bq=QEL(), qa=QAEL();
+  if(animate){ bq.classList.add("fade"); setTimeout(()=>{ qCur=idx; bq.textContent=ALL_QUOTES[qCur].t; qa.textContent=`— ${ALL_QUOTES[qCur].a}`; bq.classList.remove("fade"); }, 520); }
+  else { qCur=idx; bq.textContent=ALL_QUOTES[qCur].t; qa.textContent=`— ${ALL_QUOTES[qCur].a}`; }
+  // Update dots
+  document.querySelectorAll(".qd").forEach((d,i)=>d.classList.toggle("on",i===2));
+}
+
+function rotateQ(dir){ setQuote((qCur+dir+ALL_QUOTES.length)%ALL_QUOTES.length,true); }
+
+document.getElementById("qnext").addEventListener("click",()=>rotateQ(1));
+document.getElementById("qprev").addEventListener("click",()=>rotateQ(-1));
+
+// ── CANVAS ────────────────────────────────────────────────
+(function(){
+  const c=document.getElementById("bgc"),ctx=c.getContext("2d");
+  let pts=[];
+  const rz=()=>{c.width=c.offsetWidth;c.height=c.offsetHeight};
+  rz(); window.addEventListener("resize",rz);
+  for(let i=0;i<48;i++) pts.push({x:Math.random()*1000,y:Math.random()*800,vx:(Math.random()-.5)*.28,vy:(Math.random()-.5)*.28,s:Math.random()*1.5+.4});
+  const draw=()=>{
+    if(c.width===0)return;
+    ctx.clearRect(0,0,c.width,c.height);
+    ctx.fillStyle="rgba(212,175,55,0.55)"; ctx.strokeStyle="rgba(212,175,55,0.055)";
+    pts.forEach((p,i)=>{
+      p.x+=p.vx; p.y+=p.vy;
+      if(p.x<0||p.x>c.width)p.vx*=-1; if(p.y<0||p.y>c.height)p.vy*=-1;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.s,0,Math.PI*2);ctx.fill();
+      pts.slice(i+1).forEach(q=>{const d=Math.hypot(p.x-q.x,p.y-q.y);if(d<125){ctx.beginPath();ctx.moveTo(p.x,p.y);ctx.lineTo(q.x,q.y);ctx.stroke();}});
     });
+    requestAnimationFrame(draw);
+  };
+  draw();
+})();
 
-    moduleButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        const module = button.dataset.module;
-        syncModuleButtons(module);
-        typewriterSystem.start(MODULE_TEXTS[module]);
-        ui.showToast(`${module.toUpperCase()} module loaded`);
-        if (window.innerWidth < 860) {
-          contentScroll.scrollTo({ top: 0, behavior: "smooth" });
-        }
-      });
-    });
+// ── TYPEWRITER ────────────────────────────────────────────
+const TW_TEXT="Initializing sanctuary interface...\n\nINNER VIRTUE X is where modern self-mastery meets timeless stillness.\n\nEnter slowly. Breathe first.\nThen choose what part of yourself\nyou are ready to train.";
+let twT=null;
+function startTW(){
+  clearTimeout(twT);
+  const el=document.getElementById("tw"); el.textContent="";
+  const cur=document.createElement("span"); cur.className="cur"; cur.textContent="|"; el.appendChild(cur);
+  let i=0;
+  const type=()=>{
+    if(i>=TW_TEXT.length)return;
+    const ch=TW_TEXT[i++]; cur.insertAdjacentText("beforebegin",ch);
+    let d=Math.floor(Math.random()*38)+24;
+    if(".,!?\n".includes(ch))d+=165; else if(ch===",")d+=82;
+    twT=setTimeout(type,d);
+  };
+  type();
+}
 
-    protocolButtons.forEach((button) => {
-      button.addEventListener("click", () => {
-        runProtocol(button.dataset.protocol);
-      });
-    });
+// ── SCROLL REVEAL ─────────────────────────────────────────
+function initReveal(){
+  const io=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add("in");io.unobserve(e.target)}})},{threshold:0.07});
+  document.querySelectorAll(".rv").forEach(el=>io.observe(el));
+}
 
-    btnDrop.addEventListener("click", () => {
-      neuralDropOverlay.classList.remove("drop-active");
-      void neuralDropOverlay.offsetWidth;
-      neuralDropOverlay.classList.add("drop-active");
-      neuralCanvas.explode();
-      ui.showToast("Neural drop executed");
-    });
+// ── TOAST ─────────────────────────────────────────────────
+const toast=m=>{const el=document.createElement("div");el.className="toast";el.textContent=`>> ${m}`;document.getElementById("tb").appendChild(el);setTimeout(()=>{el.style.opacity="0";el.style.transition="opacity .4s";setTimeout(()=>el.remove(),400)},2800);};
 
-    audioToggle.addEventListener("click", async () => {
-      const nextMutedState = !audioManager.audio.muted;
-      audioManager.audio.muted = nextMutedState;
-      setOverlayAudioLabel(nextMutedState);
+// ── INTRO SEQUENCE ────────────────────────────────────────
+const INTRO=[
+  {t:"INNER VIRTUE X",sz:"3rem",delay:200},
+  {t:"Modern Stoicism for a Modern Mind",sz:"1rem",sub:true,delay:950},
+  {t:"divider",delay:1500},
+  {t:"Mental Clarity",sz:"2rem",delay:1850},
+  {t:"Emotional Discipline",sz:"2rem",delay:2300},
+  {t:"Self-Awareness",sz:"2rem",delay:2750},
+  {t:"divider",delay:3150},
+  {t:"The journey inward begins now.",sz:".95rem",sub:true,delay:3500},
+];
+function runIntro(onDone){
+  const intro=document.getElementById("intro"),seq=document.getElementById("iseq");
+  intro.classList.add("show"); seq.innerHTML="";
+  let timers=[];
+  INTRO.forEach(ln=>{
+    if(ln.t==="divider"){const div=document.createElement("div");div.className="idiv";seq.appendChild(div);timers.push(setTimeout(()=>div.classList.add("grow"),ln.delay));return;}
+    const el=document.createElement("div");el.className="il"+(ln.sub?" sub":"");el.textContent=ln.t;el.style.fontSize=ln.sz||"2rem";seq.appendChild(el);
+    timers.push(setTimeout(()=>el.classList.add("vis"),ln.delay));
+  });
+  timers.push(setTimeout(()=>finishIntro(onDone),5000));
+  document.getElementById("iskip").addEventListener("click",()=>{timers.forEach(clearTimeout);finishIntro(onDone);},{once:true});
+}
+function finishIntro(onDone){
+  const i=document.getElementById("intro");i.classList.add("hide");setTimeout(()=>{i.classList.remove("show","hide");onDone();},800);
+}
 
-      if (!nextMutedState) {
-        try {
-          await audioManager.audio.play();
-        } catch (error) {
-          console.warn("Overlay audio unmute failed.", error);
-          audioManager.audio.muted = true;
-          setOverlayAudioLabel(true);
-          ui.showToast("Browser blocked audio");
-          return;
-        }
-      }
+// ── GATEWAY ───────────────────────────────────────────────
+function bootApp(){
+  document.getElementById("gateway").classList.add("gone");
+  setTimeout(()=>runIntro(()=>{
+    document.getElementById("nav").classList.add("show");
+    document.getElementById("xbb").classList.add("on");
+    renderPhilosophers();
+    initQuotes();
+    startTW();
+    initReveal();
+    toast("Sanctuary interface initialized");
+  }),400);
+}
+document.getElementById("gw-trigger").addEventListener("click",bootApp);
+document.getElementById("gw-enter").addEventListener("click",e=>{e.stopPropagation();bootApp();});
+document.getElementById("gw-trigger").addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" ")bootApp();});
 
-      ui.showToast(nextMutedState ? "Overlay audio muted" : "Overlay audio active");
-    });
+// ── XBOT ──────────────────────────────────────────────────
+const XANS={ebook:"Each InnerVirtueX resource is a focused digital eBook or journal with clarity exercises, emotional regulation frameworks, and daily reflection prompts. Delivered digitally after purchase.",payment:"Payments go through Razorpay. If payment succeeds but access doesn't arrive, keep your confirmation and DM @innervirtuex on Instagram.",refund:"Digital products are generally final sale. Refunds may be reviewed for duplicate charges, failed delivery, or unauthorized transactions reported promptly.",delivery:"Verify payment success, check the email used at checkout, and check spam/promotions folders. Still missing? DM @innervirtuex with your payment confirmation.",default:"I can help with purchases, payments, delivery, ebook content, and refund policy. Ask me directly."};
+const xbp=document.getElementById("xbp"),xms=document.getElementById("xms"),xbb=document.getElementById("xbb");
+const txbot=o=>{const op=typeof o==="boolean"?o:!xbp.classList.contains("open");xbp.classList.toggle("open",op);xbb.textContent=op?"Hide Xbot":"Consult Xbot";if(op)document.getElementById("xfi").focus();};
+xbb.addEventListener("click",()=>txbot());
+document.getElementById("xbc").addEventListener("click",()=>txbot(false));
+document.querySelectorAll(".xc").forEach(c=>c.addEventListener("click",()=>{txbot(true);sendX(c.dataset.q);}));
+const addXM=(role,txt)=>{const w=document.createElement("div");w.className="xm"+(role==="user"?" usr":"");const s=document.createElement("strong");s.textContent=role==="user"?"You":"Xbot";const p=document.createElement("p");p.textContent=txt;w.appendChild(s);w.appendChild(p);xms.appendChild(w);xms.scrollTop=xms.scrollHeight;return p;};
+const resolveX=msg=>{const t=msg.toLowerCase();if(/refund|cancel/.test(t))return XANS.refund;if(/pay|razorpay/.test(t))return XANS.payment;if(/deliver|access|receive/.test(t))return XANS.delivery;if(/ebook|journal|guide|get/.test(t))return XANS.ebook;return XANS.default;};
+const sendX=async msg=>{addXM("user",msg);const th=addXM("bot","Thinking with clarity…");await new Promise(r=>setTimeout(r,900));let ans;try{const res=await fetch("/api/xbot",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:msg})});const d=await res.json();ans=d.reply||resolveX(msg);}catch{ans=resolveX(msg)+" For further help, DM @innervirtuex on Instagram.";}th.textContent="";for(const ch of ans){th.textContent+=ch;xms.scrollTop=xms.scrollHeight;await new Promise(r=>setTimeout(r,Math.floor(Math.random()*16)+8));}};
+document.getElementById("xff").addEventListener("submit",e=>{e.preventDefault();const m=document.getElementById("xfi").value.trim();if(!m)return;document.getElementById("xff").reset();sendX(m);});
+document.addEventListener("keydown",e=>{if(e.key==="Escape")txbot(false);});
 
-    xbotForm.addEventListener("submit", (event) => {
-      event.preventDefault();
-      const message = xbotInput.value.trim();
-      if (!message) {
-        return;
-      }
-
-      xbotForm.reset();
-      askXbot(message);
-    });
-
-    xbotLauncher.addEventListener("click", () => {
-      toggleXbot();
-    });
-
-    xbotClose.addEventListener("click", () => {
-      toggleXbot(false);
-    });
-
-    xbotChips.forEach((chip) => {
-      chip.addEventListener("click", () => {
-        const topic = chip.dataset.xbotTopic;
-        toggleXbot(true);
-        const prompt = XBOT_PROMPTS[topic] || "Help me.";
-        askXbot(prompt);
-      });
-    });
-
-    document.addEventListener("keydown", (event) => {
-      if (event.key === "Escape" && xbotPanel.classList.contains("is-open")) {
-        toggleXbot(false);
-      }
-    });
-
-    subscribeForm.addEventListener("submit", async (event) => {
-      event.preventDefault();
-      const value = emailInput.value.trim();
-      if (!value) {
-        ui.showToast("Enter a valid email");
-        return;
-      }
-
-      const submitButton = subscribeForm.querySelector('button[type="submit"]');
-      submitButton.disabled = true;
-      submitButton.textContent = "Sending...";
-
-      try {
-        const response = await fetch(CONFIG.subscribeEndpoint, {
-          method: CONFIG.subscribeMethod || "POST",
-          headers: {
-            "Content-Type": "application/json",
-            ...CONFIG.subscribeHeaders
-          },
-          body: JSON.stringify({
-            email: value,
-            source: "innervirtuex-site",
-            page: "join-inner-circle",
-            timestamp: new Date().toISOString()
-          })
-        });
-
-        const result = await response.json().catch(() => ({}));
-
-        if (!response.ok) {
-          throw new Error(result.error || `Subscribe failed with status ${response.status}`);
-        }
-
-        ui.showToast(CONFIG.subscribeSuccessMessage);
-        subscribeForm.reset();
-      } catch (error) {
-        console.warn("Subscribe request failed.", error);
-        ui.showToast(error.message || "Subscription failed. Check backend setup");
-      } finally {
-        submitButton.disabled = false;
-        submitButton.textContent = "Subscribe";
-      }
-    });
-
-    paymentLinks.forEach((link) => {
-      link.addEventListener("click", (event) => {
-        const provider = link.dataset.provider;
-        const product = link.dataset.product;
-        const url = CONFIG.paymentLinks?.[provider]?.[product] || CONFIG.paymentLinks?.[provider]?.library;
-        if (!url) {
-          event.preventDefault();
-          ui.showToast(`Add ${provider} link for ${product}`);
-        }
-      });
-    });
-
-    providerLinks.forEach((link) => {
-      link.addEventListener("click", (event) => {
-        const provider = link.dataset.provider;
-        const url = CONFIG.paymentLinks?.[provider]?.library;
-        if (!url) {
-          event.preventDefault();
-          ui.showToast(`Add ${provider} library link`);
-        }
-      });
-    });
-  </script>
+// ── SUBSCRIBE ─────────────────────────────────────────────
+document.getElementById("jform").addEventListener("submit",async e=>{
+  e.preventDefault();const email=document.getElementById("jemail").value.trim();
+  const btn=e.target.querySelector("button");btn.disabled=true;btn.textContent="Sending…";
+  try{const res=await fetch("/api/subscribe",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({email})});if(res.ok){toast("Welcome to the Inner Circle.");e.target.reset();}else throw new Error();}
+  catch{toast("Subscription failed — check backend setup.");}
+  finally{btn.disabled=false;btn.textContent="Subscribe";}
+});
+</script>
 </body>
 </html>
