@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Control Your Mind — Preview | InnerVirtueX</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600;700&family=EB+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--bg2:#111;--bg3:#161616;
+  --text:#e8e2d4;--soft:rgba(232,226,212,0.68);--dim:rgba(232,226,212,0.38);
+  --gold:#d4af37;--gold2:#f0cc5a;--line:rgba(212,175,55,0.12);
+  --fh:"Cinzel",serif;--fb:"EB Garamond",Georgia,serif;--fi:"Inter",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--text);font-family:var(--fb);font-size:18px;line-height:1.9;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:rgba(212,175,55,0.3)}
+
+/* NAV */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:200;height:54px;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 2rem;background:rgba(8,8,8,0.96);
+  border-bottom:1px solid var(--line);backdrop-filter:blur(16px);
+}
+.nav-brand{font-family:var(--fh);font-size:.75rem;letter-spacing:.45em;text-transform:uppercase}
+.nav-brand span{color:var(--gold)}
+.nav-tag{font-family:var(--fi);font-size:.58rem;letter-spacing:.28em;text-transform:uppercase;color:var(--dim)}
+.nav-buy{
+  padding:.48rem 1.1rem;background:var(--gold);color:#000;
+  font-family:var(--fi);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;
+  font-weight:600;text-decoration:none;transition:transform .3s,box-shadow .3s;
+}
+.nav-buy:hover{transform:translateY(-1px);box-shadow:0 5px 18px rgba(212,175,55,0.3)}
+
+/* HERO BOOK COVER */
+.hero{
+  min-height:92vh;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;text-align:center;padding:6rem 2rem 4rem;
+  background:radial-gradient(ellipse at 50% 30%,rgba(212,175,55,0.09),transparent 60%),var(--bg);
+  border-bottom:1px solid var(--line);position:relative;overflow:hidden;
+}
+.preview-badge{
+  font-family:var(--fi);font-size:.58rem;letter-spacing:.45em;text-transform:uppercase;
+  color:var(--gold);background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.25);
+  padding:.45rem 1.1rem;margin-bottom:2.5rem;display:inline-block;
+}
+.book-mock{
+  width:200px;aspect-ratio:3/4.2;background:#060606;
+  border:1px solid rgba(212,175,55,0.28);padding:1.4rem 1.2rem;
+  display:grid;align-content:space-between;
+  box-shadow:18px 22px 45px rgba(0,0,0,0.7),0 0 40px rgba(212,175,55,0.08);
+  position:relative;margin:0 auto 2.5rem;
+}
+.book-mock::before{
+  content:"";position:absolute;left:.7rem;top:.7rem;bottom:.7rem;
+  width:3px;background:linear-gradient(180deg,rgba(212,175,55,0.6),rgba(212,175,55,0.05));
+}
+.book-mock::after{
+  content:"";position:absolute;inset:12px;
+  border:1px solid rgba(212,175,55,0.08);pointer-events:none;
+}
+.bk-sub{font-family:var(--fi);font-size:.55rem;letter-spacing:.22em;text-transform:uppercase;color:rgba(212,175,55,0.7);margin-left:.6rem}
+.bk-title{font-family:var(--fh);font-size:1.4rem;line-height:1.1;letter-spacing:.08em;text-transform:uppercase;margin-left:.6rem;color:var(--text)}
+.bk-foot{font-family:var(--fi);font-size:.5rem;letter-spacing:.16em;text-transform:uppercase;color:var(--dim);margin-left:.6rem}
+.hero-title{font-family:var(--fh);font-size:clamp(2rem,4vw,3.5rem);letter-spacing:.1em;text-transform:uppercase;line-height:1.08;margin-bottom:.6rem;background:linear-gradient(135deg,#fff 30%,var(--gold) 65%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.hero-sub{font-family:var(--fb);font-style:italic;font-size:1.05rem;color:var(--soft);margin-bottom:.5rem}
+.hero-brand{font-family:var(--fi);font-size:.6rem;letter-spacing:.32em;text-transform:uppercase;color:var(--dim);margin-bottom:2.5rem}
+.hero-stats{display:flex;gap:2.5rem;justify-content:center;margin-bottom:2.5rem;flex-wrap:wrap}
+.hs{text-align:center}
+.hs strong{display:block;font-family:var(--fh);font-size:1.5rem;color:var(--gold)}
+.hs span{font-family:var(--fi);font-size:.58rem;letter-spacing:.2em;text-transform:uppercase;color:var(--dim)}
+.hero-cta{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.btn-buy-hero{
+  padding:1rem 2.2rem;background:var(--gold);color:#000;
+  font-family:var(--fi);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  font-weight:600;text-decoration:none;transition:transform .3s,box-shadow .3s;
+}
+.btn-buy-hero:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(212,175,55,0.3)}
+.btn-scroll{
+  padding:1rem 2rem;border:1px solid rgba(212,175,55,0.3);
+  font-family:var(--fi);font-size:.72rem;letter-spacing:.22em;text-transform:uppercase;
+  color:var(--text);text-decoration:none;transition:all .3s;cursor:pointer;background:none;
+}
+.btn-scroll:hover{border-color:var(--gold);color:var(--gold);background:rgba(212,175,55,0.06)}
+
+/* WHAT'S INSIDE */
+.inside{padding:5rem 2rem;border-bottom:1px solid var(--line);background:var(--bg2)}
+.page{max-width:780px;margin:0 auto}
+.sl{font-family:var(--fi);font-size:.62rem;letter-spacing:.32em;text-transform:uppercase;color:var(--gold);margin-bottom:.6rem}
+.st{font-family:var(--fh);font-size:clamp(1.6rem,3vw,2.6rem);letter-spacing:.08em;text-transform:uppercase;margin-bottom:1rem;line-height:1.1}
+.sc{color:var(--soft);font-size:.98rem;line-height:1.88;margin-bottom:2rem;font-weight:300}
+.toc-preview{display:grid;gap:0;margin-top:2rem}
+.toc-row{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.9rem 0;border-bottom:1px solid rgba(212,175,55,0.06);
+}
+.toc-num{font-family:var(--fi);font-size:.6rem;letter-spacing:.2em;color:var(--gold);min-width:26px}
+.toc-text{flex:1;font-family:var(--fb);font-size:.98rem;color:var(--soft);font-style:italic}
+.toc-text strong{color:var(--text);font-style:normal;font-weight:500}
+.toc-lock{font-family:var(--fi);font-size:.58rem;letter-spacing:.12em;color:var(--dimmer);text-transform:uppercase}
+.toc-free{font-family:var(--fi);font-size:.58rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase;border:1px solid rgba(212,175,55,0.3);padding:.2rem .5rem}
+
+/* PREVIEW CONTENT */
+.preview-content{padding:5rem 2rem 0;border-bottom:none}
+.ch-tag{font-family:var(--fi);font-size:.6rem;letter-spacing:.42em;text-transform:uppercase;color:var(--gold);margin-bottom:1rem;opacity:.75}
+.ch-num{font-family:var(--fh);font-size:4.5rem;color:rgba(212,175,55,0.06);line-height:1;margin-bottom:-.8rem;letter-spacing:.05em}
+.ch-title{font-family:var(--fh);font-size:clamp(1.5rem,3vw,2.6rem);letter-spacing:.09em;text-transform:uppercase;line-height:1.1;margin-bottom:.5rem;background:linear-gradient(135deg,var(--text) 50%,var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.ch-sub{font-family:var(--fb);font-style:italic;font-size:1rem;color:var(--dim);margin-bottom:2.5rem}
+.ch-div{width:45px;height:1px;background:linear-gradient(90deg,var(--gold),transparent);margin-bottom:3rem}
+p.lead{font-size:1.18rem;color:var(--text);line-height:1.88;font-weight:500;margin-bottom:1.8rem}
+p{color:var(--soft);line-height:1.9;margin-bottom:1.6rem;font-weight:300}
+p strong{color:var(--text);font-weight:600}
+p em{color:var(--gold);font-style:italic}
+.story{margin:2.5rem 0;padding:1.8rem;background:var(--bg2);border:1px solid var(--line);position:relative}
+.story::before{content:"Story";position:absolute;top:-.6rem;left:1.4rem;font-family:var(--fi);font-size:.52rem;letter-spacing:.32em;text-transform:uppercase;background:var(--bg2);padding:0 .55rem;color:var(--gold)}
+.story p{font-style:italic;color:var(--soft);margin-bottom:.9rem}
+.story p:last-child{margin-bottom:0}
+
+/* BLUR / PAYWALL */
+.blur-wrap{position:relative;overflow:hidden;margin-top:0}
+.blur-content{
+  -webkit-mask-image:linear-gradient(180deg,black 0%,black 30%,transparent 75%);
+  mask-image:linear-gradient(180deg,black 0%,black 30%,transparent 75%);
+  pointer-events:none;
+}
+.paywall{
+  position:relative;
+  margin-top:-120px;
+  padding:3rem 2rem 5rem;
+  text-align:center;
+  background:linear-gradient(180deg,transparent,var(--bg) 18%,var(--bg) 100%);
+  z-index:10;
+}
+.paywall-inner{
+  max-width:600px;margin:0 auto;
+  padding:3rem 2.5rem;
+  background:linear-gradient(135deg,rgba(212,175,55,0.07),rgba(0,0,0,0.6));
+  border:1px solid rgba(212,175,55,0.2);
+  box-shadow:0 0 60px rgba(212,175,55,0.08);
+}
+.paywall-icon{font-size:2rem;margin-bottom:1rem;opacity:.6}
+.paywall-tag{font-family:var(--fi);font-size:.58rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:.8rem}
+.paywall-title{font-family:var(--fh);font-size:clamp(1.4rem,2.5vw,2rem);letter-spacing:.1em;text-transform:uppercase;margin-bottom:.8rem;line-height:1.15}
+.paywall-sub{font-family:var(--fb);font-style:italic;font-size:1rem;color:var(--soft);margin-bottom:2rem;line-height:1.75}
+.paywall-price{font-family:var(--fh);font-size:2.8rem;color:var(--gold);margin-bottom:.4rem}
+.paywall-note{font-family:var(--fi);font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:2rem}
+.btn-paywall{
+  display:inline-block;padding:1.1rem 2.8rem;background:var(--gold);color:#000;
+  font-family:var(--fi);font-size:.75rem;letter-spacing:.24em;text-transform:uppercase;
+  font-weight:700;text-decoration:none;transition:transform .3s,box-shadow .3s;
+  margin-bottom:1rem;
+}
+.btn-paywall:hover{transform:translateY(-2px);box-shadow:0 10px 32px rgba(212,175,55,0.35)}
+.paywall-includes{display:grid;gap:.5rem;margin-top:1.8rem;text-align:left}
+.pi{display:flex;align-items:center;gap:.7rem;font-family:var(--fi);font-size:.68rem;letter-spacing:.08em;color:var(--soft)}
+.pi::before{content:"✓";color:var(--gold);font-weight:700;font-size:.8rem;flex-shrink:0}
+
+/* PULL QUOTE */
+.pull-quote{margin:2.5rem 0;padding:2rem 1.8rem 2rem 2.2rem;border-left:2px solid var(--gold);background:linear-gradient(135deg,rgba(212,175,55,0.05),transparent);position:relative}
+.pull-quote::before{content:"❝";position:absolute;top:-.4rem;left:1.4rem;font-size:2.8rem;color:rgba(212,175,55,0.2);line-height:1}
+.pull-quote p{font-family:var(--fh);font-size:clamp(1rem,2vw,1.25rem);letter-spacing:.04em;color:var(--text);margin:0;line-height:1.65}
+.pull-quote cite{display:block;margin-top:.7rem;font-family:var(--fi);font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-style:normal}
+
+/* FOOTER */
+.foot{padding:2rem;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:1rem;flex-wrap:wrap;background:rgba(0,0,0,0.92)}
+.fb{font-family:var(--fh);font-size:.72rem;letter-spacing:.4em;text-transform:uppercase}
+.fb span{color:var(--gold)}
+.fc{font-family:var(--fi);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim)}
+
+@media(max-width:640px){
+  body{font-size:16px}
+  .hero{padding:5rem 1.5rem 3rem}
+  .inside,.preview-content{padding:3.5rem 1.5rem 0}
+  .nav{padding:0 1rem}
+  .nav-tag{display:none}
+  .paywall-inner{padding:2rem 1.5rem}
+  .hero-stats{gap:1.4rem}
+  .hero-cta{flex-direction:column;align-items:center}
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-brand">INNER <span>VIRTUE</span> X</div>
+  <div class="nav-tag">Book Preview</div>
+  <a class="nav-buy" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Buy ₹499</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="preview-badge">Free Preview · First Chapter</div>
+  <div class="book-mock">
+    <div class="bk-sub">Inner Virtue X</div>
+    <div class="bk-title">Control Your Mind</div>
+    <div class="bk-foot">Mental Clarity Edition</div>
+  </div>
+  <h1 class="hero-title">Control Your Mind</h1>
+  <p class="hero-sub">A Guide to Mental Clarity for the Ones Who Think Too Much</p>
+  <p class="hero-brand">InnerVirtueX · Premium Library</p>
+  <div class="hero-stats">
+    <div class="hs"><strong>10</strong><span>Chapters</span></div>
+    <div class="hs"><strong>100+</strong><span>Pages</span></div>
+    <div class="hs"><strong>Real</strong><span>Stories</span></div>
+    <div class="hs"><strong>₹499</strong><span>Full Access</span></div>
+  </div>
+  <div class="hero-cta">
+    <a class="btn-buy-hero" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Get Full Access — ₹499</a>
+    <button class="btn-scroll" onclick="document.getElementById('preview-start').scrollIntoView({behavior:'smooth'})">Read Free Preview ↓</button>
+  </div>
+</section>
+
+<!-- WHAT'S INSIDE -->
+<section class="inside">
+  <div class="page">
+    <p class="sl">Inside the Book</p>
+    <h2 class="st">What You Will Learn</h2>
+    <p class="sc">Ten chapters of honest, story-driven writing that shows you exactly what happens inside a mind that won't stop — and how to change your relationship with it, permanently.</p>
+    <div class="toc-preview">
+      <div class="toc-row"><span class="toc-num">—</span><span class="toc-text"><strong>Introduction:</strong> The Night I Couldn't Sleep</span><span class="toc-free">Free</span></div>
+      <div class="toc-row"><span class="toc-num">01</span><span class="toc-text"><strong>The Noise You Never Noticed</strong> <em>— How the mind became so loud</em></span><span class="toc-free">Free</span></div>
+      <div class="toc-row"><span class="toc-num">02</span><span class="toc-text"><strong>Where Thoughts Come From</strong> <em>— And why they aren't always true</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">03</span><span class="toc-text"><strong>The Loop</strong> <em>— How overthinking becomes a habit</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">04</span><span class="toc-text"><strong>Meet the Observer</strong> <em>— The part of you watching the chaos</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">05</span><span class="toc-text"><strong>The Scripts Running Your Life</strong> <em>— Patterns nobody told you about</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">06</span><span class="toc-text"><strong>The Pause</strong> <em>— Your most underused mental tool</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">07</span><span class="toc-text"><strong>Attention Is Everything</strong> <em>— What you feed grows</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">08</span><span class="toc-text"><strong>Emotional Weather</strong> <em>— You are not the storm</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">09</span><span class="toc-text"><strong>Building Mental Discipline</strong> <em>— One quiet day at a time</em></span><span class="toc-lock">🔒 Full Access</span></div>
+      <div class="toc-row"><span class="toc-num">10</span><span class="toc-text"><strong>The Quiet Mind</strong> <em>— What peace actually looks like</em></span><span class="toc-lock">🔒 Full Access</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FREE PREVIEW CONTENT -->
+<section class="preview-content" id="preview-start">
+  <div class="page">
+    <div class="ch-tag">Introduction · Free Preview</div>
+    <div class="ch-num">—</div>
+    <h2 class="ch-title">The Night I<br>Couldn't Sleep</h2>
+    <p class="ch-sub">How a single thought becomes a thousand</p>
+    <div class="ch-div"></div>
+
+    <p class="lead">It was two in the morning. The room was dark and completely quiet. And yet somehow — impossibly — my mind was the loudest it had been all day.</p>
+
+    <div class="story">
+      <p>Rohan had been lying in bed for forty minutes. Not tossing and turning dramatically the way people do in films. Just lying there, still, eyes open, staring at the ceiling while his brain ran a full audit of every mistake he had made in the past six months.</p>
+      <p>It had started simple enough. He'd sent a message to his manager earlier that day — a project update — and somewhere between pressing send and dinner, he became convinced the tone had been wrong. Too casual. Or maybe too formal.</p>
+      <p>And from that single seed, the mind had bloomed into something enormous. By midnight, he was no longer thinking about the message. He was re-examining his entire career, his personality, whether he was fundamentally unlikable, and at one point — he wasn't sure how he got there — whether he had made the right choices in his twenties at all.</p>
+      <p>At 2 a.m., he was twenty-eight years old and he was already rewriting his life story. He hadn't moved in forty minutes.</p>
+    </div>
+
+    <p>If you have lived inside a human body for any length of time, you know exactly what Rohan was experiencing. Maybe your version sounds like replaying arguments from relationships that ended years ago. Or a mental slideshow of worst-case scenarios before every important meeting. Or a persistent, low-level hum of inadequacy that doesn't say anything specific — it just hums.</p>
+
+    <p>The name for all of this is overthinking. But that word has been used so casually that it has started to feel like a personality trait rather than a problem. We say <em>"I'm an overthinker"</em> the way we say <em>"I'm a morning person"</em> — as if it's simply who we are, fixed and permanent.</p>
+
+    <p><strong>It is not who you are.</strong> It is something that happens to you — and more importantly, something you can change your relationship with.</p>
+
+    <div class="pull-quote">
+      <p>The mind is not your enemy. It is simply untrained. And an untrained mind, left to its own devices, will run the same circuits until something breaks — or until someone decides to learn how it actually works.</p>
+      <cite>— InnerVirtueX</cite>
+    </div>
+  </div>
+</section>
+
+<!-- BLUR + PAYWALL -->
+<div class="blur-wrap">
+  <div class="blur-content">
+    <section style="padding:0 2rem 3rem">
+      <div class="page">
+        <div class="ch-tag">Chapter One · Free Preview</div>
+        <div class="ch-num">01</div>
+        <h2 class="ch-title">The Noise You<br>Never Noticed</h2>
+        <p class="ch-sub">How the mind became so loud — and why you stopped hearing it</p>
+        <div class="ch-div"></div>
+
+        <p class="lead">There is a particular kind of exhaustion that has nothing to do with how much you slept or how hard you worked. It's a tiredness that lives behind your eyes and sits in the front of your chest.</p>
+
+        <p>Most people assume they are tired from their lives. From the commute, the meetings, the obligations, the responsibilities. And while all of those things genuinely cost energy, they are rarely the main source of the depletion.</p>
+
+        <p>The main source is the commentary.</p>
+
+        <div class="story">
+          <p>Priya used to think she just had a lot going on. She was managing a team of eleven people, raising a seven-year-old mostly alone after her divorce, and taking care of her mother. But when she started paying attention — really paying attention — she discovered something startling.</p>
+          <p>For every one hour of actual difficult activity, there were three or four hours of mental rehearsal happening in the background. Before every difficult conversation at work, she had it in her head at least six times. None of those mental rehearsals made the actual events go better. They just cost her the same energy as doing the thing itself — except they produced nothing.</p>
+        </div>
+
+        <p>This is the first important distinction this book asks you to make: <strong>the difference between thinking and spinning.</strong></p>
+
+        <p>Thinking is productive mental activity. You assess a situation, weigh options, form an understanding, make a decision. There is a beginning, a middle, and something that resembles an end. Spinning is the other thing — when your mind returns to the same thought, not because it is making progress, but because it has gotten stuck...</p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- PAYWALL -->
+<div class="paywall">
+  <div class="paywall-inner">
+    <div class="paywall-icon">🔒</div>
+    <div class="paywall-tag">Continue Reading</div>
+    <h3 class="paywall-title">The Full Book Awaits You</h3>
+    <p class="paywall-sub">You've read the beginning. The real transformation happens in the chapters ahead — 10 chapters of honest, story-driven writing that will permanently shift how you see your own mind.</p>
+    <div class="paywall-price">₹499</div>
+    <div class="paywall-note">One-time purchase · Instant digital access</div>
+    <a class="btn-paywall" href="https://razorpay.me/@atharvaverma" target="_blank" rel="noreferrer">Get Full Access Now</a>
+    <div class="paywall-includes">
+      <div class="pi">All 10 chapters — 100+ pages of premium content</div>
+      <div class="pi">Real stories that mirror your own experience</div>
+      <div class="pi">Daily practices & exercises for mental clarity</div>
+      <div class="pi">Complete practices reference guide</div>
+      <div class="pi">Instant access after payment</div>
+    </div>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="fb">INNER <span>VIRTUE</span> X</div>
+  <div class="fc">@innervirtuex · Clarity Begins Within</div>
+  <a href="https://innervirtuex.vercel.app" style="font-family:var(--fi);font-size:.58rem;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);text-decoration:none">← Back to Website</a>
+</footer>
+
+</body>
+</html>
